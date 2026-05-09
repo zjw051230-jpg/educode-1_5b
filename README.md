@@ -1,0 +1,33 @@
+# EduCode-1.5B
+
+EduCode-1.5B is a small language model training system for CS / ML / Code learning scenarios.
+
+## Current Stage
+- Windows engineering fast track: W1
+- Current objective: establish project skeleton and documentation only
+- This stage does not include training code
+
+## Hardware Roadmap
+- Windows RTX 4060 Ti: engineering fast track
+- Mac M3 Max: learning line
+- A100: CUDA migration and profiling line
+- B200: main 1.5B training line
+
+## Current Scope
+This repository currently focuses on:
+- project skeleton
+- documentation
+- configuration placeholders
+- experiment organization
+
+## Current Non-goals
+This stage does not include:
+- MoE
+- alignment / RLHF / DPO
+- RAG
+- Web UI
+- service deployment
+- multimodality
+
+## Immediate Goal
+Build a clean project structure and planning documents before implementing tokenizer, model, or training components.
