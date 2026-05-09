@@ -1,0 +1,116 @@
+{
+  "run": {
+    "run_name": "mac_tiny_10m",
+    "seed": 42,
+    "output_dir": "outputs/mac_tiny_10m",
+    "notes": "Mac M3 Max learning-line config. Dtype and attention backend need MPS compatibility validation."
+  },
+  "hardware": {
+    "target": "mac_mps",
+    "device": "mps",
+    "dtype": "float32",
+    "dtype_note": "bf16 may be possible later, but float32 is the safer default until validated on MPS.",
+    "use_tf32": false,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "none",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "byte",
+    "vocab_size": 8192,
+    "special_tokens": ["<pad>", "<bos>", "<eos>"],
+    "tokenizer_path": "artifacts/tokenizers/mac_tiny_10m.json"
+  },
+  "data": {
+    "dataset_name": "placeholder_dataset",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 256,
+    "num_workers": 0,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 5000000
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 8192,
+    "context_length": 256,
+    "num_layers": 4,
+    "d_model": 256,
+    "num_heads": 4,
+    "head_dim": 64,
+    "ffn_type": "swiglu",
+    "d_ff": 1024,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 1000,
+    "batch_size": 8,
+    "gradient_accumulation_steps": 1,
+    "global_batch_tokens": 2048,
+    "sequence_length": 256,
+    "eval_interval": 100,
+    "log_interval": 20,
+    "save_interval": 200,
+    "grad_clip": 1.0,
+    "mixed_precision": "float32"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 50,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/mac_tiny_10m",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": false,
+    "keep_last_n": 2,
+    "save_optimizer_state": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 20,
+    "eval_tokens": 8192,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": true,
+    "prompts": ["class TinyModel:"],
+    "max_new_tokens": 32,
+    "temperature": 0.8,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 50],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": false,
+    "attention_backend": "naive",
+    "attention_backend_note": "SDPA may be tested later, but MPS compatibility should be validated first."
+  },
+  "logging": {
+    "log_dir": "logs/mac_tiny_10m",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}

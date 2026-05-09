@@ -1,0 +1,117 @@
+{
+  "run": {
+    "run_name": "b200_educode_1_5b",
+    "seed": 42,
+    "output_dir": "outputs/b200_educode_1_5b",
+    "notes": "B200 1.5B main training draft config. Draft only, not for execution in the current stage."
+  },
+  "hardware": {
+    "target": "b200_cuda",
+    "device": "cuda",
+    "dtype": "bf16",
+    "use_tf32": true,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "vocab_size": 32768,
+    "special_tokens": ["<pad>", "<bos>", "<eos>"],
+    "tokenizer_path": "artifacts/tokenizers/educode_1_5b.json"
+  },
+  "data": {
+    "dataset_name": "placeholder_dataset",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 2048,
+    "num_workers": 8,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 5000000000,
+    "token_budget_options": [5000000000, 10000000000, 30000000000]
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 32768,
+    "context_length": 2048,
+    "num_layers": 28,
+    "d_model": 2048,
+    "num_heads": 16,
+    "head_dim": 128,
+    "ffn_type": "swiglu",
+    "d_ff": 5504,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 0,
+    "batch_size": 8,
+    "gradient_accumulation_steps": 16,
+    "global_batch_tokens": 262144,
+    "sequence_length": 2048,
+    "eval_interval": 500,
+    "log_interval": 20,
+    "save_interval": 500,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "muon_ablation": "planned"
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 1000,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/b200_educode_1_5b",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": true,
+    "keep_last_n": 5,
+    "save_optimizer_state": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 100,
+    "eval_tokens": 65536,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": true,
+    "prompts": ["def solve(problem):"],
+    "max_new_tokens": 128,
+    "temperature": 0.7,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 100],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": true,
+    "attention_backend": "sdpa",
+    "planned_attention_backend": "flash_attention_2"
+  },
+  "logging": {
+    "log_dir": "logs/b200_educode_1_5b",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}

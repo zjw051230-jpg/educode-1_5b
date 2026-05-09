@@ -1,0 +1,115 @@
+{
+  "run": {
+    "run_name": "a100_smoke_100m",
+    "seed": 42,
+    "output_dir": "outputs/a100_smoke_100m",
+    "notes": "A100 CUDA profiling config for a 100M-class smoke model."
+  },
+  "hardware": {
+    "target": "a100_cuda",
+    "device": "cuda",
+    "dtype": "bf16",
+    "use_tf32": true,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "vocab_size": 16384,
+    "special_tokens": ["<pad>", "<bos>", "<eos>"],
+    "tokenizer_path": "artifacts/tokenizers/a100_smoke_100m.json"
+  },
+  "data": {
+    "dataset_name": "placeholder_dataset",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 512,
+    "num_workers": 4,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 50000000
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 16384,
+    "context_length": 512,
+    "num_layers": 12,
+    "d_model": 768,
+    "num_heads": 12,
+    "head_dim": 64,
+    "ffn_type": "swiglu",
+    "d_ff": 3072,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 2000,
+    "batch_size": 8,
+    "gradient_accumulation_steps": 8,
+    "global_batch_tokens": 32768,
+    "sequence_length": 512,
+    "eval_interval": 100,
+    "log_interval": 20,
+    "save_interval": 200,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 100,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/a100_smoke_100m",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": true,
+    "keep_last_n": 3,
+    "save_optimizer_state": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 50,
+    "eval_tokens": 16384,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": true,
+    "prompts": ["def train_step(batch):"],
+    "max_new_tokens": 64,
+    "temperature": 0.7,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 100],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": true,
+    "attention_backend": "sdpa",
+    "attention_backend_note": "FlashAttention-2 can be tested later as a planned switch on A100."
+  },
+  "logging": {
+    "log_dir": "logs/a100_smoke_100m",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}

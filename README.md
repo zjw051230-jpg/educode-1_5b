@@ -31,3 +31,8 @@ This stage does not include:
 
 ## Immediate Goal
 Build a clean project structure and planning documents before implementing tokenizer, model, or training components.
+
+## Current Milestones
+- W1 project skeleton
+- W2 CUDA environment check
+- W3 config schema draft
