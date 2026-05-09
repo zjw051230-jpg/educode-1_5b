@@ -36,3 +36,4 @@ Build a clean project structure and planning documents before implementing token
 - W1 project skeleton
 - W2 CUDA environment check
 - W3 config schema draft
+- W4 smoke test plan
