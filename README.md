@@ -37,3 +37,4 @@ Build a clean project structure and planning documents before implementing token
 - W2 CUDA environment check
 - W3 config schema draft
 - W4 smoke test plan
+- W5 run logging format
