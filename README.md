@@ -54,3 +54,4 @@ Build a clean project structure and planning documents before implementing token
 - W10.9 checkpoint save/load only
 - W10.10 generation only
 - W10.11 logging integration only
+- W10.12 one-step smoke run
