@@ -52,3 +52,4 @@ Build a clean project structure and planning documents before implementing token
 - W10.7 loss only
 - W10.8 backward + optimizer step only
 - W10.9 checkpoint save/load only
+- W10.10 generation only
