@@ -45,3 +45,4 @@ Build a clean project structure and planning documents before implementing token
 - W10 Windows 10M smoke implementation plan
 - W10.1 config loader only
 - W10.2 config validator only
+- W10.3 run setup only
