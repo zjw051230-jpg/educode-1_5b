@@ -6,10 +6,10 @@ The purpose of the experiment index is to:
 - connect config, run_id, hardware, git commit, result, and report references
 - avoid scattered experiment tracking
 - support later project reports and resume writing
-- Project has completed the Windows one-step smoke milestone.
-- The current stage is preparing for W11 minimal training loop planning.
-- Documentation, config, run setup, logging, one-step smoke, checkpoint, generation, and optimizer-step checks have been completed.
-- The project has not yet entered multi-step training, long training, A100/B200 scaling, BPE integration, RoPE integration, FlashAttention-2 integration, or 1.5B pretraining.
+- Project has completed the Windows one-step smoke milestone and the bounded W11 minimal training loop review.
+- The current stage is deciding between a bounded 50-step toy training plan and a return to the Mac learning line.
+- Documentation, config, run setup, logging, one-step smoke, checkpoint, generation, optimizer-step checks, and a bounded 10-step toy training loop have been completed.
+- The project has not yet entered real-data training, long training, A100/B200 scaling, BPE integration, RoPE integration, FlashAttention-2 integration, or 1.5B pretraining.
 
 ## 2. Experiment Tracking Principles
 - every experiment gets a unique `experiment_id`
@@ -56,7 +56,8 @@ Meaning:
 | EXP-20260511-001-windows-one-step-smoke | `20260511_024724_windows_cuda_one_step_smoke` | windows_cuda | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | 2d30630 | success | one-step smoke path completed with checkpoint, generation, and logging artifacts | `docs/w10_12_one_step_smoke.md` | review the milestone before any repeated loop |
 | EXP-20260511-002-windows-one-step-smoke-review | `20260511_024724_windows_cuda_one_step_smoke` | review | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | 8abbcda | success | one-step smoke reviewed and accepted | `docs/w10_13_one_step_smoke_review.md` | proceed to W11 minimal training loop plan |
 | EXP-20260511-003-w11-minimal-training-loop-plan | N/A | planning | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | b213897 | success | minimal training loop plan created | `docs/w11_minimal_training_loop_plan.md` | create a strictly bounded minimal training loop script next |
-| EXP-20260511-004-w11-1-minimal-training-loop-script | N/A | windows_cuda | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | pending local commit | success | minimal training loop script completed on toy data | `docs/w11_1_minimal_training_loop.md` | review the toy-loop metrics and artifacts next |
+| EXP-20260511-004-w11-1-minimal-training-loop-script | `20260511_041027_windows_cuda_minimal_training_loop` | windows_cuda | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | 09d8bae | success | minimal training loop script completed on toy data | `docs/w11_1_minimal_training_loop.md` | review the toy-loop metrics and artifacts next |
+| EXP-20260511-005-w11-2-minimal-training-loop-review | `20260511_041027_windows_cuda_minimal_training_loop` | review | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | pending local commit | success | minimal training loop reviewed and accepted | `docs/w11_2_minimal_training_loop_review.md` | write a bounded 50-step toy training plan or return to the Mac learning line |
 
 Notes:
 - These entries are documentation / planning records, not training runs.
