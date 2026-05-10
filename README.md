@@ -3,12 +3,10 @@
 EduCode-1.5B is a small language model training system for CS / ML / Code learning scenarios.
 
 ## Current Stage
-- Windows engineering fast track has completed the one-step smoke milestone through W10.13
-- CUDA, tiny model forward, loss, backward, optimizer step, checkpoint save/load, generation, and run logging have been validated in a bounded smoke path
-- The next stage is W11 minimal training loop plan
-- The project has not entered long training yet
-- The project has not entered A100/B200 main training yet
-- BPE, RoPE, FlashAttention-2, MoE, and alignment are not implemented yet
+- Windows engineering fast track has completed the one-step smoke run and review
+- Current stage is preparing for W11.1 minimal training loop script
+- Completed components include config loading and validation, toy data, ByteTokenizer, sequence dataset, tiny model forward, loss, optimizer step, checkpoint save/load, generation, logging, and one-step smoke
+- Not yet done: multi-step training loop, real dataset, BPE integration, RoPE, FlashAttention-2, A100/B200 scaling, 1.5B pretraining, MoE, and alignment
 
 ## Hardware Roadmap
 - Windows RTX 4060 Ti: engineering fast track
