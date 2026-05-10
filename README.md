@@ -40,3 +40,4 @@ Build a clean project structure and planning documents before implementing token
 - W5 run logging format
 - W6 config validation checklist
 - W7 minimal run manifest templates
+- W8 experiment index
