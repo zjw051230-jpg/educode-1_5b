@@ -71,8 +71,9 @@ python D:/Projects/educode-1_5b/scripts/run_one_step_smoke.py
 - checkpoint reload verification is useful because it confirms the saved model state matches the updated model after the optimizer step
 
 ## 9. Next Step
-Suggested W10.13:
-- multi-step smoke loop
-- repeat the same path for a small number of steps
-- keep logging, checkpoint, and generation integrated
-- still stay far below a real training run
+W10.13 one-step smoke review has completed.
+
+Suggested next step:
+- W11 minimal training loop plan
+- start with a plan rather than directly writing a repeated loop
+- keep the training loop scope small and bounded before any longer run

@@ -3,9 +3,12 @@
 EduCode-1.5B is a small language model training system for CS / ML / Code learning scenarios.
 
 ## Current Stage
-- Windows engineering fast track: W1
-- Current objective: establish project skeleton and documentation only
-- This stage does not include training code
+- Windows engineering fast track has completed the one-step smoke milestone through W10.13
+- CUDA, tiny model forward, loss, backward, optimizer step, checkpoint save/load, generation, and run logging have been validated in a bounded smoke path
+- The next stage is W11 minimal training loop plan
+- The project has not entered long training yet
+- The project has not entered A100/B200 main training yet
+- BPE, RoPE, FlashAttention-2, MoE, and alignment are not implemented yet
 
 ## Hardware Roadmap
 - Windows RTX 4060 Ti: engineering fast track
