@@ -50,3 +50,4 @@ Build a clean project structure and planning documents before implementing token
 - W10.5 sequence dataset x/y only
 - W10.6 tiny model forward only
 - W10.7 loss only
+- W10.8 backward + optimizer step only
