@@ -58,3 +58,4 @@ Build a clean project structure and planning documents before implementing token
 - W10.12 one-step smoke run
 - W10.13 one-step smoke review
 - W11 minimal training loop plan
+- W11.1 minimal training loop script
