@@ -60,3 +60,4 @@ Choose the next bounded learning step: a 50-step toy training plan on Windows or
 - W11 minimal training loop plan
 - W11.1 minimal training loop script
 - W11.2 minimal training loop review
+- W11.3 bounded 50-step toy training plan
