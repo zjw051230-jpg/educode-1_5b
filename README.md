@@ -41,3 +41,4 @@ Build a clean project structure and planning documents before implementing token
 - W6 config validation checklist
 - W7 minimal run manifest templates
 - W8 experiment index
+- W9 Windows 10M smoke preflight checklist
