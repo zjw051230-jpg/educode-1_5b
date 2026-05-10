@@ -6,7 +6,10 @@ The purpose of the experiment index is to:
 - connect config, run_id, hardware, git commit, result, and report references
 - avoid scattered experiment tracking
 - support later project reports and resume writing
-- keep the current stage documentation-only without running experiments
+- Project has completed the Windows one-step smoke milestone.
+- The current stage is preparing for W11 minimal training loop planning.
+- Documentation, config, run setup, logging, one-step smoke, checkpoint, generation, and optimizer-step checks have been completed.
+- The project has not yet entered multi-step training, long training, A100/B200 scaling, BPE integration, RoPE integration, FlashAttention-2 integration, or 1.5B pretraining.
 
 ## 2. Experiment Tracking Principles
 - every experiment gets a unique `experiment_id`
@@ -61,7 +64,8 @@ Notes:
 
 | planned_experiment | hardware | config | goal | prerequisite | success_criteria | current_status |
 |---|---|---|---|---|---|---|
-| Windows 10M CUDA smoke test | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | verify minimal CUDA smoke path on local Windows machine | W2, W3, W4, W5, W6, W7 complete | forward/backward/checkpoint/generation path planned and validated | planned |
+| Windows one-step smoke | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | verify the smallest end-to-end CUDA smoke path on the local Windows machine | W2-W10.11 complete | one-step smoke completed with checkpoint, generation, and logging artifacts | success |
+| Windows minimal multi-step training loop | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | extend the smoke path into a carefully bounded repeated loop | W10.12 one-step smoke accepted and W10.13 review complete | one-step smoke completed; minimal training loop not started yet | planned |
 | Mac M3 Max ByteTokenizer / BPE learning run | Mac M3 Max 36GB | `configs/mac/tiny_10m.json` | learn tokenizer behavior and small data flow on MPS | tokenizer implementation phase ready | byte round-trip and BPE encode/decode verified | planned |
 | Mac M3 Max tiny 10M training run | Mac M3 Max 36GB | `configs/mac/tiny_10m.json` | validate tiny dense Transformer training behavior | tokenizer and model path implemented | loss decreases and checkpoint path works | planned |
 | A100 100M SDPA smoke run | A100 | `configs/a100/smoke_100m.json` | validate CUDA bf16 + SDPA baseline on datacenter GPU | local smoke path stable | logs, checkpoint, and validation path work | planned |
