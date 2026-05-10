@@ -14,3 +14,6 @@ data/processed/
 *.bin
 wandb/
 .cache/
+
+# Generated experiment run directories
+experiments/*/*/

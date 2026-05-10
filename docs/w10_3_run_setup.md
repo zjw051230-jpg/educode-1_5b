@@ -42,7 +42,11 @@ python D:/Projects/educode-1_5b/scripts/create_run_setup.py configs/windows/smok
 
 ## 7. Git Tracking Decision
 This step does not commit the actual `experiments/<stage>/<run_id>/` directory.
+`create_run_setup.py` generates a local `experiments/<stage>/<run_id>/` run directory.
+These generated run directories are ignored by default in `.gitignore`.
+They may be kept locally for inspecting `run_config.json` and `run_metadata.json`.
 Only the run setup code and documentation are committed.
+If a future run summary is worth including in reports, it should be copied or rewritten into `docs/` rather than committing the whole experiment run directory.
 Selected summaries may be committed later, but large logs and checkpoints should not be committed.
 
 ## 8. Next Step
