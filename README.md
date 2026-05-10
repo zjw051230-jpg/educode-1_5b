@@ -46,3 +46,4 @@ Build a clean project structure and planning documents before implementing token
 - W10.1 config loader only
 - W10.2 config validator only
 - W10.3 run setup only
+- W10.4 toy data + ByteTokenizer only
