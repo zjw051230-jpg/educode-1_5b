@@ -1,0 +1,22 @@
+{
+  "run_id": "YYYYMMDD_HHMMSS_stage_short_name",
+  "project": "EduCode-1.5B",
+  "stage": "windows_cuda | mac_mps | a100_cuda | b200_cuda",
+  "hardware_target": "windows_cuda",
+  "hostname": "TODO",
+  "os": "TODO",
+  "python_version": "TODO",
+  "torch_version": "TODO",
+  "cuda_available": false,
+  "cuda_version": "TODO",
+  "cudnn_version": "TODO",
+  "gpu_name": "TODO",
+  "gpu_memory_gib": null,
+  "git_commit": "TODO",
+  "git_branch": "main",
+  "config_path": "configs/.../...json",
+  "start_time": "YYYY-MM-DDTHH:MM:SS",
+  "end_time": null,
+  "status": "planned | success | failed | interrupted",
+  "notes": ""
+}

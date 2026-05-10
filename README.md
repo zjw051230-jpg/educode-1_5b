@@ -39,3 +39,4 @@ Build a clean project structure and planning documents before implementing token
 - W4 smoke test plan
 - W5 run logging format
 - W6 config validation checklist
+- W7 minimal run manifest templates

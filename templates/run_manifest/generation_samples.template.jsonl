@@ -1,0 +1,2 @@
+{"step": 0, "prompt": "def add(a, b):", "output": "\n    return a + b", "max_new_tokens": 32, "temperature": 0.7, "top_k": 50, "top_p": 0.95, "checkpoint_path": "checkpoints/<run_id>/latest.pt", "timestamp": "2026-05-10T00:05:00Z"}
+{"step": 10, "prompt": "class TinyModel:", "output": "\n    def __init__(self):\n        pass", "max_new_tokens": 48, "temperature": 0.8, "top_k": 50, "top_p": 0.95, "checkpoint_path": "checkpoints/<run_id>/step_000010.pt", "timestamp": "2026-05-10T00:10:00Z"}

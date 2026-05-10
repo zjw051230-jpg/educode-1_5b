@@ -1,0 +1,17 @@
+{
+  "run_id": "YYYYMMDD_HHMMSS_stage_short_name",
+  "checkpoints": [
+    {
+      "checkpoint_id": "latest_step_000000",
+      "step": 0,
+      "path": "checkpoints/<run_id>/latest.pt",
+      "type": "latest",
+      "train_loss": null,
+      "val_loss": null,
+      "saved_at": "YYYY-MM-DDTHH:MM:SS",
+      "contains_optimizer_state": true,
+      "contains_scheduler_state": true,
+      "config_hash": "TODO"
+    }
+  ]
+}
