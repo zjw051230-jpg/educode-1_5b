@@ -10,6 +10,7 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 from educode.config_loader import load_json_config, pretty_print_summary, summarize_config
+from educode.config_validator import validate_config
 
 
 def main() -> int:
@@ -26,6 +27,15 @@ def main() -> int:
 
     summary = summarize_config(config)
     pretty_print_summary(summary)
+
+    errors = validate_config(config)
+    if errors:
+        print("Validation: failed")
+        for error in errors:
+            print(f"- {error}")
+    else:
+        print("Validation: passed")
+
     return 0
 
 

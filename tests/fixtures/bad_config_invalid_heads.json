@@ -1,0 +1,113 @@
+{
+  "run": {
+    "run_name": "bad_windows_smoke_config",
+    "seed": 42,
+    "output_dir": "outputs/bad_windows_smoke_config",
+    "notes": "Invalid fixture for config validator testing."
+  },
+  "hardware": {
+    "target": "windows_cuda",
+    "device": "cuda",
+    "dtype": "bf16",
+    "use_tf32": false,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "vocab_size": 8192,
+    "special_tokens": ["<pad>", "<bos>", "<eos>"],
+    "tokenizer_path": "artifacts/tokenizers/bad_fixture.json"
+  },
+  "data": {
+    "dataset_name": "placeholder_dataset",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 128,
+    "num_workers": 0,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 1000000
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 9000,
+    "context_length": 128,
+    "num_layers": 4,
+    "d_model": 250,
+    "num_heads": 4,
+    "ffn_type": "swiglu",
+    "d_ff": 1024,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 100,
+    "batch_size": 4,
+    "gradient_accumulation_steps": 1,
+    "global_batch_tokens": 512,
+    "sequence_length": 128,
+    "eval_interval": 25,
+    "log_interval": 10,
+    "save_interval": 50,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 10,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/bad_fixture",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": false,
+    "keep_last_n": 2,
+    "save_optimizer_state": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 10,
+    "eval_tokens": 4096,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": true,
+    "prompts": ["def hello_world():"],
+    "max_new_tokens": 32,
+    "temperature": 0.8,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 10],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": false,
+    "attention_backend": "sdpa"
+  },
+  "logging": {
+    "log_dir": "logs/bad_fixture",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}
