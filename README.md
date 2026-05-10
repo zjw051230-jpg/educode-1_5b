@@ -48,3 +48,4 @@ Build a clean project structure and planning documents before implementing token
 - W10.3 run setup only
 - W10.4 toy data + ByteTokenizer only
 - W10.5 sequence dataset x/y only
+- W10.6 tiny model forward only
