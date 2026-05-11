@@ -3,7 +3,9 @@
 A CS336-inspired modular LLM training system, built from scratch and staged from local CUDA smoke tests toward larger-scale dense Transformer experiments.
 
 ## Current Status
-- Windows RTX 4060 Ti engineering fast track complete through bounded 50-step toy training.
+- Resume MVP is complete.
+- Project is transitioning from toy-data validation to formal training preparation.
+- Next step: BPE tokenizer and small real dataset planning.
 - Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging.
 - Not yet real pretraining, not yet 1.5B, not yet real dataset.
 
@@ -60,6 +62,7 @@ Current implementation note:
 - no A100/B200 experiments yet
 
 ## Roadmap
+- T1 formal training roadmap
 - BPE tokenizer integration
 - RoPE integration
 - real dataset pipeline
@@ -107,3 +110,4 @@ Current implementation note:
 - W11.4 bounded 50-step toy training
 - W11.5 bounded 50-step toy training review
 - R1 resume MVP pack
+- T1 formal training roadmap
