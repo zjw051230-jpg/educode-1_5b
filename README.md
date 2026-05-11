@@ -1,37 +1,77 @@
 # EduCode-1.5B
 
-EduCode-1.5B is a small language model training system for CS / ML / Code learning scenarios.
+A CS336-inspired modular LLM training system, built from scratch and staged from local CUDA smoke tests toward larger-scale dense Transformer experiments.
 
-## Current Stage
-- Windows engineering fast track has completed the one-step smoke run, review, minimal training loop script, minimal training loop review, bounded 50-step toy training, and bounded 50-step toy training review
-- Current stage is deciding between a bounded 100-step toy training plan and a return to the Mac learning line
-- Completed components include config loading and validation, toy data, ByteTokenizer, sequence dataset, tiny model forward, loss, optimizer step, checkpoint save/load, generation, logging, one-step smoke, a bounded 10-step toy training loop, and a bounded 50-step toy training loop
-- Not yet done: real dataset training, BPE integration, RoPE, FlashAttention-2, A100/B200 scaling, 1.5B pretraining, MoE, and alignment
+## Current Status
+- Windows RTX 4060 Ti engineering fast track complete through bounded 50-step toy training.
+- Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging.
+- Not yet real pretraining, not yet 1.5B, not yet real dataset.
 
-## Hardware Roadmap
-- Windows RTX 4060 Ti: engineering fast track
-- Mac M3 Max: learning line
-- A100: CUDA migration and profiling line
-- B200: main 1.5B training line
+## Quick Demo
+Run either of these commands:
 
-## Current Scope
-This repository currently focuses on:
-- project skeleton
-- documentation
-- configuration placeholders
-- experiment organization
+```text
+python scripts/run_resume_demo.py
+```
 
-## Current Non-goals
-This stage does not include:
-- MoE
-- alignment / RLHF / DPO
-- RAG
-- Web UI
-- service deployment
-- multimodality
+or
 
-## Immediate Goal
-Choose the next bounded learning step: a 100-step toy training plan on Windows or a return to the Mac learning line.
+```text
+python scripts/run_50_step_toy_training.py
+```
+
+## Current Result
+
+| Metric | Value |
+|---|---|
+| max_steps | 50 |
+| first_loss | 9.188724 |
+| final_loss | 4.837882 |
+| loss_drop | 4.350842 |
+| checkpoint reload match | True |
+| tokens/sec | 5007.16 |
+| generation preview | `helloa nordnad  n otd` |
+
+## Architecture / Pipeline
+
+`config → tokenizer → dataset → model → loss → optimizer → checkpoint → generation → logging`
+
+Current implementation note:
+- the current demo uses toy data and a tiny decoder-only model
+- the same modular structure is intended to later support tokenizer, data, scale, and hardware upgrades
+
+## Technical Highlights
+- Built a modular decoder-only Transformer training pipeline in PyTorch.
+- Implemented config loading and validation, byte-level tokenization, x/y sequence batching, model forward, next-token loss, optimizer step, checkpoint save/load, autoregressive generation, and run logging.
+- Validated the end-to-end pipeline on an RTX 4060 Ti with one-step smoke, 10-step minimal loop, and bounded 50-step toy training milestones.
+- Produced reproducible run artifacts including `run_config.json`, `run_metadata.json`, `metrics.jsonl`, `generation_samples.jsonl`, checkpoint manifest files, and markdown summaries.
+- Added guardrails so generated artifacts remain Git-ignored and bounded runs do not silently turn into larger experiments.
+
+## Limitations
+- toy data only
+- ByteTokenizer temporary path
+- config declares BPE/8192 but the current smoke path uses byte ids
+- learned position embeddings, not RoPE
+- PyTorch SDPA only, not FlashAttention-2
+- tiny model only, not 1.5B
+- no real dataset
+- no validation set
+- no meaningful generation quality
+- no A100/B200 experiments yet
+
+## Roadmap
+- BPE tokenizer integration
+- RoPE integration
+- real dataset pipeline
+- validation loop
+- learning-rate scheduler
+- resume training test
+- A100 100M profiling
+- B200 1.5B pretraining experiment
+
+## Resume Resources
+- [Resume Bullets](docs/resume_bullets.md)
+- [Resume Project Report](docs/resume_project_report.md)
 
 ## Current Milestones
 - W1 project skeleton
@@ -63,3 +103,4 @@ Choose the next bounded learning step: a 100-step toy training plan on Windows o
 - W11.3 bounded 50-step toy training plan
 - W11.4 bounded 50-step toy training
 - W11.5 bounded 50-step toy training review
+- R1 resume MVP pack
