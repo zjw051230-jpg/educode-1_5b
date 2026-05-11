@@ -72,6 +72,9 @@ Current implementation note:
 ## Resume Resources
 - [Resume Bullets](docs/resume_bullets.md)
 - [Resume Project Report](docs/resume_project_report.md)
+- [Quickstart](docs/quickstart.md)
+- [Reproducibility Checklist](docs/reproducibility_checklist.md)
+- [Public Showcase Checklist](docs/public_showcase_checklist.md)
 
 ## Current Milestones
 - W1 project skeleton
