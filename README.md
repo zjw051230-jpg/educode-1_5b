@@ -114,3 +114,4 @@ Current implementation note:
 - R1 resume MVP pack
 - T1 formal training roadmap
 - T2 BPE tokenizer plan
+- T2.1 tokenizer environment check
