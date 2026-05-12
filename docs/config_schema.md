@@ -78,8 +78,29 @@ Notes:
 Suggested fields:
 - `type`: `"byte" | "bpe"`
 - `vocab_size`
+- `path`
+- `artifact_dir`
 - `special_tokens`
-- `tokenizer_path`
+- `pad_token_id`
+- `bos_token_id`
+- `eos_token_id`
+- `unk_token_id`
+
+Rules:
+- `tokenizer.type` must be one of: `byte`, `bpe`
+- if `tokenizer.type == "bpe"`:
+  - `tokenizer.path` is required
+  - `tokenizer.path` must point to `tokenizer.json`
+  - `tokenizer.artifact_dir` should point to the containing artifact directory
+  - `tokenizer.vocab_size` must match the loaded tokenizer vocab size
+  - `model.vocab_size` must equal `tokenizer.vocab_size`
+- if `tokenizer.type == "byte"`:
+  - `tokenizer.vocab_size` should be `256`
+  - `tokenizer.path` may be `null`
+
+Required formula:
+
+`model.vocab_size = tokenizer.vocab_size = loaded_tokenizer.vocab_size`
 
 Notes:
 - The current Mac learning line starts from a ByteTokenizer mindset.

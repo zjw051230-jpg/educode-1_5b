@@ -1,0 +1,119 @@
+{
+  "run": {
+    "run_name": "windows_bpe_toy_512_smoke",
+    "seed": 42,
+    "output_dir": "outputs/windows_bpe_toy_512_smoke",
+    "notes": "Toy BPE tokenizer config validation smoke. Not for formal training."
+  },
+  "hardware": {
+    "target": "windows_cuda",
+    "device": "cuda",
+    "dtype": "bf16",
+    "use_tf32": false,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "vocab_size": 311,
+    "path": "tokenizers/educode_bpe_toy_512/tokenizer.json",
+    "artifact_dir": "tokenizers/educode_bpe_toy_512",
+    "special_tokens": ["<pad>", "<bos>", "<eos>", "<unk>"],
+    "pad_token_id": 0,
+    "bos_token_id": 1,
+    "eos_token_id": 2,
+    "unk_token_id": 3
+  },
+  "data": {
+    "dataset_name": "toy_tokenizer_sample",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 16,
+    "num_workers": 0,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 2048
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 311,
+    "context_length": 16,
+    "num_layers": 2,
+    "d_model": 128,
+    "num_heads": 4,
+    "head_dim": 32,
+    "ffn_type": "swiglu",
+    "d_ff": 512,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 1,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 1,
+    "global_batch_tokens": 32,
+    "sequence_length": 16,
+    "eval_interval": 1,
+    "log_interval": 1,
+    "save_interval": 1,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 1,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/windows_bpe_toy_512_smoke",
+    "resume_from": null,
+    "save_latest": false,
+    "save_best": false,
+    "keep_last_n": 1,
+    "save_optimizer_state": false
+  },
+  "evaluation": {
+    "enabled": false,
+    "eval_steps": 1,
+    "eval_tokens": 256,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": false,
+    "prompts": ["hello world"],
+    "max_new_tokens": 8,
+    "temperature": 1.0,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": false,
+    "profile_steps": [1],
+    "record_memory": false,
+    "record_tokens_per_sec": false,
+    "record_mfu": false,
+    "attention_backend": "sdpa"
+  },
+  "logging": {
+    "log_dir": "logs/windows_bpe_toy_512_smoke",
+    "log_jsonl": false,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}

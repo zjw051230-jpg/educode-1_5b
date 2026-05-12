@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 REQUIRED_TOP_LEVEL_SECTIONS = [
@@ -31,6 +32,11 @@ ALLOWED_ATTENTION_BACKENDS = {
     "flash_attention_2",
 }
 
+ALLOWED_TOKENIZER_TYPES = {
+    "byte",
+    "bpe",
+}
+
 
 def get_nested(config: dict[str, Any], path: str, default: Any = None) -> Any:
     current: Any = config
@@ -39,6 +45,76 @@ def get_nested(config: dict[str, Any], path: str, default: Any = None) -> Any:
             return default
         current = current[key]
     return current
+
+
+def validate_tokenizer_config(config: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+
+    tokenizer_type = get_nested(config, "tokenizer.type")
+    tokenizer_vocab_size = get_nested(config, "tokenizer.vocab_size")
+    model_vocab_size = get_nested(config, "model.vocab_size")
+
+    if tokenizer_type not in ALLOWED_TOKENIZER_TYPES:
+        errors.append("tokenizer.type must be one of: byte, bpe")
+        return errors
+
+    if tokenizer_type == "byte":
+        if tokenizer_vocab_size != 256:
+            errors.append("byte tokenizer requires tokenizer.vocab_size == 256")
+        if tokenizer_vocab_size != model_vocab_size:
+            errors.append("tokenizer.vocab_size must match model.vocab_size")
+        return errors
+
+    tokenizer_path_value = get_nested(config, "tokenizer.path")
+    if not isinstance(tokenizer_path_value, str) or not tokenizer_path_value.strip():
+        errors.append("bpe tokenizer requires tokenizer.path")
+    else:
+        tokenizer_path = Path(tokenizer_path_value)
+        if not tokenizer_path.is_absolute():
+            tokenizer_path = Path.cwd() / tokenizer_path
+        if not tokenizer_path.exists():
+            errors.append("tokenizer.path must exist")
+        elif not tokenizer_path.is_file():
+            errors.append("tokenizer.path must be a file")
+        elif tokenizer_path.suffix.lower() != ".json":
+            errors.append("tokenizer.path should point to a .json tokenizer artifact")
+
+    artifact_dir_value = get_nested(config, "tokenizer.artifact_dir")
+    if artifact_dir_value is not None:
+        if not isinstance(artifact_dir_value, str) or not artifact_dir_value.strip():
+            errors.append("tokenizer.artifact_dir must be a non-empty string when provided")
+        else:
+            artifact_dir = Path(artifact_dir_value)
+            if not artifact_dir.is_absolute():
+                artifact_dir = Path.cwd() / artifact_dir
+            if not artifact_dir.exists():
+                errors.append("tokenizer.artifact_dir must exist")
+            elif not artifact_dir.is_dir():
+                errors.append("tokenizer.artifact_dir must be a directory")
+
+    if tokenizer_vocab_size != model_vocab_size:
+        errors.append("tokenizer.vocab_size must match model.vocab_size")
+
+    if isinstance(tokenizer_path_value, str) and tokenizer_path_value.strip():
+        try:
+            from tokenizers import Tokenizer
+        except ImportError:
+            errors.append("tokenizers package is required to validate bpe tokenizer.path")
+        else:
+            tokenizer_path = Path(tokenizer_path_value)
+            if not tokenizer_path.is_absolute():
+                tokenizer_path = Path.cwd() / tokenizer_path
+            if tokenizer_path.exists() and tokenizer_path.is_file():
+                try:
+                    loaded_tokenizer = Tokenizer.from_file(str(tokenizer_path))
+                except Exception as exc:
+                    errors.append(f"failed to load tokenizer.path: {exc}")
+                else:
+                    loaded_vocab_size = loaded_tokenizer.get_vocab_size()
+                    if tokenizer_vocab_size != loaded_vocab_size:
+                        errors.append("tokenizer.vocab_size must match loaded tokenizer vocab size")
+
+    return errors
 
 
 def validate_config(config: dict[str, Any]) -> list[str]:
@@ -56,10 +132,7 @@ def validate_config(config: dict[str, Any]) -> list[str]:
     if attention_backend not in ALLOWED_ATTENTION_BACKENDS:
         errors.append("profiling.attention_backend must be one of: naive, sdpa, flash_attention_2")
 
-    tokenizer_vocab_size = get_nested(config, "tokenizer.vocab_size")
-    model_vocab_size = get_nested(config, "model.vocab_size")
-    if tokenizer_vocab_size != model_vocab_size:
-        errors.append("tokenizer.vocab_size must match model.vocab_size")
+    errors.extend(validate_tokenizer_config(config))
 
     architecture = get_nested(config, "model.architecture")
     if architecture != "dense_decoder_only":
