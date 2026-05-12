@@ -1,0 +1,14 @@
+hello world
+你好，世界
+Transformer models predict the next token.
+Python code: print('hello')
+loss = F.cross_entropy(logits, targets)
+The optimizer updates model parameters using gradients.
+A dataset produces token sequences.
+A dataloader groups samples into batches.
+Checkpointing saves model state and optimizer state.
+Generation samples the next token from logits.
+CS336 studies language modeling from scratch.
+Gradient descent minimizes a scalar loss.
+Emoji test 😊
+数学表达：loss = -log p(target | context)

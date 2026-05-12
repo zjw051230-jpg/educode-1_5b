@@ -1,0 +1,16 @@
+{
+  "name": "educode_bpe_toy_512",
+  "type": "BPE",
+  "library": "tokenizers",
+  "vocab_size_target": 512,
+  "min_frequency": 1,
+  "special_tokens": [
+    "<pad>",
+    "<bos>",
+    "<eos>",
+    "<unk>"
+  ],
+  "artifact_path": "tokenizers/educode_bpe_toy_512",
+  "corpus_path": "data/tokenizer_samples/tiny_educode_corpus.txt",
+  "is_formal_tokenizer": false
+}

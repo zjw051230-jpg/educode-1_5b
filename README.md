@@ -5,6 +5,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 ## Current Status
 - Resume MVP is complete.
 - Formal training preparation has started.
+- Tiny BPE tokenizer artifact created for tokenizer path validation.
+- Formal 8k tokenizer for real data is not complete yet.
 - Next tokenizer target is BPE 8k for Windows small real-data training.
 - ByteTokenizer remains a temporary smoke/debug tokenizer.
 - Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging.
@@ -115,3 +117,4 @@ Current implementation note:
 - T1 formal training roadmap
 - T2 BPE tokenizer plan
 - T2.1 tokenizer environment check
+- T2.2 tiny BPE tokenizer artifact
