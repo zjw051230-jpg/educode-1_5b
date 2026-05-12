@@ -63,7 +63,8 @@ Meaning:
 | EXP-20260511-008-w11-5-bounded-50-step-toy-training-review | `20260511_044948_windows_cuda_bounded_50_step_toy` | review | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | 6eb6eb6 | success | bounded 50-step toy training reviewed and accepted | `docs/w11_5_bounded_50_step_toy_training_review.md` | write a bounded 100-step toy training plan or return to the Mac learning line |
 | EXP-20260511-009-r1-resume-mvp-pack | N/A | R1 | Windows RTX 4060 Ti | `scripts/run_resume_demo.py` | 24418ba | success | resume-ready project packaging created | `docs/resume_project_report.md` | polish the repository landing page and resume summary next |
 | EXP-20260511-010-r2-final-repository-polish | N/A | R2 | Windows RTX 4060 Ti | `scripts/run_resume_demo.py` | 0f7d4a6 | success | final repository polish and showcase checklists created | `docs/quickstart.md` | prepare final resume wording and visibility decision next |
-| EXP-20260511-011-t1-formal-training-roadmap | N/A | T1 | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | pending local commit | success | formal training roadmap and dataset/tokenizer plan created | `docs/t1_formal_training_roadmap.md` | define the BPE tokenizer plan next |
+| EXP-20260511-011-t1-formal-training-roadmap | N/A | T1 | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | 4d7ba0a | success | formal training roadmap and dataset/tokenizer plan created | `docs/t1_formal_training_roadmap.md` | define the BPE tokenizer plan next |
+| EXP-20260512-001-t2-bpe-tokenizer-plan | N/A | T2 | Windows RTX 4060 Ti | `configs/windows/smoke_cuda_10m.json` | pending local commit | success | BPE tokenizer plan created | `docs/t2_bpe_tokenizer_plan.md` | run tokenizer environment checks next |
 
 Notes:
 - These entries are documentation / planning records, not training runs.
