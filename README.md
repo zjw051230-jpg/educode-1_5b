@@ -154,3 +154,4 @@ Current implementation note:
 - T7.6 50-step vs 100-step comparison
 - T8 A100 100M scaling plan
 - T8.1 A100 100M config draft
+- T8.2 A100 environment preflight checklist
