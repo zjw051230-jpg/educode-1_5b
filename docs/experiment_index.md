@@ -81,7 +81,8 @@ Meaning:
 | EXP-20260514-015-t5-3-bpe-8k-tokenizer-artifact | N/A | T5.3 | Windows RTX 2080 Ti | `scripts/train_bpe_8k_tokenizer.py` | f6e9f41 | success | educode_bpe_8k tokenizer artifact trained on synthetic seed corpus | `docs/t5_3_bpe_8k_tokenizer_artifact.md` | validate the formal 8k config path against the new artifact next |
 | EXP-20260514-016-t5-4-bpe-8k-config-linkage-validation | N/A | T5.4 | Windows RTX 2080 Ti | `configs/windows/bpe_8k_formal_placeholder.json` | 494bf9c | success | BPE tokenizer artifact linked to formal config placeholder | `docs/t5_4_bpe_8k_config_linkage.md` | plan a validation loop or run a BPE-based smoke next |
 | EXP-20260514-017-t5-5-bpe-data-model-loss-smoke | N/A | T5.5 | Windows RTX 2080 Ti | `scripts/inspect_bpe_data_model_loss_smoke.py` | 0f24bd9 | success | BPE processed-data model/loss smoke completed | `docs/t5_5_bpe_data_model_loss_smoke.md` | plan a validation loop next |
-| EXP-20260514-018-t6-validation-loop-plan | N/A | T6 | Windows RTX 2080 Ti | `docs/t6_validation_loop_plan.md` | pending local commit | success | validation loop plan created | `docs/t6_validation_loop_plan.md` | implement a bounded validation-loop smoke script next |
+| EXP-20260514-018-t6-validation-loop-plan | N/A | T6 | Windows RTX 2080 Ti | `docs/t6_validation_loop_plan.md` | d128bd6 | success | validation loop plan created | `docs/t6_validation_loop_plan.md` | implement a bounded validation-loop smoke script next |
+| EXP-20260514-019-t6-1-validation-loop-smoke | N/A | T6.1 | Windows RTX 2080 Ti | `scripts/inspect_validation_loop_smoke.py` | pending local commit | success | one-batch train/val loss smoke completed | `docs/t6_1_validation_loop_smoke.md` | plan a small real-data training stage next |
 
 Notes:
 - These entries are documentation / planning records, not training runs.
