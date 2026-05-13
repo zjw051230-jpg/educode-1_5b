@@ -143,3 +143,4 @@ Current implementation note:
 - T5.5 BPE data/model/loss smoke
 - T6 validation loop plan
 - T6.1 validation loop smoke
+- T7 small real-data training plan
