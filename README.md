@@ -141,3 +141,4 @@ Current implementation note:
 - T5.3 BPE 8k tokenizer artifact
 - T5.4 BPE 8k config linkage validation
 - T5.5 BPE data/model/loss smoke
+- T6 validation loop plan
