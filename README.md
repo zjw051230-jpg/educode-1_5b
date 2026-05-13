@@ -9,17 +9,16 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Tiny BPE tokenizer has passed dataset/model/loss integration smoke.
 - Tokenizer configs have been split into byte smoke, toy BPE smoke, and formal BPE placeholder.
 - Toy BPE tokenizer config path validation is now covered by a dedicated smoke config.
-- Formal 8k tokenizer artifact is still pending.
-- Small real dataset planning has started.
-- Real corpus directory structure and intake checklist have been created.
+- Formal `educode_bpe_8k` tokenizer artifact has been created from the current synthetic seed corpus.
+- The formal BPE config is linked to the observed tokenizer vocab size `1174`.
+- BPE processed-data model/loss smoke has passed.
+- One-batch train/val validation-loop smoke has passed.
+- A bounded 50-step synthetic-seed small training run has completed with periodic validation, checkpoint reload, generation output, and structured logs.
 - Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
-- Project-authored synthetic seed corpus has been created for safe pipeline validation.
 - This is not external real-world training data.
-- Formal 8k tokenizer and real-data training are still pending.
-- Next tokenizer target is BPE 8k for Windows small real-data training.
-- ByteTokenizer remains a temporary smoke/debug tokenizer.
-- Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging.
-- Not yet real pretraining, not yet 1.5B, not yet real dataset.
+- ByteTokenizer remains a legacy smoke/debug tokenizer path.
+- Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging, and periodic validation.
+- Not yet real pretraining, not yet 1.5B, not yet external real dataset.
 
 ## Quick Demo
 Run either of these commands:
@@ -39,12 +38,13 @@ python scripts/run_50_step_toy_training.py
 | Metric | Value |
 |---|---|
 | max_steps | 50 |
-| first_loss | 9.188724 |
-| final_loss | 4.837882 |
-| loss_drop | 4.350842 |
+| eval_interval | 10 |
+| first_train_loss | 7.192344 |
+| final_train_loss | 4.074500 |
+| final_val_loss | 7.380465 |
 | checkpoint reload match | True |
-| tokens/sec | 5007.16 |
-| generation preview | `helloa nordnad  n otd` |
+| tokens/sec | 6738.19 |
+| generation preview | `def hello_world(): "deep learning uses"` |
 
 ## Architecture / Pipeline
 
@@ -144,3 +144,4 @@ Current implementation note:
 - T6 validation loop plan
 - T6.1 validation loop smoke
 - T7 small real-data training plan
+- T7.1 bounded 50-step small real-data training
