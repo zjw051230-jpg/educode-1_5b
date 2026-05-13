@@ -12,8 +12,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Formal 8k tokenizer artifact is still pending.
 - Small real dataset planning has started.
 - Real corpus directory structure and intake checklist have been created.
-- First real corpus source decision is pending user-approved local source selection.
-- No real corpus has been added yet.
+- Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
+- No corpus content has been created yet.
 - Formal 8k tokenizer and real-data training are still pending.
 - Next tokenizer target is BPE 8k for Windows small real-data training.
 - ByteTokenizer remains a temporary smoke/debug tokenizer.
@@ -132,3 +132,4 @@ Current implementation note:
 - T3 small real dataset plan
 - T4 real corpus intake structure
 - T4.1 first corpus source decision
+- T4.2S synthetic seed corpus source decision
