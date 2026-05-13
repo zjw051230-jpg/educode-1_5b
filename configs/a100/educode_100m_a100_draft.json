@@ -1,0 +1,118 @@
+{
+  "status": "draft_not_run",
+  "run": {
+    "run_name": "a100_educode_100m_draft",
+    "seed": 42,
+    "output_dir": "outputs/a100_educode_100m_draft",
+    "notes": "A100 100M-class config draft only. This file has not been run. It keeps the current educode_bpe_8k tokenizer artifact vocab size at 1174 because that artifact was trained on the current synthetic seed corpus. The 14-layer shape is used here because, under the current TinyDecoderOnlyTransformer parameterization, it lands in the repo's intended 100M-class range. model.position_encoding is a forward-looking draft field for a future RoPE-capable implementation; the current local TinyDecoderOnlyTransformer still uses learned position embeddings. A future larger permitted corpus may require tokenizer retraining and a vocab_size update. This is a draft config and inspection milestone, not a completed 100M training run."
+  },
+  "hardware": {
+    "target": "a100_cuda",
+    "gpu": "A100 40GB or 80GB",
+    "device": "cuda",
+    "dtype": "bf16",
+    "use_tf32": true,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "vocab_size": 1174,
+    "path": "tokenizers/educode_bpe_8k/tokenizer.json",
+    "artifact_dir": "tokenizers/educode_bpe_8k",
+    "special_tokens": ["<pad>", "<bos>", "<eos>", "<unk>"]
+  },
+  "data": {
+    "dataset_name": "placeholder_expanded_permitted_corpus",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 512,
+    "num_workers": 8,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 50000000
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 1174,
+    "context_length": 512,
+    "num_layers": 14,
+    "d_model": 768,
+    "num_heads": 12,
+    "head_dim": 64,
+    "ffn_type": "swiglu",
+    "d_ff": 3072,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 2000,
+    "batch_size": 8,
+    "gradient_accumulation_steps": 8,
+    "global_batch_tokens": 32768,
+    "sequence_length": 512,
+    "eval_interval": 100,
+    "log_interval": 20,
+    "save_interval": 200,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 100,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/a100_educode_100m_draft",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": true,
+    "keep_last_n": 3,
+    "save_optimizer_state": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 50,
+    "eval_tokens": 16384,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": true,
+    "prompts": ["def train_step(batch):"],
+    "max_new_tokens": 64,
+    "temperature": 0.7,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 100],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": true,
+    "attention_backend": "sdpa",
+    "attention_backend_note": "FlashAttention-2 can be evaluated later as a follow-up A100 backend test."
+  },
+  "logging": {
+    "log_dir": "logs/a100_educode_100m_draft",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}
