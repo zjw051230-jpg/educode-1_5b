@@ -13,7 +13,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Small real dataset planning has started.
 - Real corpus directory structure and intake checklist have been created.
 - Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
-- No corpus content has been created yet.
+- Project-authored synthetic seed corpus has been created for safe pipeline validation.
+- This is not external real-world training data.
 - Formal 8k tokenizer and real-data training are still pending.
 - Next tokenizer target is BPE 8k for Windows small real-data training.
 - ByteTokenizer remains a temporary smoke/debug tokenizer.
@@ -133,3 +134,4 @@ Current implementation note:
 - T4 real corpus intake structure
 - T4.1 first corpus source decision
 - T4.2S synthetic seed corpus source decision
+- T4.3 synthetic seed corpus

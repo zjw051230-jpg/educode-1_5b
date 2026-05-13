@@ -1,0 +1,15 @@
+Loss and logits notes
+
+A language model produces logits for every vocabulary item.
+Logits are unnormalized scores, not probabilities.
+Cross entropy compares those scores with the target token ids.
+
+Small example:
+- context: "deep learning uses"
+- target token: "gradients"
+- higher target logit usually means lower loss
+
+Important reminders:
+- finite loss matters more than low loss in the first bounded run
+- debugging starts with shapes, dtype, and masking
+- validation loss should be logged separately from training loss
