@@ -47,7 +47,15 @@ def get_nested(config: dict[str, Any], path: str, default: Any = None) -> Any:
     return current
 
 
-def validate_tokenizer_config(config: dict[str, Any]) -> list[str]:
+def resolve_repo_path(path_value: str, repo_root: str | Path | None = None) -> Path:
+    path = Path(path_value)
+    if path.is_absolute():
+        return path
+    base_path = Path(repo_root) if repo_root is not None else Path.cwd()
+    return base_path / path
+
+
+def validate_tokenizer_config(config: dict[str, Any], repo_root: str | Path | None = None) -> list[str]:
     errors: list[str] = []
 
     tokenizer_type = get_nested(config, "tokenizer.type")
@@ -69,9 +77,7 @@ def validate_tokenizer_config(config: dict[str, Any]) -> list[str]:
     if not isinstance(tokenizer_path_value, str) or not tokenizer_path_value.strip():
         errors.append("bpe tokenizer requires tokenizer.path")
     else:
-        tokenizer_path = Path(tokenizer_path_value)
-        if not tokenizer_path.is_absolute():
-            tokenizer_path = Path.cwd() / tokenizer_path
+        tokenizer_path = resolve_repo_path(tokenizer_path_value, repo_root=repo_root)
         if not tokenizer_path.exists():
             errors.append("tokenizer.path must exist")
         elif not tokenizer_path.is_file():
@@ -84,9 +90,7 @@ def validate_tokenizer_config(config: dict[str, Any]) -> list[str]:
         if not isinstance(artifact_dir_value, str) or not artifact_dir_value.strip():
             errors.append("tokenizer.artifact_dir must be a non-empty string when provided")
         else:
-            artifact_dir = Path(artifact_dir_value)
-            if not artifact_dir.is_absolute():
-                artifact_dir = Path.cwd() / artifact_dir
+            artifact_dir = resolve_repo_path(artifact_dir_value, repo_root=repo_root)
             if not artifact_dir.exists():
                 errors.append("tokenizer.artifact_dir must exist")
             elif not artifact_dir.is_dir():
@@ -101,9 +105,7 @@ def validate_tokenizer_config(config: dict[str, Any]) -> list[str]:
         except ImportError:
             errors.append("tokenizers package is required to validate bpe tokenizer.path")
         else:
-            tokenizer_path = Path(tokenizer_path_value)
-            if not tokenizer_path.is_absolute():
-                tokenizer_path = Path.cwd() / tokenizer_path
+            tokenizer_path = resolve_repo_path(tokenizer_path_value, repo_root=repo_root)
             if tokenizer_path.exists() and tokenizer_path.is_file():
                 try:
                     loaded_tokenizer = Tokenizer.from_file(str(tokenizer_path))
@@ -117,7 +119,7 @@ def validate_tokenizer_config(config: dict[str, Any]) -> list[str]:
     return errors
 
 
-def validate_config(config: dict[str, Any]) -> list[str]:
+def validate_config(config: dict[str, Any], repo_root: str | Path | None = None) -> list[str]:
     errors: list[str] = []
 
     for section in REQUIRED_TOP_LEVEL_SECTIONS:
@@ -132,7 +134,7 @@ def validate_config(config: dict[str, Any]) -> list[str]:
     if attention_backend not in ALLOWED_ATTENTION_BACKENDS:
         errors.append("profiling.attention_backend must be one of: naive, sdpa, flash_attention_2")
 
-    errors.extend(validate_tokenizer_config(config))
+    errors.extend(validate_tokenizer_config(config, repo_root=repo_root))
 
     architecture = get_nested(config, "model.architecture")
     if architecture != "dense_decoder_only":

@@ -23,7 +23,7 @@ def main() -> int:
     artifact_dir = PROJECT_ROOT / config["tokenizer"]["artifact_dir"]
     loaded_tokenizer = Tokenizer.from_file(str(tokenizer_path))
     loaded_vocab_size = loaded_tokenizer.get_vocab_size()
-    errors = validate_config(config)
+    errors = validate_config(config, repo_root=PROJECT_ROOT)
 
     print(f"config path: {CONFIG_PATH}")
     print(f"tokenizer.type: {config['tokenizer']['type']}")

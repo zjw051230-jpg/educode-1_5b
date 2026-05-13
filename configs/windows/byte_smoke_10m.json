@@ -1,10 +1,10 @@
 {
-  "status": "legacy",
+  "status": "ready_for_smoke",
   "run": {
-    "run_name": "windows_smoke_cuda_10m",
+    "run_name": "windows_byte_smoke_10m",
     "seed": 42,
-    "output_dir": "outputs/windows_smoke_cuda_10m",
-    "notes": "Legacy config from the early smoke phase. Superseded by byte_smoke_10m.json and bpe_toy_512_smoke.json. Not for formal training."
+    "output_dir": "outputs/windows_byte_smoke_10m",
+    "notes": "Windows ByteTokenizer legacy smoke config. Not for formal training."
   },
   "hardware": {
     "target": "windows_cuda",
@@ -19,10 +19,9 @@
     }
   },
   "tokenizer": {
-    "type": "bpe",
-    "vocab_size": 8192,
-    "special_tokens": ["<pad>", "<bos>", "<eos>"],
-    "tokenizer_path": "artifacts/tokenizers/windows_smoke_cuda_10m.json"
+    "type": "byte",
+    "vocab_size": 256,
+    "special_tokens": ["<pad>", "<bos>", "<eos>"]
   },
   "data": {
     "dataset_name": "placeholder_dataset",
@@ -37,7 +36,7 @@
   },
   "model": {
     "architecture": "dense_decoder_only",
-    "vocab_size": 8192,
+    "vocab_size": 256,
     "context_length": 128,
     "num_layers": 4,
     "d_model": 256,
@@ -77,7 +76,7 @@
     "max_lr": 0.0003
   },
   "checkpoint": {
-    "save_dir": "checkpoints/windows_smoke_cuda_10m",
+    "save_dir": "checkpoints/windows_byte_smoke_10m",
     "resume_from": null,
     "save_latest": true,
     "save_best": false,
@@ -107,7 +106,7 @@
     "attention_backend": "sdpa"
   },
   "logging": {
-    "log_dir": "logs/windows_smoke_cuda_10m",
+    "log_dir": "logs/windows_byte_smoke_10m",
     "log_jsonl": true,
     "use_wandb": false,
     "wandb_project": null

@@ -1,9 +1,10 @@
 {
+  "status": "ready_for_smoke",
   "run": {
     "run_name": "windows_bpe_toy_512_smoke",
     "seed": 42,
     "output_dir": "outputs/windows_bpe_toy_512_smoke",
-    "notes": "Toy BPE tokenizer config validation smoke. Not for formal training."
+    "notes": "Toy BPE tokenizer smoke config for validated local artifact checks. Not for formal training."
   },
   "hardware": {
     "target": "windows_cuda",
