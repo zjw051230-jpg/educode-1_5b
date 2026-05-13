@@ -93,7 +93,8 @@ Meaning:
 | EXP-20260514-027-t8-a100-100m-scaling-plan | N/A | T8 | A100 | `docs/t8_a100_100m_scaling_plan.md` | 538642d | success | A100 100M scaling plan created | `docs/t8_a100_100m_scaling_plan.md` | create the A100 100M config draft next |
 | EXP-20260514-028-t8-1-a100-100m-config-draft | N/A | T8.1 | A100 | `configs/a100/educode_100m_a100_draft.json` | fd5686b | success | A100 100M draft config created and validated with a read-only inspection script | `docs/t8_1_a100_100m_config_draft.md` | prepare an A100 environment preflight checklist next |
 | EXP-20260514-029-t8-2-a100-environment-preflight-checklist | N/A | T8.2 | A100 | `docs/t8_2_a100_environment_preflight_checklist.md` | ff508ed | success | A100 environment preflight checklist created | `docs/t8_2_a100_environment_preflight_checklist.md` | write an A100 100M forward/loss smoke plan or script after hardware is available |
-| EXP-20260514-030-t8-3-a100-100m-forward-loss-smoke-plan | N/A | T8.3 | A100 | `docs/t8_3_a100_100m_forward_loss_smoke_plan.md` | pending local commit | success | A100 100M forward/loss smoke plan created | `docs/t8_3_a100_100m_forward_loss_smoke_plan.md` | implement the A100 100M forward/loss smoke script after hardware is available |
+| EXP-20260514-030-t8-3-a100-100m-forward-loss-smoke-plan | N/A | T8.3 | A100 | `docs/t8_3_a100_100m_forward_loss_smoke_plan.md` | 723dd50 | success | A100 100M forward/loss smoke plan created | `docs/t8_3_a100_100m_forward_loss_smoke_plan.md` | implement the A100 100M forward/loss smoke script after hardware is available |
+| EXP-20260514-031-t8-4-a100-execution-runbook | N/A | T8.4 | A100 | `docs/t8_4_a100_execution_runbook.md` | pending local commit | success | A100 execution runbook and handoff checklist created | `docs/t8_4_a100_execution_runbook.md` | implement the A100 forward/loss smoke script after A100 access is available |
 
 Notes:
 - These entries are documentation / planning records, not training runs.
