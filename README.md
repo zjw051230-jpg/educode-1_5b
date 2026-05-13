@@ -149,3 +149,4 @@ Current implementation note:
 - T7.3 bounded 100-step small training plan
 - T7.4 bounded 100-step small training run
 - T7.5 100-step small training review
+- T7.6 50-step vs 100-step comparison
