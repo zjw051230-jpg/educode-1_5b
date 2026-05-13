@@ -10,6 +10,9 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Tokenizer configs have been split into byte smoke, toy BPE smoke, and formal BPE placeholder.
 - Toy BPE tokenizer config path validation is now covered by a dedicated smoke config.
 - Formal 8k tokenizer artifact is still pending.
+- Small real dataset planning has started.
+- No real corpus has been downloaded or created yet.
+- Next step is data intake structure and source decision.
 - Formal 8k tokenizer and real-data training are still pending.
 - Next tokenizer target is BPE 8k for Windows small real-data training.
 - ByteTokenizer remains a temporary smoke/debug tokenizer.
@@ -125,3 +128,4 @@ Current implementation note:
 - T2.3 BPE tokenizer integration smoke
 - T2.4 tokenizer config schema update
 - T2.5 tokenizer config migration
+- T3 small real dataset plan
