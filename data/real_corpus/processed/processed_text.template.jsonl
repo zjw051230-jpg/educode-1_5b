@@ -1,0 +1,2 @@
+{"id": "doc_000001", "source_id": "source_000001", "split": "train", "text": "Template text only. Replace with approved training text.", "metadata": {"source_type": "user_created_notes", "license": "user_created"}}
+{"id": "doc_000002", "source_id": "source_000002", "split": "val", "text": "Template validation text only.", "metadata": {"source_type": "permissive_public_text", "license": "example"}}

@@ -1,0 +1,2 @@
+{"source_id": "source_000001", "source_type": "user_created_notes", "license": "user_created", "path": "raw/example_notes.md", "approved_for_training": true, "contains_private_data": false, "notes": "template example only"}
+{"source_id": "source_000002", "source_type": "permissive_public_text", "license": "MIT-or-public-domain-example", "path": "raw/example_public_text.txt", "approved_for_training": false, "contains_private_data": false, "notes": "template example only; replace with real license review"}
