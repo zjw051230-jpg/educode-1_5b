@@ -1,0 +1,29 @@
+{
+  "source_id": "source_synthetic_seed_000001",
+  "source_category": "synthetic_examples",
+  "input_dir": "data/real_corpus/raw/synthetic_seed",
+  "allowed_suffixes": [
+    ".md",
+    ".py",
+    ".txt"
+  ],
+  "split_seed": 1337,
+  "validation": {
+    "source_id_match": true,
+    "allowed_for_training": true,
+    "privacy_risk": "none"
+  },
+  "counts": {
+    "processed_docs": 8,
+    "train_docs": 7,
+    "val_docs": 1,
+    "dropped_files": 0,
+    "secret_scan_hits": 0
+  },
+  "outputs": {
+    "processed_jsonl": "data/real_corpus/processed/synthetic_seed.processed.jsonl",
+    "train_jsonl": "data/real_corpus/splits/synthetic_seed.train.jsonl",
+    "val_jsonl": "data/real_corpus/splits/synthetic_seed.val.jsonl",
+    "dropped_jsonl": "data/real_corpus/metadata/synthetic_seed.dropped_files.jsonl"
+  }
+}

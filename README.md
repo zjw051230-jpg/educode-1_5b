@@ -136,3 +136,4 @@ Current implementation note:
 - T4.2S synthetic seed corpus source decision
 - T4.3 synthetic seed corpus
 - T5 real data intake cleaning script plan
+- T5.1 synthetic seed intake cleaning script
