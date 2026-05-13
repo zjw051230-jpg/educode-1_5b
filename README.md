@@ -139,3 +139,4 @@ Current implementation note:
 - T5.1 synthetic seed intake cleaning script
 - T5.2 BPE 8k tokenizer training plan
 - T5.3 BPE 8k tokenizer artifact
+- T5.4 BPE 8k config linkage validation
