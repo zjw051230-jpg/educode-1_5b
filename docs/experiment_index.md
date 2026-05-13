@@ -8,7 +8,7 @@ The purpose of the experiment index is to:
 - support later project reports and resume writing
 - Project has completed the Windows smoke and bounded small-training validation milestones through T7.6.
 - Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, and validation-loop smoke have been completed through T6.1.
-- The current stage has entered A100 preparation and documentation milestones through T8.7, including config draft, preflight checklist, provider selection, and first-session command checklist.
+- The current stage has entered A100 preparation and documentation milestones through T8.8, including config draft, preflight checklist, provider selection, first-session command checklist, and first-session report template.
 - The project has not yet entered real A100 execution, A100 forward/loss smoke, A100 profiling, B200 execution, RoPE implementation, FlashAttention-2 integration, or 1.5B pretraining.
 
 ## 2. Experiment Tracking Principles
@@ -97,7 +97,8 @@ Meaning:
 | EXP-20260514-031-t8-4-a100-execution-runbook | N/A | T8.4 | A100 | `docs/t8_4_a100_execution_runbook.md` | ca5be8d | success | A100 execution runbook and handoff checklist created | `docs/t8_4_a100_execution_runbook.md` | implement the A100 forward/loss smoke script after A100 access is available |
 | EXP-20260514-032-t8-5-a100-access-decision-checklist | N/A | T8.5 | A100 | `docs/t8_5_a100_access_decision_checklist.md` | 245ec3c | success | A100 access decision checklist created | `docs/t8_5_a100_access_decision_checklist.md` | create an A100 provider selection record after a provider or instance is chosen |
 | EXP-20260514-033-t8-6-a100-provider-selection-record | N/A | T8.6 | A100 | `docs/t8_6_a100_provider_selection_record.md` | 4f8bf3f | success | selected first A100 target as single A100 80GB | `docs/t8_6_a100_provider_selection_record.md` | create an A100 first-session command checklist next |
-| EXP-20260514-034-t8-7-a100-first-session-commands | N/A | T8.7 | A100 | `docs/t8_7_a100_first_session_commands.md` | pending local commit | success | A100 first-session command checklist created | `docs/t8_7_a100_first_session_commands.md` | use the checklist on the selected A100 machine and report the environment and config-check outputs |
+| EXP-20260514-034-t8-7-a100-first-session-commands | N/A | T8.7 | A100 | `docs/t8_7_a100_first_session_commands.md` | d358742 | success | A100 first-session command checklist created | `docs/t8_7_a100_first_session_commands.md` | use the checklist on the selected A100 machine and report the environment and config-check outputs |
+| EXP-20260514-035-t8-8-a100-first-session-report-template | N/A | T8.8 | A100 | `docs/t8_8_a100_first_session_report_template.md` | pending local commit | success | A100 first-session report template created | `docs/t8_8_a100_first_session_report_template.md` | fill the template after the first real A100 session and use it to decide whether forward/loss smoke is approved |
 
 Notes:
 - These entries are documentation / planning records, not training runs.

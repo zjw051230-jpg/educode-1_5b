@@ -161,3 +161,4 @@ Current implementation note:
 - T8.5 A100 access decision checklist
 - T8.6 A100 provider selection record
 - T8.7 A100 first-session command checklist
+- T8.8 A100 first-session report template

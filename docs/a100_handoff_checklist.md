@@ -1,6 +1,7 @@
 # A100 Handoff Checklist
 
 - first-session command checklist: `docs/t8_7_a100_first_session_commands.md`
+- first-session report template: `docs/t8_8_a100_first_session_report_template.md`
 - machine provider / instance type
 - GPU type
 - VRAM
