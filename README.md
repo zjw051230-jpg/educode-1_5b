@@ -146,3 +146,4 @@ Current implementation note:
 - T7 small real-data training plan
 - T7.1 bounded 50-step small real-data training
 - T7.2 50-step small training review
+- T7.3 bounded 100-step small training plan
