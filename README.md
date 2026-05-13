@@ -157,3 +157,4 @@ Current implementation note:
 - T8.2 A100 environment preflight checklist
 - T8.3 A100 100M forward/loss smoke plan
 - T8.4 A100 execution runbook
+- T8.5 A100 access decision checklist
