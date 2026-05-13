@@ -1,0 +1,100 @@
+{
+  "decision_id": "decision_000001",
+  "decision_status": "pending_user_source_selection",
+  "first_source_type": "user_created_local_notes",
+  "source_review_schema": {
+    "source_category": [
+      "user_created_notes",
+      "permissive_public_text",
+      "permissive_code_snippets",
+      "curated_local_examples",
+      "synthetic_examples"
+    ],
+    "approval_status": [
+      "pending_review",
+      "approved_local_only",
+      "approved_for_training",
+      "rejected"
+    ],
+    "license_or_ownership": [
+      "user_created",
+      "public_domain",
+      "MIT",
+      "Apache-2.0",
+      "CC-BY",
+      "other_with_notes"
+    ],
+    "privacy_risk": [
+      "unknown",
+      "none",
+      "low",
+      "medium",
+      "high"
+    ],
+    "expected_file_types": [
+      ".txt",
+      ".md",
+      ".py",
+      ".jsonl"
+    ],
+    "allowed_for_training": [
+      true,
+      false
+    ],
+    "allowed_to_commit": [
+      true,
+      false
+    ]
+  },
+  "source_candidates": [
+    {
+      "candidate_id": "candidate_a",
+      "source_category": "user_created_notes",
+      "recommended": true,
+      "approval_status": "pending_review",
+      "license_or_ownership": "user_created",
+      "privacy_risk": "unknown",
+      "expected_file_types": [
+        ".txt",
+        ".md"
+      ],
+      "allowed_for_training": false,
+      "allowed_to_commit": false,
+      "data_added": false
+    },
+    {
+      "candidate_id": "candidate_b",
+      "source_category": "user_created_code_snippets",
+      "recommended": true,
+      "approval_status": "pending_review",
+      "license_or_ownership": "user_created",
+      "privacy_risk": "unknown",
+      "expected_file_types": [
+        ".py",
+        ".md",
+        ".txt"
+      ],
+      "allowed_for_training": false,
+      "allowed_to_commit": false,
+      "data_added": false
+    },
+    {
+      "candidate_id": "candidate_c",
+      "source_category": "permissive_public_text",
+      "recommended": false,
+      "approval_status": "pending_review",
+      "license_or_ownership": "other_with_notes",
+      "privacy_risk": "unknown",
+      "expected_file_types": [
+        ".txt",
+        ".md",
+        ".jsonl"
+      ],
+      "allowed_for_training": false,
+      "allowed_to_commit": false,
+      "data_added": false
+    }
+  ],
+  "selected_source": null,
+  "notes": "Template only. No real data has been selected or added yet. In this template, privacy_risk=unknown means pending review."
+}

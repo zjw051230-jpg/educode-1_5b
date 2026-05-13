@@ -1,5 +1,13 @@
 # Data Intake Checklist
 
+## 0. Source Decision Gate
+- Do not intake files until a source decision record exists.
+- Do not intake files until the user explicitly approves the source path.
+- Do not intake private or unclear-license material.
+- Record `source_category`, `approval_status`, `license_or_ownership`, `privacy_risk`, `expected_file_types`, `allowed_for_training`, and `allowed_to_commit`.
+- Record `allowed_for_training` and `allowed_to_commit` separately.
+- A source may be allowed for local training but not allowed for Git commit.
+
 ## 1. Before Adding Data
 - Is the data user-created, public domain, or permissively licensed?
 - Is the license recorded?
