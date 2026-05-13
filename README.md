@@ -145,3 +145,4 @@ Current implementation note:
 - T6.1 validation loop smoke
 - T7 small real-data training plan
 - T7.1 bounded 50-step small real-data training
+- T7.2 50-step small training review
