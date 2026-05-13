@@ -6,10 +6,10 @@ The purpose of the experiment index is to:
 - connect config, run_id, hardware, git commit, result, and report references
 - avoid scattered experiment tracking
 - support later project reports and resume writing
-- Project has completed the Windows one-step smoke milestone and the bounded W11 minimal training loop review.
-- The current stage is deciding between a bounded 50-step toy training plan and a return to the Mac learning line.
-- Documentation, config, run setup, logging, one-step smoke, checkpoint, generation, optimizer-step checks, and a bounded 10-step toy training loop have been completed.
-- The project has not yet entered real-data training, long training, A100/B200 scaling, BPE integration, RoPE integration, FlashAttention-2 integration, or 1.5B pretraining.
+- Project has completed the Windows smoke and bounded small-training validation milestones through T7.6.
+- Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, and validation-loop smoke have been completed through T6.1.
+- The current stage has entered A100 preparation and documentation milestones through T8.7, including config draft, preflight checklist, provider selection, and first-session command checklist.
+- The project has not yet entered real A100 execution, A100 forward/loss smoke, A100 profiling, B200 execution, RoPE implementation, FlashAttention-2 integration, or 1.5B pretraining.
 
 ## 2. Experiment Tracking Principles
 - every experiment gets a unique `experiment_id`
@@ -96,7 +96,8 @@ Meaning:
 | EXP-20260514-030-t8-3-a100-100m-forward-loss-smoke-plan | N/A | T8.3 | A100 | `docs/t8_3_a100_100m_forward_loss_smoke_plan.md` | 723dd50 | success | A100 100M forward/loss smoke plan created | `docs/t8_3_a100_100m_forward_loss_smoke_plan.md` | implement the A100 100M forward/loss smoke script after hardware is available |
 | EXP-20260514-031-t8-4-a100-execution-runbook | N/A | T8.4 | A100 | `docs/t8_4_a100_execution_runbook.md` | ca5be8d | success | A100 execution runbook and handoff checklist created | `docs/t8_4_a100_execution_runbook.md` | implement the A100 forward/loss smoke script after A100 access is available |
 | EXP-20260514-032-t8-5-a100-access-decision-checklist | N/A | T8.5 | A100 | `docs/t8_5_a100_access_decision_checklist.md` | 245ec3c | success | A100 access decision checklist created | `docs/t8_5_a100_access_decision_checklist.md` | create an A100 provider selection record after a provider or instance is chosen |
-| EXP-20260514-033-t8-6-a100-provider-selection-record | N/A | T8.6 | A100 | `docs/t8_6_a100_provider_selection_record.md` | pending local commit | success | selected first A100 target as single A100 80GB | `docs/t8_6_a100_provider_selection_record.md` | create an A100 first-session command checklist next |
+| EXP-20260514-033-t8-6-a100-provider-selection-record | N/A | T8.6 | A100 | `docs/t8_6_a100_provider_selection_record.md` | 4f8bf3f | success | selected first A100 target as single A100 80GB | `docs/t8_6_a100_provider_selection_record.md` | create an A100 first-session command checklist next |
+| EXP-20260514-034-t8-7-a100-first-session-commands | N/A | T8.7 | A100 | `docs/t8_7_a100_first_session_commands.md` | pending local commit | success | A100 first-session command checklist created | `docs/t8_7_a100_first_session_commands.md` | use the checklist on the selected A100 machine and report the environment and config-check outputs |
 
 Notes:
 - These entries are documentation / planning records, not training runs.

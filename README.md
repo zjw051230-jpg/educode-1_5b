@@ -16,6 +16,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - A bounded 50-step synthetic-seed small training run has completed with periodic validation, checkpoint reload, generation output, and structured logs.
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
+- An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
 - Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
 - This is not external real-world training data.
 - ByteTokenizer remains a legacy smoke/debug tokenizer path.
@@ -159,3 +160,4 @@ Current implementation note:
 - T8.4 A100 execution runbook
 - T8.5 A100 access decision checklist
 - T8.6 A100 provider selection record
+- T8.7 A100 first-session command checklist
