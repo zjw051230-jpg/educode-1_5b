@@ -158,3 +158,4 @@ Current implementation note:
 - T8.3 A100 100M forward/loss smoke plan
 - T8.4 A100 execution runbook
 - T8.5 A100 access decision checklist
+- T8.6 A100 provider selection record
