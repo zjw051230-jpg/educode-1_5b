@@ -178,3 +178,4 @@ Current implementation note:
 - D6 expanded corpus small training plan
 - D6.1 50-step expanded BPE training run
 - D6.2 50-step expanded BPE training review
+- D6.3 100-step expanded BPE training plan
