@@ -174,3 +174,4 @@ Current implementation note:
 - D3 synthetic expanded corpus intake
 - D4 expanded BPE tokenizer
 - D5 expanded BPE data/model/loss smoke
+- D6 expanded corpus small training plan
