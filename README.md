@@ -185,3 +185,4 @@ Current implementation note:
 - D6.6 50-step vs 100-step expanded BPE comparison
 - D7 expanded synthetic corpus batch 2
 - D8 45-file expanded synthetic corpus intake
+- D9 domain BPE tokenizer on 45-file corpus

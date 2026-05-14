@@ -1,0 +1,29 @@
+{
+  "name": "educode_bpe_domain_8k",
+  "type": "BPE",
+  "library": "tokenizers",
+  "vocab_size_target": 8192,
+  "vocab_size_observed": 3988,
+  "special_tokens": [
+    "<pad>",
+    "<bos>",
+    "<eos>",
+    "<unk>"
+  ],
+  "special_token_ids": {
+    "<pad>": 0,
+    "<bos>": 1,
+    "<eos>": 2,
+    "<unk>": 3
+  },
+  "artifact_path": "tokenizers/educode_bpe_domain_8k",
+  "tokenizer_json": "tokenizers/educode_bpe_domain_8k/tokenizer.json",
+  "corpus_path": "data/real_corpus/processed/synthetic_expanded.processed.jsonl",
+  "splits_used": [
+    "train"
+  ],
+  "input_docs": 45,
+  "train_docs_used": 41,
+  "is_production_tokenizer": false,
+  "notes": "Domain BPE tokenizer artifact trained only on the processed 45-file synthetic expanded corpus train split."
+}
