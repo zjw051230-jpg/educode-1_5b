@@ -187,3 +187,4 @@ Current implementation note:
 - D8 45-file expanded synthetic corpus intake
 - D9 domain BPE tokenizer on 45-file corpus
 - D10 domain BPE data/model/loss smoke
+- D11 domain BPE small training plan
