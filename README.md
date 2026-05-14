@@ -172,3 +172,4 @@ Current implementation note:
 - D2.1 expanded synthetic corpus source decision and skeleton
 - D2.2 first expanded synthetic corpus batch
 - D3 synthetic expanded corpus intake
+- D4 expanded BPE tokenizer
