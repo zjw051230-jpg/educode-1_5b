@@ -173,3 +173,4 @@ Current implementation note:
 - D2.2 first expanded synthetic corpus batch
 - D3 synthetic expanded corpus intake
 - D4 expanded BPE tokenizer
+- D5 expanded BPE data/model/loss smoke

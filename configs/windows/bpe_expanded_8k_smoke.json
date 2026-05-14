@@ -1,0 +1,120 @@
+{
+  "status": "ready_for_smoke",
+  "run": {
+    "run_name": "windows_bpe_expanded_8k_smoke",
+    "seed": 42,
+    "output_dir": "outputs/windows_bpe_expanded_8k_smoke",
+    "notes": "Expanded BPE smoke config only. Target vocab size was 8192, but observed vocab size is 1846 because the current expanded synthetic corpus is still small. This config is for expanded BPE smoke only, not production training."
+  },
+  "hardware": {
+    "target": "windows_cuda",
+    "device": "cuda",
+    "dtype": "bf16",
+    "use_tf32": false,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "vocab_size": 1846,
+    "path": "tokenizers/educode_bpe_expanded_8k/tokenizer.json",
+    "artifact_dir": "tokenizers/educode_bpe_expanded_8k",
+    "special_tokens": ["<pad>", "<bos>", "<eos>", "<unk>"],
+    "pad_token_id": 0,
+    "bos_token_id": 1,
+    "eos_token_id": 2,
+    "unk_token_id": 3
+  },
+  "data": {
+    "dataset_name": "synthetic_expanded_processed",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 128,
+    "num_workers": 0,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 2000000
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "vocab_size": 1846,
+    "context_length": 128,
+    "num_layers": 4,
+    "d_model": 256,
+    "num_heads": 4,
+    "head_dim": 64,
+    "ffn_type": "swiglu",
+    "d_ff": 1024,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 1,
+    "batch_size": 4,
+    "gradient_accumulation_steps": 1,
+    "global_batch_tokens": 512,
+    "sequence_length": 128,
+    "eval_interval": 1,
+    "log_interval": 1,
+    "save_interval": 1,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16"
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 1,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "checkpoints/windows_bpe_expanded_8k_smoke",
+    "resume_from": null,
+    "save_latest": false,
+    "save_best": false,
+    "keep_last_n": 1,
+    "save_optimizer_state": false
+  },
+  "evaluation": {
+    "enabled": false,
+    "eval_steps": 1,
+    "eval_tokens": 256,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": false,
+    "prompts": ["hello world"],
+    "max_new_tokens": 8,
+    "temperature": 1.0,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": false,
+    "profile_steps": [1],
+    "record_memory": false,
+    "record_tokens_per_sec": false,
+    "record_mfu": false,
+    "attention_backend": "sdpa"
+  },
+  "logging": {
+    "log_dir": "logs/windows_bpe_expanded_8k_smoke",
+    "log_jsonl": false,
+    "use_wandb": false,
+    "wandb_project": null
+  }
+}
