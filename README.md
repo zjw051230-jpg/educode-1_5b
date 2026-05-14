@@ -171,3 +171,4 @@ Current implementation note:
 - D2 expanded synthetic educational corpus plan
 - D2.1 expanded synthetic corpus source decision and skeleton
 - D2.2 first expanded synthetic corpus batch
+- D3 synthetic expanded corpus intake

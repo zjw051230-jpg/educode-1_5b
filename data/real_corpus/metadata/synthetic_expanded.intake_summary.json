@@ -1,0 +1,35 @@
+{
+  "source_id": "source_synthetic_expanded_000001",
+  "source_category": "synthetic_examples",
+  "input_dir": "data/real_corpus/raw/synthetic_expanded",
+  "allowed_suffixes": [
+    ".md",
+    ".py",
+    ".txt"
+  ],
+  "split_seed": 1337,
+  "split_ratio": {
+    "train": 0.9,
+    "val": 0.1
+  },
+  "validation": {
+    "source_id_match": true,
+    "allowed_for_training": true,
+    "privacy_risk": "none"
+  },
+  "counts": {
+    "candidate_files": 15,
+    "processed_docs": 15,
+    "train_docs": 13,
+    "val_docs": 2,
+    "dropped_files": 0,
+    "secret_scan_hits": 0
+  },
+  "outputs": {
+    "processed_jsonl": "data/real_corpus/processed/synthetic_expanded.processed.jsonl",
+    "train_jsonl": "data/real_corpus/splits/synthetic_expanded.train.jsonl",
+    "val_jsonl": "data/real_corpus/splits/synthetic_expanded.val.jsonl",
+    "dropped_jsonl": "data/real_corpus/metadata/synthetic_expanded.dropped_files.jsonl",
+    "summary_json": "data/real_corpus/metadata/synthetic_expanded.intake_summary.json"
+  }
+}
