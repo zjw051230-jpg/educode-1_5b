@@ -168,3 +168,4 @@ Current implementation note:
 - T8.8 A100 first-session report template
 - A1 A100 smoke milestone report
 - D1 expand permitted corpus plan
+- D2 expanded synthetic educational corpus plan
