@@ -17,6 +17,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
+- A100 80GB single-GPU smoke path validated up to 2.15B-scale optimizer profiling.
+- Current result is engineering/scaling validation, not full pretraining.
 - Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
 - This is not external real-world training data.
 - ByteTokenizer remains a legacy smoke/debug tokenizer path.
@@ -61,6 +63,7 @@ Current implementation note:
 - Built a modular decoder-only Transformer training pipeline in PyTorch.
 - Implemented config loading and validation, byte-level tokenization, x/y sequence batching, model forward, next-token loss, optimizer step, checkpoint save/load, autoregressive generation, and run logging.
 - Validated the end-to-end pipeline on an RTX 4060 Ti with one-step smoke, 10-step minimal loop, and bounded 50-step toy training milestones.
+- Validated 100M/300M training smoke and 2.15B-scale optimizer profiling on a single A100 80GB.
 - Produced reproducible run artifacts including `run_config.json`, `run_metadata.json`, `metrics.jsonl`, `generation_samples.jsonl`, checkpoint manifest files, and markdown summaries.
 - Added guardrails so generated artifacts remain Git-ignored and bounded runs do not silently turn into larger experiments.
 
@@ -74,7 +77,7 @@ Current implementation note:
 - no real dataset
 - no validation set
 - no meaningful generation quality
-- no A100/B200 experiments yet
+- no B200 experiments yet
 
 ## Roadmap
 - T1 formal training roadmap
@@ -162,3 +165,4 @@ Current implementation note:
 - T8.6 A100 provider selection record
 - T8.7 A100 first-session command checklist
 - T8.8 A100 first-session report template
+- A1 A100 smoke milestone report
