@@ -188,3 +188,4 @@ Current implementation note:
 - D9 domain BPE tokenizer on 45-file corpus
 - D10 domain BPE data/model/loss smoke
 - D11 domain BPE small training plan
+- D11.1 50-step domain BPE training
