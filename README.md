@@ -177,3 +177,4 @@ Current implementation note:
 - D5 expanded BPE data/model/loss smoke
 - D6 expanded corpus small training plan
 - D6.1 50-step expanded BPE training run
+- D6.2 50-step expanded BPE training review
