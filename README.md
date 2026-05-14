@@ -14,6 +14,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - BPE processed-data model/loss smoke has passed.
 - One-batch train/val validation-loop smoke has passed.
 - A bounded 50-step synthetic-seed small training run has completed with periodic validation, checkpoint reload, generation output, and structured logs.
+- Expanded synthetic corpus intake and the expanded BPE tokenizer path have been validated on the current 15-document synthetic corpus, with observed tokenizer vocab size `1846`.
+- A bounded 50-step expanded BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
@@ -45,12 +47,12 @@ python scripts/run_50_step_toy_training.py
 |---|---|
 | max_steps | 50 |
 | eval_interval | 10 |
-| first_train_loss | 7.192344 |
-| final_train_loss | 4.074500 |
-| final_val_loss | 7.380465 |
+| first_train_loss | 7.633180 |
+| final_train_loss | 4.182922 |
+| final_val_loss | 7.184383 |
 | checkpoint reload match | True |
-| tokens/sec | 6738.19 |
-| generation preview | `def hello_world(): "deep learning uses"` |
+| tokens/sec | 17216.95 |
+| generation preview | `N/A for D6.1 (no generation step)` |
 
 ## Architecture / Pipeline
 
@@ -69,14 +71,13 @@ Current implementation note:
 - Added guardrails so generated artifacts remain Git-ignored and bounded runs do not silently turn into larger experiments.
 
 ## Limitations
-- toy data only
-- ByteTokenizer temporary path
-- config declares BPE/8192 but the current smoke path uses byte ids
+- small synthetic data only
+- ByteTokenizer remains a legacy smoke/debug path
+- expanded BPE observed vocab is `1846`, still far below the target `8192`
 - learned position embeddings, not RoPE
 - PyTorch SDPA only, not FlashAttention-2
 - tiny model only, not 1.5B
-- no real dataset
-- no validation set
+- only tiny synthetic validation splits
 - no meaningful generation quality
 - no B200 experiments yet
 
@@ -175,3 +176,4 @@ Current implementation note:
 - D4 expanded BPE tokenizer
 - D5 expanded BPE data/model/loss smoke
 - D6 expanded corpus small training plan
+- D6.1 50-step expanded BPE training run

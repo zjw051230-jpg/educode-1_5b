@@ -7,8 +7,8 @@ The purpose of the experiment index is to:
 - avoid scattered experiment tracking
 - support later project reports and resume writing
 - Project has completed the Windows smoke and bounded small-training validation milestones through T7.6.
-- Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, and validation-loop smoke have been completed through T6.1.
-- The current stage has moved from A100 scaling validation into permitted corpus expansion planning.
+- Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, validation-loop smoke, and expanded-corpus small-training validation have been completed through D6.1.
+- The current stage has moved from A100 scaling validation through permitted corpus expansion into bounded local expanded-BPE training validation.
 - The project has validated real A100 single-GPU smoke behavior through 2.15B-scale optimizer profiling, but meaningful longer training is now limited by corpus scale, tokenizer quality, and approved data sources rather than raw GPU feasibility.
 
 ## 2. Experiment Tracking Principles
@@ -107,11 +107,12 @@ Meaning:
 | EXP-20260515-005-d3-synthetic-expanded-intake | N/A | D3 | data | `scripts/intake_synthetic_expanded_corpus.py` | ff5a1d6 | success | expanded synthetic corpus intake and train/val split completed | `docs/d3_synthetic_expanded_intake_cleaning.md` | train an updated BPE tokenizer on the expanded synthetic corpus next |
 | EXP-20260515-006-d4-expanded-bpe-tokenizer | N/A | D4 | tokenizer | `scripts/train_expanded_bpe_tokenizer.py` | c977f5b | success | expanded synthetic corpus BPE tokenizer artifact trained | `docs/d4_expanded_bpe_tokenizer.md` | run an expanded BPE data/model/loss smoke next |
 | EXP-20260515-007-d5-expanded-bpe-data-model-loss-smoke | N/A | D5 | smoke | `scripts/inspect_expanded_bpe_data_model_loss_smoke.py` | a3d005d | success | expanded BPE processed-data model/loss smoke completed | `docs/d5_expanded_bpe_data_model_loss_smoke.md` | write an expanded corpus small-training plan next |
-| EXP-20260515-008-d6-expanded-corpus-small-training-plan | N/A | D6 | planning | `docs/d6_expanded_corpus_small_training_plan.md` | pending local commit | success | expanded corpus small training plan created | `docs/d6_expanded_corpus_small_training_plan.md` | implement a bounded 50-step expanded BPE training run next |
+| EXP-20260515-008-d6-expanded-corpus-small-training-plan | N/A | D6 | planning | `docs/d6_expanded_corpus_small_training_plan.md` | 6281623 | success | expanded corpus small training plan created | `docs/d6_expanded_corpus_small_training_plan.md` | implement a bounded 50-step expanded BPE training run next |
+| EXP-20260515-009-d6-1-50-step-expanded-bpe-training | `20260515_014657_windows_cuda_50_step_expanded_bpe_training` | D6.1 | Windows RTX 2080 Ti | `configs/windows/bpe_expanded_8k_smoke.json` | pending local commit | success | bounded 50-step expanded BPE training completed with periodic validation, checkpoint reload, and structured logs | `docs/d6_1_50_step_expanded_bpe_training.md` | review the bounded expanded-BPE training artifacts before any longer or non-local run |
 
 Notes:
-- These entries are documentation / planning records, not training runs.
-- No fake training metrics or fake run outputs are recorded here.
+- These entries include planning records, inspections, and real bounded local training runs.
+- Only summary/report metadata is committed here; raw logs, checkpoints, and datasets remain ignored.
 
 ## 5. Planned Smoke Experiments
 
