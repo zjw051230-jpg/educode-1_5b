@@ -15,6 +15,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - One-batch train/val validation-loop smoke has passed.
 - A bounded 50-step synthetic-seed small training run has completed with periodic validation, checkpoint reload, generation output, and structured logs.
 - Expanded synthetic corpus intake and the expanded BPE tokenizer path have been validated on the current 15-document synthetic corpus, with observed tokenizer vocab size `1846`.
+- The approved `synthetic_expanded` source has now been expanded to 45 project-authored corpus files across five categories.
 - A bounded 50-step expanded BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
@@ -182,3 +183,4 @@ Current implementation note:
 - D6.4 100-step expanded BPE training
 - D6.5 100-step expanded BPE training review
 - D6.6 50-step vs 100-step expanded BPE comparison
+- D7 expanded synthetic corpus batch 2
