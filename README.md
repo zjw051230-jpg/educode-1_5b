@@ -170,3 +170,4 @@ Current implementation note:
 - D1 expand permitted corpus plan
 - D2 expanded synthetic educational corpus plan
 - D2.1 expanded synthetic corpus source decision and skeleton
+- D2.2 first expanded synthetic corpus batch
