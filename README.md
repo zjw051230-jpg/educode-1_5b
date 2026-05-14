@@ -180,3 +180,4 @@ Current implementation note:
 - D6.2 50-step expanded BPE training review
 - D6.3 100-step expanded BPE training plan
 - D6.4 100-step expanded BPE training
+- D6.5 100-step expanded BPE training review
