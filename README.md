@@ -19,6 +19,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
 - A100 80GB single-GPU smoke path validated up to 2.15B-scale optimizer profiling.
 - Current result is engineering/scaling validation, not full pretraining.
+- After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
 - This is not external real-world training data.
 - ByteTokenizer remains a legacy smoke/debug tokenizer path.
@@ -166,3 +167,4 @@ Current implementation note:
 - T8.7 A100 first-session command checklist
 - T8.8 A100 first-session report template
 - A1 A100 smoke milestone report
+- D1 expand permitted corpus plan

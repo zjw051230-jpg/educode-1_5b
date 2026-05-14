@@ -8,8 +8,8 @@ The purpose of the experiment index is to:
 - support later project reports and resume writing
 - Project has completed the Windows smoke and bounded small-training validation milestones through T7.6.
 - Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, and validation-loop smoke have been completed through T6.1.
-- The current stage has imported A100 smoke results after completing the A100 preparation milestones through T8.8.
-- The project has validated real A100 single-GPU smoke behavior through 2.15B-scale optimizer profiling, but has not entered full pretraining, larger-corpus training, B200 execution, RoPE implementation, or FlashAttention-2 integration.
+- The current stage has moved from A100 scaling validation into permitted corpus expansion planning.
+- The project has validated real A100 single-GPU smoke behavior through 2.15B-scale optimizer profiling, but meaningful longer training is now limited by corpus scale, tokenizer quality, and approved data sources rather than raw GPU feasibility.
 
 ## 2. Experiment Tracking Principles
 - every experiment gets a unique `experiment_id`
@@ -99,7 +99,8 @@ Meaning:
 | EXP-20260514-033-t8-6-a100-provider-selection-record | N/A | T8.6 | A100 | `docs/t8_6_a100_provider_selection_record.md` | 4f8bf3f | success | selected first A100 target as single A100 80GB | `docs/t8_6_a100_provider_selection_record.md` | create an A100 first-session command checklist next |
 | EXP-20260514-034-t8-7-a100-first-session-commands | N/A | T8.7 | A100 | `docs/t8_7_a100_first_session_commands.md` | d358742 | success | A100 first-session command checklist created | `docs/t8_7_a100_first_session_commands.md` | use the checklist on the selected A100 machine and report the environment and config-check outputs |
 | EXP-20260514-035-t8-8-a100-first-session-report-template | N/A | T8.8 | A100 | `docs/t8_8_a100_first_session_report_template.md` | 0f77972 | success | A100 first-session report template created | `docs/t8_8_a100_first_session_report_template.md` | fill the template after the first real A100 session and use it to decide whether forward/loss smoke is approved |
-| EXP-20260514-036-a1-a100-smoke-milestone-report | N/A | A1 | A100 | `docs/a1_a100_smoke_milestone_report.md` | pending local commit | success | A100 80GB smoke results imported; 2.15B seq512 50-step optimizer profile passed | `docs/a1_a100_smoke_milestone_report.md` | use the imported A100 smoke milestone to plan D1 permitted corpus expansion and later longer training gates |
+| EXP-20260514-036-a1-a100-smoke-milestone-report | N/A | A1 | A100 | `docs/a1_a100_smoke_milestone_report.md` | c7fec6c | success | A100 80GB smoke results imported; 2.15B seq512 50-step optimizer profile passed | `docs/a1_a100_smoke_milestone_report.md` | use the imported A100 smoke milestone to plan D1 permitted corpus expansion and later longer training gates |
+| EXP-20260515-001-d1-expand-permitted-corpus-plan | N/A | D1 | planning | `docs/d1_expand_permitted_corpus_plan.md` | pending local commit | success | permitted corpus expansion plan created | `docs/d1_expand_permitted_corpus_plan.md` | use the source ladder and intake rules to define the first approved expanded corpus without downloading or copying external data |
 
 Notes:
 - These entries are documentation / planning records, not training runs.
