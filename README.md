@@ -184,3 +184,4 @@ Current implementation note:
 - D6.5 100-step expanded BPE training review
 - D6.6 50-step vs 100-step expanded BPE comparison
 - D7 expanded synthetic corpus batch 2
+- D8 45-file expanded synthetic corpus intake

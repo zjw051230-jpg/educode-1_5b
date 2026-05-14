@@ -18,10 +18,10 @@
     "privacy_risk": "none"
   },
   "counts": {
-    "candidate_files": 15,
-    "processed_docs": 15,
-    "train_docs": 13,
-    "val_docs": 2,
+    "candidate_files": 45,
+    "processed_docs": 45,
+    "train_docs": 41,
+    "val_docs": 4,
     "dropped_files": 0,
     "secret_scan_hits": 0
   },
