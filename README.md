@@ -207,3 +207,4 @@ Current implementation note:
 - D12.8 external general text intake / cleaning plan
 - D12.9 external general text intake
 - D12.10 external general text intake review
+- D13 mixed corpus integration strategy
