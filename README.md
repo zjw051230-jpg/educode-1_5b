@@ -205,3 +205,4 @@ Current implementation note:
 - D12.6 Gutenberg controlled download plan
 - D12.7 Gutenberg controlled download inspection
 - D12.8 external general text intake / cleaning plan
+- D12.9 external general text intake

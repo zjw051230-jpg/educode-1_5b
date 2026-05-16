@@ -1,0 +1,47 @@
+{
+  "source_id": "external_general_text_project_gutenberg_000001",
+  "candidate_id": "candidate_pg_0001",
+  "source_category": "external_general_text",
+  "input": {
+    "raw_dir": "data/real_corpus/raw/external_general_text/project_gutenberg_small_sample/candidate_pg_0001_alice",
+    "raw_path": "data/real_corpus/raw/external_general_text/project_gutenberg_small_sample/candidate_pg_0001_alice/alice_pg11_raw.txt",
+    "source_note_path": "data/real_corpus/raw/external_general_text/project_gutenberg_small_sample/candidate_pg_0001_alice/SOURCE.md"
+  },
+  "processing": {
+    "header_footer_removed_in_processed": true,
+    "split_method": "chapter",
+    "split_seed": 1337,
+    "val_ratio": 0.1
+  },
+  "counts": {
+    "processed_docs": 12,
+    "train_docs": 11,
+    "val_docs": 1,
+    "dropped_files": 1
+  },
+  "secret_scan": {
+    "result": "explanatory/license-only",
+    "hit_count": 1,
+    "hits": [
+      {
+        "id": "candidate_pg_0001_chapter_12",
+        "split": "train",
+        "pattern": "secret",
+        "excerpt": " them best,     For this must ever be A secret, kept from all the rest,     Between yo",
+        "classification": "benign_content_word"
+      }
+    ]
+  },
+  "outputs": {
+    "processed_jsonl": "data/real_corpus/processed/external_general_text.processed.jsonl",
+    "train_jsonl": "data/real_corpus/splits/external_general_text.train.jsonl",
+    "val_jsonl": "data/real_corpus/splits/external_general_text.val.jsonl",
+    "dropped_jsonl": "data/real_corpus/metadata/external_general_text.dropped_files.jsonl",
+    "summary_json": "data/real_corpus/metadata/external_general_text.intake_summary.json"
+  },
+  "validation": {
+    "manifest_source_id_match": true,
+    "candidate_downloaded": true,
+    "approved_for_training_before_review": true
+  }
+}
