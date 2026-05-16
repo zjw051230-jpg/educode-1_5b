@@ -216,3 +216,4 @@ Current implementation note:
 - D15 mixed/domain BPE data/model/loss smoke
 - D16 mixed/domain BPE small training plan
 - D16.1 50-step mixed/domain BPE training
+- D16.2 50-step mixed/domain BPE training review
