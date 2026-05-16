@@ -201,3 +201,4 @@ Current implementation note:
 - D12.4 Project Gutenberg candidate terms record
 - D12.5 Gutenberg single candidate selection
 - D12.6 Gutenberg controlled download plan
+- D12.7 Gutenberg controlled download inspection
