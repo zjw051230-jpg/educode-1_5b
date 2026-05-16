@@ -189,3 +189,4 @@ Current implementation note:
 - D10 domain BPE data/model/loss smoke
 - D11 domain BPE small training plan
 - D11.1 50-step domain BPE training
+- D11.2 50-step domain BPE training review
