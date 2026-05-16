@@ -215,3 +215,4 @@ Current implementation note:
 - D14.1 mixed/domain BPE tokenizer
 - D15 mixed/domain BPE data/model/loss smoke
 - D16 mixed/domain BPE small training plan
+- D16.1 50-step mixed/domain BPE training
