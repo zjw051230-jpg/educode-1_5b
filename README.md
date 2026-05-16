@@ -17,16 +17,18 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Expanded synthetic corpus intake and the expanded BPE tokenizer path have been validated on the current 15-document synthetic corpus, with observed tokenizer vocab size `1846`.
 - The approved `synthetic_expanded` source has now been expanded to 45 project-authored corpus files across five categories.
 - A bounded 50-step expanded BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
+- The approved `mixed_domain_external` processed corpus has been created from the project-authored domain corpus plus the controlled external supplement, with provenance preserved.
+- Mixed/domain BPE tokenizer path has been validated on the approved mixed corpus, reaching observed vocab size `8192`.
+- Mixed/domain BPE processed-data model/loss smoke has passed on the approved mixed corpus, with `external_general_text` remaining supplement only.
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
 - A100 80GB single-GPU smoke path validated up to 2.15B-scale optimizer profiling.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
-- Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
-- This is not external real-world training data.
-- One controlled Project Gutenberg raw sample has been downloaded for inspection under `external_general_text`, but it is still not approved for intake or training.
-- External general text intake and cleaning are currently planned as a separate future step, with raw provenance preserved and outputs kept separate from `synthetic_expanded`.
+- Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
+- The controlled `external_general_text` supplement has been processed and approved for tokenizer retraining plus bounded mixed-corpus experiments only.
+- Raw provenance is preserved and `external_general_text` remains separate from `synthetic_expanded`.
 - ByteTokenizer remains a legacy smoke/debug tokenizer path.
 - Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging, and periodic validation.
 - Not yet real pretraining, not yet 1.5B, not yet external real dataset.
@@ -211,3 +213,4 @@ Current implementation note:
 - D13.1 mixed domain/external corpus build
 - D14 mixed/domain BPE tokenizer retraining plan
 - D14.1 mixed/domain BPE tokenizer
+- D15 mixed/domain BPE data/model/loss smoke
