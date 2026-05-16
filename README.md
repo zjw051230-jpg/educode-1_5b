@@ -193,3 +193,4 @@ Current implementation note:
 - D11.3 100-step domain BPE training plan
 - D11.4 100-step domain BPE training
 - D11.5 100-step domain BPE training review
+- D11.6 50-step vs 100-step domain BPE comparison
