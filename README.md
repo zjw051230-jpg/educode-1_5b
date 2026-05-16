@@ -197,3 +197,4 @@ Current implementation note:
 - D12 external/general text supplement plan
 - D12.1 Project Gutenberg source decision record
 - D12.2 external general text skeleton and manifest placeholder
+- D12.3 Project Gutenberg file-level review plan
