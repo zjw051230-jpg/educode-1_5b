@@ -195,3 +195,4 @@ Current implementation note:
 - D11.5 100-step domain BPE training review
 - D11.6 50-step vs 100-step domain BPE comparison
 - D12 external/general text supplement plan
+- D12.1 Project Gutenberg source decision record
