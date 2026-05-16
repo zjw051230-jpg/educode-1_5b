@@ -25,6 +25,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the first approved source is a project-authored synthetic educational seed corpus.
 - This is not external real-world training data.
+- One controlled Project Gutenberg raw sample has been downloaded for inspection under `external_general_text`, but it is still not approved for intake or training.
+- External general text intake and cleaning are currently planned as a separate future step, with raw provenance preserved and outputs kept separate from `synthetic_expanded`.
 - ByteTokenizer remains a legacy smoke/debug tokenizer path.
 - Core pipeline validated: config, data, tokenizer, model, loss, optimizer step, checkpoint, generation, logging, and periodic validation.
 - Not yet real pretraining, not yet 1.5B, not yet external real dataset.
@@ -202,3 +204,4 @@ Current implementation note:
 - D12.5 Gutenberg single candidate selection
 - D12.6 Gutenberg controlled download plan
 - D12.7 Gutenberg controlled download inspection
+- D12.8 external general text intake / cleaning plan
