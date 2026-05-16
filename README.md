@@ -199,3 +199,4 @@ Current implementation note:
 - D12.2 external general text skeleton and manifest placeholder
 - D12.3 Project Gutenberg file-level review plan
 - D12.4 Project Gutenberg candidate terms record
+- D12.5 Gutenberg single candidate selection
