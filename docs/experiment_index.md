@@ -10,6 +10,7 @@ The purpose of the experiment index is to:
 - Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, validation-loop smoke, corpus expansion, tokenizer retraining, and bounded mixed/domain small-training validation have been completed through D16.4.
 - The current stage has moved from A100 scaling validation through permitted corpus expansion into bounded local mixed/domain BPE training validation.
 - The project has validated real A100 single-GPU smoke behavior through 2.15B-scale optimizer profiling, but meaningful longer training is now limited by corpus scale, tokenizer quality, and approved data sources rather than raw GPU feasibility.
+- A draft-only worker framework now exists for future parallel educational corpus drafting without promoting content into the formal training corpus.
 
 ## 2. Experiment Tracking Principles
 - every experiment gets a unique `experiment_id`
@@ -148,7 +149,8 @@ Meaning:
 | EXP-20260517-005-d16-4-100-step-mixed-domain-bpe-training | `20260517_004516_windows_cuda_100_step_mixed_domain_bpe_training` | D16.4 | windows_cuda | `configs/windows/bpe_mixed_domain_8k_smoke.json` | 8be3481 | success | 100-step mixed/domain BPE training completed | `docs/d16_4_100_step_mixed_domain_bpe_training.md` | review the bounded mixed/domain BPE training artifacts before any longer or non-local run |
 | EXP-20260517-006-d16-5-100-step-mixed-domain-bpe-training-review | `20260517_004516_windows_cuda_100_step_mixed_domain_bpe_training` | D16.5 | review | `docs/d16_5_100_step_mixed_domain_bpe_training_review.md` | 4b43a46 | success | 100-step mixed/domain BPE training run reviewed and accepted with overfitting signal noted | `docs/d16_5_100_step_mixed_domain_bpe_training_review.md` | compare the bounded 50-step and 100-step mixed/domain runs next, then plan A2 or more corpus expansion instead of more local step-stacking |
 | EXP-20260517-007-d16-6-50-vs-100-step-mixed-domain-bpe-comparison | N/A | D16.6 | comparison | `docs/d16_6_50_vs_100_step_mixed_domain_bpe_comparison.md` | 56433da | success | 50-step and 100-step mixed/domain BPE training runs compared; overfitting signal noted | `docs/d16_6_50_vs_100_step_mixed_domain_bpe_comparison.md` | enter A2 mixed/domain A100 planning or continue corpus expansion instead of more local step-stacking |
-| EXP-20260517-008-a2-a100-mixed-domain-training-plan | N/A | A2 | planning | `docs/a2_a100_mixed_domain_training_plan.md` | pending local commit | success | A100 mixed/domain training plan created | `docs/a2_a100_mixed_domain_training_plan.md` | create an A100 300M mixed/domain config draft and validation script next |
+| EXP-20260517-008-a2-a100-mixed-domain-training-plan | N/A | A2 | planning | `docs/a2_a100_mixed_domain_training_plan.md` | 0e2838c | success | A100 mixed/domain training plan created | `docs/a2_a100_mixed_domain_training_plan.md` | create an A100 300M mixed/domain config draft and validation script next |
+| EXP-20260517-009-d17-0-draft-corpus-worker-framework | N/A | D17.0 | planning | `data/real_corpus/draft_queue/domain_synthetic_batch_03/00_framework/topic_registry.jsonl` | pending local commit | success | draft corpus taxonomy, topic registry, and worker framework created | `docs/d17_0_draft_corpus_taxonomy_worker_framework.md` | validate future written drafts against the registry before any promotion discussion |
 
 Notes:
 - These entries include planning records, inspections, and real bounded local training runs.

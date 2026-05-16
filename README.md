@@ -27,6 +27,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
 - A100 80GB single-GPU smoke path validated up to 2.15B-scale optimizer profiling.
+- A draft-only corpus worker framework now exists under `data/real_corpus/draft_queue/domain_synthetic_batch_03/` with a 120-topic reservation registry and review-only templates.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -225,3 +226,4 @@ Current implementation note:
 - D16.5 100-step mixed/domain BPE training review
 - D16.6 50-step vs 100-step mixed/domain BPE comparison
 - A2 A100 mixed/domain training plan
+- D17.0 draft corpus taxonomy and worker framework
