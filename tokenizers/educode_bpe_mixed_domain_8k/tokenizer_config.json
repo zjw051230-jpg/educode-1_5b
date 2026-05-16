@@ -1,0 +1,39 @@
+{
+  "name": "educode_bpe_mixed_domain_8k",
+  "type": "BPE",
+  "library": "tokenizers",
+  "vocab_size_target": 8192,
+  "vocab_size_observed": 8192,
+  "special_tokens": [
+    "<pad>",
+    "<bos>",
+    "<eos>",
+    "<unk>"
+  ],
+  "special_token_ids": {
+    "<pad>": 0,
+    "<bos>": 1,
+    "<eos>": 2,
+    "<unk>": 3
+  },
+  "artifact_path": "tokenizers/educode_bpe_mixed_domain_8k",
+  "tokenizer_json": "tokenizers/educode_bpe_mixed_domain_8k/tokenizer.json",
+  "corpus_path": "data/real_corpus/processed/mixed_domain_external.processed.jsonl",
+  "splits_used": [
+    "train"
+  ],
+  "input_docs": 57,
+  "train_docs_used": 52,
+  "input_source_category_counts": {
+    "synthetic_examples": 45,
+    "external_general_text": 12
+  },
+  "train_source_category_counts": {
+    "synthetic_examples": 41,
+    "external_general_text": 11
+  },
+  "external_general_text_is_supplement_only": true,
+  "project_backbone": "CS / ML / Python / Transformer training systems education",
+  "is_production_tokenizer": false,
+  "notes": "Mixed/domain BPE tokenizer artifact trained on the approved mixed_domain_external corpus train split only. external_general_text remains supplement only."
+}
