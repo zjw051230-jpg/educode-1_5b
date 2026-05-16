@@ -22,6 +22,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Mixed/domain BPE processed-data model/loss smoke has passed on the approved mixed corpus, with `external_general_text` remaining supplement only.
 - A bounded 50-step mixed/domain BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
 - A bounded 100-step mixed/domain BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
+- Mixed/domain local training shows overfitting signal; next step is controlled A100 mixed/domain scale validation, not more local step stacking.
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
@@ -223,3 +224,4 @@ Current implementation note:
 - D16.4 100-step mixed/domain BPE training
 - D16.5 100-step mixed/domain BPE training review
 - D16.6 50-step vs 100-step mixed/domain BPE comparison
+- A2 A100 mixed/domain training plan
