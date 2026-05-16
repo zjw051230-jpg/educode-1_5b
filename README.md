@@ -20,6 +20,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - The approved `mixed_domain_external` processed corpus has been created from the project-authored domain corpus plus the controlled external supplement, with provenance preserved.
 - Mixed/domain BPE tokenizer path has been validated on the approved mixed corpus, reaching observed vocab size `8192`.
 - Mixed/domain BPE processed-data model/loss smoke has passed on the approved mixed corpus, with `external_general_text` remaining supplement only.
+- A bounded 50-step mixed/domain BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
+- A bounded 100-step mixed/domain BPE small training run has completed with periodic validation, checkpoint reload, and structured logs.
 - An A100 100M draft config has been created and passes read-only config inspection against the current validator.
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
@@ -50,14 +52,14 @@ python scripts/run_50_step_toy_training.py
 
 | Metric | Value |
 |---|---|
-| max_steps | 50 |
+| max_steps | 100 |
 | eval_interval | 10 |
-| first_train_loss | 7.633180 |
-| final_train_loss | 4.182922 |
-| final_val_loss | 7.184383 |
+| first_train_loss | 9.161793 |
+| final_train_loss | 3.796839 |
+| final_val_loss | 7.833482 |
 | checkpoint reload match | True |
-| tokens/sec | 17216.95 |
-| generation preview | `N/A for D6.1 (no generation step)` |
+| tokens/sec | 27905.04 |
+| generation preview | `N/A for D16.4 (no generation step)` |
 
 ## Architecture / Pipeline
 
@@ -218,3 +220,4 @@ Current implementation note:
 - D16.1 50-step mixed/domain BPE training
 - D16.2 50-step mixed/domain BPE training review
 - D16.3 100-step mixed/domain BPE training plan
+- D16.4 100-step mixed/domain BPE training

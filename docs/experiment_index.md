@@ -6,9 +6,9 @@ The purpose of the experiment index is to:
 - connect config, run_id, hardware, git commit, result, and report references
 - avoid scattered experiment tracking
 - support later project reports and resume writing
-- Project has completed the Windows smoke and bounded small-training validation milestones through T7.6.
-- Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, validation-loop smoke, and expanded-corpus small-training validation have been completed through D6.1.
-- The current stage has moved from A100 scaling validation through permitted corpus expansion into bounded local expanded-BPE training validation.
+- Project has completed the Windows smoke and bounded small-training validation milestones through D16.4.
+- Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, validation-loop smoke, corpus expansion, tokenizer retraining, and bounded mixed/domain small-training validation have been completed through D16.4.
+- The current stage has moved from A100 scaling validation through permitted corpus expansion into bounded local mixed/domain BPE training validation.
 - The project has validated real A100 single-GPU smoke behavior through 2.15B-scale optimizer profiling, but meaningful longer training is now limited by corpus scale, tokenizer quality, and approved data sources rather than raw GPU feasibility.
 
 ## 2. Experiment Tracking Principles
@@ -144,7 +144,8 @@ Meaning:
 | EXP-20260517-001-d16-mixed-domain-bpe-small-training-plan | N/A | D16 | planning | `docs/d16_mixed_domain_bpe_small_training_plan.md` | c9ee6d5 | success | mixed/domain BPE small training plan created | `docs/d16_mixed_domain_bpe_small_training_plan.md` | implement a bounded 50-step mixed/domain BPE small training run next while keeping `external_general_text` supplement only |
 | EXP-20260517-002-d16-1-50-step-mixed-domain-bpe-training | `20260517_000844_windows_cuda_50_step_mixed_domain_bpe_training` | D16.1 | windows_cuda | `configs/windows/bpe_mixed_domain_8k_smoke.json` | 6c1d6aa | success | 50-step mixed/domain BPE training completed | `docs/d16_1_50_step_mixed_domain_bpe_training.md` | review the bounded mixed/domain BPE training artifacts before any longer or non-local run |
 | EXP-20260517-003-d16-2-50-step-mixed-domain-bpe-training-review | `20260517_000844_windows_cuda_50_step_mixed_domain_bpe_training` | D16.2 | review | `docs/d16_2_50_step_mixed_domain_bpe_training_review.md` | 94d75c3 | success | 50-step mixed/domain BPE training run reviewed and accepted | `docs/d16_2_50_step_mixed_domain_bpe_training_review.md` | prepare a 100-step mixed/domain BPE training plan or consider A2 planning after one more local review step |
-| EXP-20260517-004-d16-3-100-step-mixed-domain-bpe-training-plan | N/A | D16.3 | planning | `docs/d16_3_100_step_mixed_domain_bpe_training_plan.md` | pending local commit | success | 100-step mixed/domain BPE training plan created | `docs/d16_3_100_step_mixed_domain_bpe_training_plan.md` | implement a bounded 100-step mixed/domain BPE training run next while keeping `external_general_text` supplement only |
+| EXP-20260517-004-d16-3-100-step-mixed-domain-bpe-training-plan | N/A | D16.3 | planning | `docs/d16_3_100_step_mixed_domain_bpe_training_plan.md` | 4442382 | success | 100-step mixed/domain BPE training plan created | `docs/d16_3_100_step_mixed_domain_bpe_training_plan.md` | implement a bounded 100-step mixed/domain BPE training run next while keeping `external_general_text` supplement only |
+| EXP-20260517-005-d16-4-100-step-mixed-domain-bpe-training | `20260517_004516_windows_cuda_100_step_mixed_domain_bpe_training` | D16.4 | windows_cuda | `configs/windows/bpe_mixed_domain_8k_smoke.json` | pending local commit | success | 100-step mixed/domain BPE training completed | `docs/d16_4_100_step_mixed_domain_bpe_training.md` | review the bounded mixed/domain BPE training artifacts before any longer or non-local run |
 
 Notes:
 - These entries include planning records, inspections, and real bounded local training runs.
