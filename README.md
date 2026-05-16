@@ -209,3 +209,4 @@ Current implementation note:
 - D12.10 external general text intake review
 - D13 mixed corpus integration strategy
 - D13.1 mixed domain/external corpus build
+- D14 mixed/domain BPE tokenizer retraining plan
