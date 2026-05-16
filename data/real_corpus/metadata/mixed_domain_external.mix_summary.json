@@ -1,0 +1,55 @@
+{
+  "mixed_corpus_id": "mixed_domain_external_000001",
+  "mixed_stage": "D13.1",
+  "seed": 1337,
+  "project_backbone": "CS/ML/Python/Transformer training systems education",
+  "external_general_text_is_supplement": true,
+  "total_docs": 57,
+  "train_docs": 52,
+  "val_docs": 5,
+  "synthetic_docs": 45,
+  "external_docs": 12,
+  "total_chars": 181618,
+  "source_counts": {
+    "synthetic_examples": 45,
+    "external_general_text": 12
+  },
+  "train_source_counts": {
+    "synthetic_examples": 41,
+    "external_general_text": 11
+  },
+  "val_source_counts": {
+    "synthetic_examples": 4,
+    "external_general_text": 1
+  },
+  "source_categories": [
+    "external_general_text",
+    "synthetic_examples"
+  ],
+  "inputs": {
+    "synthetic_processed": "data/real_corpus/processed/synthetic_expanded.processed.jsonl",
+    "external_processed": "data/real_corpus/processed/external_general_text.processed.jsonl",
+    "synthetic_manifest": "data/real_corpus/metadata/source_manifest.synthetic_expanded.jsonl",
+    "external_manifest": "data/real_corpus/metadata/source_manifest.external_general_text.jsonl"
+  },
+  "split_policy": {
+    "preserve_original_split": true,
+    "train_docs_remain_train": true,
+    "val_docs_remain_val": true,
+    "shuffle_within_split_only": true,
+    "document_level_split": true
+  },
+  "manifest_validation": {
+    "synthetic_allowed_for_training": true,
+    "external_allowed_for_training": true,
+    "external_source_category": "external_general_text",
+    "external_training_use_scope": "small external general text supplement only",
+    "external_approval_status": "approved_for_tokenizer_and_bounded_mixed_training_experiments"
+  },
+  "outputs": {
+    "processed_jsonl": "data/real_corpus/processed/mixed_domain_external.processed.jsonl",
+    "train_jsonl": "data/real_corpus/splits/mixed_domain_external.train.jsonl",
+    "val_jsonl": "data/real_corpus/splits/mixed_domain_external.val.jsonl",
+    "summary_json": "data/real_corpus/metadata/mixed_domain_external.mix_summary.json"
+  }
+}

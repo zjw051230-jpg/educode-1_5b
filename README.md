@@ -208,3 +208,4 @@ Current implementation note:
 - D12.9 external general text intake
 - D12.10 external general text intake review
 - D13 mixed corpus integration strategy
+- D13.1 mixed domain/external corpus build
