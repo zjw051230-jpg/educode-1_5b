@@ -217,3 +217,4 @@ Current implementation note:
 - D16 mixed/domain BPE small training plan
 - D16.1 50-step mixed/domain BPE training
 - D16.2 50-step mixed/domain BPE training review
+- D16.3 100-step mixed/domain BPE training plan
