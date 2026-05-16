@@ -227,3 +227,4 @@ Current implementation note:
 - D16.6 50-step vs 100-step mixed/domain BPE comparison
 - A2 A100 mixed/domain training plan
 - D17.0 draft corpus taxonomy and worker framework
+- D17.1 draft corpus generation validation

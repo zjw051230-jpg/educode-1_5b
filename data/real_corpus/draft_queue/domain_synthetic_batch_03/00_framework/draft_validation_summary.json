@@ -1,0 +1,753 @@
+{
+  "validation_status": "passed",
+  "registry_path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/00_framework/topic_registry.jsonl",
+  "registry_rows": 120,
+  "registry_errors": [],
+  "total_topic_files": 120,
+  "markdown_count": 78,
+  "python_count": 42,
+  "batch_summary_count": 6,
+  "worker_counts": {
+    "CC-1": 20,
+    "CC-2": 20,
+    "CC-3": 20,
+    "CC-4": 20,
+    "CC-5": 20,
+    "CC-6": 20
+  },
+  "file_type_counts_by_worker": {
+    "CC-1": {
+      "markdown": 16,
+      "python": 4
+    },
+    "CC-2": {
+      "markdown": 12,
+      "python": 8
+    },
+    "CC-3": {
+      "markdown": 15,
+      "python": 5
+    },
+    "CC-4": {
+      "markdown": 14,
+      "python": 6
+    },
+    "CC-5": {
+      "markdown": 16,
+      "python": 4
+    },
+    "CC-6": {
+      "markdown": 5,
+      "python": 15
+    }
+  },
+  "line_count_stats": {
+    "min": 26,
+    "max": 63,
+    "mean": 44.02
+  },
+  "missing_files": [],
+  "missing_files_count": 0,
+  "metadata_errors": [],
+  "metadata_errors_count": 0,
+  "scope_errors": [],
+  "scope_errors_count": 0,
+  "git_scope": {
+    "checked_with_git_status": true,
+    "allowed_exact_paths": [
+      "README.md",
+      "docs/d17_1_draft_corpus_generation_validation.md",
+      "docs/d17_1_worker_aggregation_summary.md",
+      "docs/experiment_index.md",
+      "scripts/validate_draft_corpus_batch_03.py"
+    ],
+    "allowed_prefixes": [
+      "data/real_corpus/draft_queue/domain_synthetic_batch_03/"
+    ],
+    "observed_entries": [
+      {
+        "status": " M",
+        "path": "README.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/experiment_index.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/00_framework/draft_validation_summary.json"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/batch_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/evaluation_overfitting/bounded_run_acceptance_vs_quality_claims.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/evaluation_overfitting/checkpoint_reload_success_is_not_generalization.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/evaluation_overfitting/lower_train_loss_vs_worse_val_loss.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/evaluation_overfitting/overfitting_on_small_educational_corpora.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/evaluation_overfitting/simple_eval_interval_tradeoffs.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/evaluation_overfitting/tiny_validation_split_limitations.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/finite_loss_checks_in_smoke_runs.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/loss_curve_interpretation_for_tiny_runs.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/padding_aware_loss_masking.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/tiny_batch_loss_sanity_check.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/train_vs_val_loss_logging_fields.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/finite_gradient_check_helper.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/gradient_clipping_decision_notes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/gradient_descent_for_tiny_transformers.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/learning_rate_too_high_warning_signs.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/manual_seed_effect_on_tiny_experiments.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/optimizer_step_zero_grad_order.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/optimization/weight_decay_in_decoder_training.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/batch_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/config_metrics/config_validation_error_formatting.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/config_metrics/metrics_schema_for_loss_memory_and_throughput.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/config_metrics/repo_root_config_resolution.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/config_metrics/run_summary_json_fields.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/config_metrics/status_field_meanings_for_draft_assets.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/config_metrics/tokenizer_vocab_alignment_check.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/draft_queue_vs_formal_corpus_boundaries.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/jsonl_line_by_line_loader.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/jsonl_utf8_reading_notes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/jsonl_writer_append_safety.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/processed_record_minimal_fields.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/schema_checks_for_processed_records.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/jsonl_pipeline/splits_manifest_consistency.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/batch_dimension_shape_notes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/build_next_token_samples.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/deterministic_batch_sampling.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/drop_last_batch_tradeoffs.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/input_target_shift_helper.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/sequence_length_truncation_choices.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc2_python_data_systems/token_batching/token_count_reporting.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/attention_mask_shapes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/attention_scores_softmax_axis.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/batch_first_attention_notes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/causal_mask_purpose.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/masked_attention_logits_example.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/sequence_length_and_mask_memory.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/attention_masking/why_future_tokens_must_be_hidden.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/batch_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/decoder_only_language_modeling_overview.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/feedforward_layer_role.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/learned_position_embeddings_vs_rope.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/residual_stream_intuition.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/stacked_block_shape_trace.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/tiny_decoder_forward_pass.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/decoder_only/transformer_block_data_flow.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/embeddings_logits/argmax_vs_sampling_preview.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/embeddings_logits/embedding_table_shape_check.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/embeddings_logits/logits_shape_before_loss.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/embeddings_logits/token_embeddings_vs_output_logits.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/embeddings_logits/vocab_size_alignment_with_tokenizer.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc3_transformer_architecture/embeddings_logits/weight_tying_tradeoffs.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/batch_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/checkpoint_manifest_expectations.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/checkpoint_metadata_fields.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/checkpoint_save_vs_reload_checks.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/final_only_vs_periodic_checkpoints.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/map_location_cpu_review_notes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/optimizer_state_presence_check.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/checkpointing/parameter_equality_after_reload.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/a100_smoke_run_guardrails.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/cuda_allocated_vs_reserved_memory.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/cuda_memory_snapshot_helper.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/oom_response_order.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/seq_len_profile_switches.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/step_time_with_perf_counter.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/cuda_a100_profiling/throughput_interpretation_without_quality_claims.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/experiment_logging/bounded_run_success_flags.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/experiment_logging/jsonl_metrics_row_schema.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/experiment_logging/metrics_logging_per_step_vs_per_eval.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/experiment_logging/run_metadata_fields.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/experiment_logging/source_category_count_reporting.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc4_training_runtime_systems/experiment_logging/summary_data_dict_pattern.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/batch_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/debugging_zh_en/bilingual_reserved_topic_triage.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/debugging_zh_en/debugging_mojibake_and_encoding.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/debugging_zh_en/encoding_probe_snippet.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/debugging_zh_en/mixed_language_label_leakage.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/debugging_zh_en/promotion_rules_for_bilingual_drafts.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/debugging_zh_en/review_flags_for_translation_artifacts.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/mixed_script_spacing_notes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/simple_bilingual_token_count.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/special_token_consistency_across_languages.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/unicode_normalization_cautions.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/utf8_checks_for_bilingual_jsonl.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/zh_en_punctuation_tokenization.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/tokenizer_zh_en/zh_en_token_boundary_intuition.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/bilingual_loss_logging_fields.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/bilingual_prompt_response_formatting.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/evaluation_prompts_for_bilingual_smokes.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/instruction_target_alignment_zh_en.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/language_balance_in_tiny_batches.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/paired_example_schema.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc5_bilingual_qa/training_loop_zh_en/seq_len_pressure_in_bilingual_examples.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/batch_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/device_move_sanity_check.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/grad_norm_print_helper.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/manual_seed_setup.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/minimal_tensor_shape_print.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/single_batch_forward_backward.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/tiny_next_token_loss_snippet.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/minimal_pytorch/tiny_optimizer_step.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/bpe_artifact_dir_layout.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/encode_decode_roundtrip.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/special_token_listing.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/token_id_preview_table.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/tokenizer_load_and_vocab_check.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/tokenizer_path_resolution.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/tokenizer_utils/tokenizer_smoke_checklist.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/training_utilities/bounded_run_exit_conditions.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/training_utilities/checkpoint_reload_boolean.md"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/training_utilities/metrics_row_append_helper.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/training_utilities/source_category_counter.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/training_utilities/summary_data_dict_pattern.py"
+      },
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc6_code_snippets/training_utilities/validation_loss_helper.py"
+      },
+      {
+        "status": "??",
+        "path": "docs/d17_1_draft_corpus_generation_validation.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/d17_1_worker_aggregation_summary.md"
+      },
+      {
+        "status": "??",
+        "path": "scripts/validate_draft_corpus_batch_03.py"
+      }
+    ],
+    "out_of_scope_errors": [],
+    "out_of_scope_error_count": 0
+  },
+  "secret_scan": {
+    "result": "explanatory-only",
+    "explanatory_only_count": 169,
+    "credential_style_count": 0,
+    "explanatory_only_examples": [
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 13,
+        "pattern": "token",
+        "context": "# Cross-Entropy for Next-Token Prediction",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 15,
+        "pattern": "token",
+        "context": "A tiny decoder predicts one token at each position, but the training target is the next token rather than the current token.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 18,
+        "pattern": "token",
+        "context": "Consider a synthetic batch with token ids like [4, 8, 2, 9].",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 23,
+        "pattern": "token",
+        "context": "If the model gives token 9 a probability of 0.80 when 2 is correct, the loss is much worse than if it gave 2 a probability of 0.35 and several alternatives near",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 26,
+        "pattern": "token",
+        "context": "In a next-token setting, average loss is often easier to compare across runs than raw summed loss.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 36,
+        "pattern": "token",
+        "context": "It may place more mass on the correct next token.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 43,
+        "pattern": "token",
+        "context": "Cross entropy also interacts with token distribution.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 48,
+        "pattern": "token",
+        "context": "Every token position is a supervised classification event.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/cross_entropy_next_token_objective.md",
+        "line": 49,
+        "pattern": "token",
+        "context": "Cross entropy summarizes how surprised the model still is by the true next token.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 13,
+        "pattern": "token",
+        "context": "# Why Next-Token Labels Are Shifted by One Position",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 15,
+        "pattern": "token",
+        "context": "A next-token model should not be trained to repeat the token it already sees at the same position.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 16,
+        "pattern": "token",
+        "context": "Instead, each hidden state is asked to predict the token immediately to its right.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 26,
+        "pattern": "token",
+        "context": "The label shift also explains why the final token often has no direct next-token label inside a fixed sequence window.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 27,
+        "pattern": "token",
+        "context": "There is nothing after it unless an EOS token or a following packed token is included.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 35,
+        "pattern": "token",
+        "context": "If the rows do not look like a one-token slide, the training objective is probably wrong.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 45,
+        "pattern": "token",
+        "context": "A hidden state after token blue is useful only if it helps predict birds, not blue again.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/next_token_label_shift_intuition.md",
+        "line": 47,
+        "pattern": "token",
+        "context": "The simplest rule is this: model state at index t should be judged by token t+1.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/loss_curve_interpretation_for_tiny_runs.md",
+        "line": 18,
+        "pattern": "token",
+        "context": "A downward training curve usually means the optimizer is finding directions that improve next-token prediction on the seen batches.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/loss_curve_interpretation_for_tiny_runs.md",
+        "line": 22,
+        "pattern": "token",
+        "context": "Different mini-batches can have different token distributions, different amounts of repetition, and different average difficulty.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_03/cc1_ml_foundations/loss_validation/loss_curve_interpretation_for_tiny_runs.md",
+        "line": 45,
+        "pattern": "token",
+        "context": "Token distribution matters here as well.",
+        "classification": "explanatory-only"
+      }
+    ],
+    "credential_style_examples": []
+  },
+  "approval_state": {
+    "all_registry_rows_approved_for_training_false": true,
+    "all_registry_rows_contains_external_text_false": true,
+    "all_registry_rows_contains_private_data_false": true
+  }
+}
