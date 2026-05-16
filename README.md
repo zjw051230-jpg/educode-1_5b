@@ -222,3 +222,4 @@ Current implementation note:
 - D16.3 100-step mixed/domain BPE training plan
 - D16.4 100-step mixed/domain BPE training
 - D16.5 100-step mixed/domain BPE training review
+- D16.6 50-step vs 100-step mixed/domain BPE comparison
