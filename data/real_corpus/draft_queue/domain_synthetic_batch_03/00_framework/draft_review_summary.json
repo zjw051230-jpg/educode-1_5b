@@ -1,0 +1,53 @@
+{
+  "registry_path": "data/real_corpus/draft_queue/domain_synthetic_batch_03/00_framework/topic_registry.jsonl",
+  "total_records": 120,
+  "approved_for_promotion_candidate_count": 118,
+  "needs_edit_count": 2,
+  "rejected_count": 0,
+  "worker_counts": {
+    "CC-1": 20,
+    "CC-2": 20,
+    "CC-3": 20,
+    "CC-4": 20,
+    "CC-5": 20,
+    "CC-6": 20
+  },
+  "review_state_by_worker": {
+    "CC-1": {
+      "approved_for_promotion_candidate": 20
+    },
+    "CC-2": {
+      "approved_for_promotion_candidate": 20
+    },
+    "CC-3": {
+      "approved_for_promotion_candidate": 20
+    },
+    "CC-4": {
+      "approved_for_promotion_candidate": 19,
+      "needs_edit": 1
+    },
+    "CC-5": {
+      "approved_for_promotion_candidate": 20
+    },
+    "CC-6": {
+      "approved_for_promotion_candidate": 19,
+      "needs_edit": 1
+    }
+  },
+  "file_type_counts": {
+    "markdown": 78,
+    "python": 42
+  },
+  "line_count_min": 26,
+  "line_count_max": 63,
+  "line_count_mean": 44.02,
+  "secret_scan_summary": {
+    "explanatory-only": 54,
+    "passed": 66
+  },
+  "duplicate_topic_count": 0,
+  "duplicate_filename_count": 1,
+  "review_gate_status": "passed_with_notes",
+  "registry_errors": [],
+  "registry_row_count": 120
+}

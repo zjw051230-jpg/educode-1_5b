@@ -228,3 +228,4 @@ Current implementation note:
 - A2 A100 mixed/domain training plan
 - D17.0 draft corpus taxonomy and worker framework
 - D17.1 draft corpus generation validation
+- D17.2 draft corpus review gate
