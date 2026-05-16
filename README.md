@@ -190,3 +190,4 @@ Current implementation note:
 - D11 domain BPE small training plan
 - D11.1 50-step domain BPE training
 - D11.2 50-step domain BPE training review
+- D11.3 100-step domain BPE training plan
