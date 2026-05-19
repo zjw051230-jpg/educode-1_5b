@@ -1,0 +1,226 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_05",
+  "source_quality_manifest_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/batch_05_quality_review_manifest.jsonl",
+  "source_quality_summary_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/batch_05_quality_review_summary.json",
+  "d19_2_quality_gate_status": "passed_with_notes",
+  "target_total_samples": 120,
+  "sampled_total_files": 120,
+  "sampled_worker_counts": {
+    "CC-1": 20,
+    "CC-2": 20,
+    "CC-3": 20,
+    "CC-4": 20,
+    "CC-5": 20,
+    "CC-6": 20
+  },
+  "sampled_quality_state_counts": {
+    "needs_edit": 25,
+    "quality_pass": 95
+  },
+  "sampled_file_type_counts": {
+    "markdown": 71,
+    "python": 49
+  },
+  "sampled_risk_flag_counts": {
+    "bilingual_pairing_missing": 6,
+    "repeated_internal_line": 9,
+    "thin_section_structure": 13,
+    "trace_note_residue": 2
+  },
+  "worker_sampling_results": {
+    "CC-1": {
+      "sampled_total": 20,
+      "sampled_quality_pass": 20,
+      "sampled_needs_edit": 0,
+      "sampled_file_type_counts": {
+        "markdown": 15,
+        "python": 5
+      },
+      "sampled_risk_flag_counts": {},
+      "writing_forms": [
+        "bug-reproduction snippet",
+        "diagnostic comparison script",
+        "evidence-first checklist",
+        "failure postmortem",
+        "gradient-stat trace demo",
+        "hyperparameter sweep mini-simulator",
+        "incident notebook",
+        "toy metric calculator",
+        "what-changed analysis",
+        "worked interpretation memo"
+      ],
+      "concrete_anchors": [
+        "before/after comparison",
+        "debugging transcript",
+        "failure scenario",
+        "metrics interpretation",
+        "numeric toy example",
+        "small pseudo-run log"
+      ]
+    },
+    "CC-2": {
+      "sampled_total": 20,
+      "sampled_quality_pass": 11,
+      "sampled_needs_edit": 9,
+      "sampled_file_type_counts": {
+        "markdown": 9,
+        "python": 11
+      },
+      "sampled_risk_flag_counts": {
+        "repeated_internal_line": 9
+      },
+      "writing_forms": [
+        "Q&A",
+        "checklist",
+        "code walkthrough",
+        "comparison table",
+        "debugging diary",
+        "explainer note",
+        "failure analysis",
+        "metric interpretation",
+        "mini lab"
+      ],
+      "concrete_anchors": [
+        "before/after comparison",
+        "broken JSONL case",
+        "config snippet",
+        "failure scenario",
+        "metrics interpretation",
+        "mini code trace",
+        "numeric toy example",
+        "repair checklist",
+        "schema mismatch",
+        "small pseudo-run log"
+      ]
+    },
+    "CC-3": {
+      "sampled_total": 20,
+      "sampled_quality_pass": 20,
+      "sampled_needs_edit": 0,
+      "sampled_file_type_counts": {
+        "markdown": 12,
+        "python": 8
+      },
+      "sampled_risk_flag_counts": {},
+      "writing_forms": [
+        "Q&A",
+        "before/after comparison",
+        "bug triage note",
+        "checklist",
+        "code walkthrough",
+        "comparison table",
+        "config review",
+        "debugging diary",
+        "metric interpretation",
+        "trace notebook style note"
+      ],
+      "concrete_anchors": [
+        "before/after comparison",
+        "debugging transcript",
+        "decision checklist",
+        "failure scenario",
+        "metrics interpretation",
+        "numeric toy example",
+        "tensor shape"
+      ]
+    },
+    "CC-4": {
+      "sampled_total": 20,
+      "sampled_quality_pass": 20,
+      "sampled_needs_edit": 0,
+      "sampled_file_type_counts": {
+        "markdown": 11,
+        "python": 9
+      },
+      "sampled_risk_flag_counts": {},
+      "writing_forms": [
+        "Q&A",
+        "checklist",
+        "code walkthrough",
+        "comparison table",
+        "config review",
+        "debugging diary",
+        "explainer note",
+        "failure analysis",
+        "metric interpretation"
+      ],
+      "concrete_anchors": [
+        "before/after comparison",
+        "config snippet",
+        "debugging transcript",
+        "decision checklist",
+        "metrics interpretation",
+        "mini code trace",
+        "numeric toy example",
+        "tensor shape"
+      ]
+    },
+    "CC-5": {
+      "sampled_total": 20,
+      "sampled_quality_pass": 14,
+      "sampled_needs_edit": 6,
+      "sampled_file_type_counts": {
+        "markdown": 16,
+        "python": 4
+      },
+      "sampled_risk_flag_counts": {
+        "bilingual_pairing_missing": 6,
+        "thin_section_structure": 5
+      },
+      "writing_forms": [
+        "Q&A",
+        "checklist",
+        "code walkthrough",
+        "comparison table",
+        "failure analysis",
+        "metric interpretation",
+        "numeric toy example"
+      ],
+      "concrete_anchors": [
+        "before/after comparison",
+        "config snippet",
+        "debugging transcript",
+        "metrics interpretation",
+        "numeric toy example",
+        "small pseudo-run log"
+      ]
+    },
+    "CC-6": {
+      "sampled_total": 20,
+      "sampled_quality_pass": 10,
+      "sampled_needs_edit": 10,
+      "sampled_file_type_counts": {
+        "markdown": 8,
+        "python": 12
+      },
+      "sampled_risk_flag_counts": {
+        "thin_section_structure": 8,
+        "trace_note_residue": 2
+      },
+      "writing_forms": [
+        "checklist",
+        "comparison table",
+        "debugging diary",
+        "explainer note",
+        "failure analysis",
+        "failure analysis diary",
+        "inspection memo",
+        "operator guide and sanity-check q&a"
+      ],
+      "concrete_anchors": [
+        "before/after comparison",
+        "debugging transcript",
+        "decision checklist",
+        "metrics interpretation",
+        "numeric toy example",
+        "small pseudo-run log",
+        "tensor shape"
+      ]
+    }
+  },
+  "notes": [
+    "Each worker contributes 20 samples: 10 quality_pass representatives, 5 needs_edit risk cases, and 5 boundary/representative files.",
+    "Sampling joins the quality-review manifest back to the validation manifest so writing_form and concrete_anchor remain available to human reviewers.",
+    "CC-2, CC-5, and CC-6 prioritize their known residual risk clusters from D19.2."
+  ]
+}

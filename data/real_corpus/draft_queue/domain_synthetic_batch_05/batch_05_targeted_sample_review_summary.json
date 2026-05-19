@@ -1,0 +1,175 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_05",
+  "source_sampling_manifest_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/batch_05_targeted_sampling_manifest.jsonl",
+  "total_reviewed_samples": 120,
+  "strong_candidate_for_promotion_count": 92,
+  "keep_as_candidate_count": 17,
+  "needs_rewrite_count": 11,
+  "reject_count": 0,
+  "promotion_readiness": "may_support_small_promotion_subset",
+  "worker_decision_counts": {
+    "CC-1": {
+      "strong_candidate_for_promotion": 20
+    },
+    "CC-2": {
+      "needs_rewrite": 9,
+      "strong_candidate_for_promotion": 11
+    },
+    "CC-3": {
+      "strong_candidate_for_promotion": 20
+    },
+    "CC-4": {
+      "strong_candidate_for_promotion": 20
+    },
+    "CC-5": {
+      "keep_as_candidate": 9,
+      "strong_candidate_for_promotion": 11
+    },
+    "CC-6": {
+      "keep_as_candidate": 8,
+      "needs_rewrite": 2,
+      "strong_candidate_for_promotion": 10
+    }
+  },
+  "review_samples": {
+    "strong_examples": [
+      {
+        "topic_id": "B05-MLF-0066",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/gradient_behavior/b05-mlf-0066_gradient_behavior_sparse_batch_spike.md"
+      },
+      {
+        "topic_id": "B05-MLF-0068",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/gradient_behavior/b05-mlf-0068_gradient_behavior_clipping_hides_lr_instability.md"
+      },
+      {
+        "topic_id": "B05-MLF-0035",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/overfitting_diagnostics/b05-mlf-0035_overfitting_diagnostics_conflicting_signals_between_loss_and_examples.md"
+      },
+      {
+        "topic_id": "B05-MLF-0100",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/failure_scenarios/b05-mlf-0100_failure_scenarios_false_plateau_from_clipped_dashboard_range.md"
+      },
+      {
+        "topic_id": "B05-MLF-0059",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/optimization_dynamics/b05-mlf-0059_optimization_dynamics_seed_change_exposes_instability.md"
+      },
+      {
+        "topic_id": "B05-MLF-0001",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0001_loss_validation_validation_gap_under_tiny_split.md"
+      },
+      {
+        "topic_id": "B05-MLF-0003",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0003_loss_validation_sum_vs_mean_loss_report.md"
+      },
+      {
+        "topic_id": "B05-MLF-0006",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0006_loss_validation_smoothed_curve_hides_spike.md"
+      },
+      {
+        "topic_id": "B05-MLF-0009",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0009_loss_validation_windowed_validation_noise.md"
+      },
+      {
+        "topic_id": "B05-MLF-0011",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0011_loss_validation_microbatch_average_distortion.md"
+      },
+      {
+        "topic_id": "B05-MLF-0012",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0012_loss_validation_label_smoothing_readback.md"
+      },
+      {
+        "topic_id": "B05-MLF-0014",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0014_loss_validation_loss_normalization_by_sequence_length.md"
+      },
+      {
+        "topic_id": "B05-MLF-0015",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0015_loss_validation_noisy_tail_batches.md"
+      },
+      {
+        "topic_id": "B05-MLF-0016",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0016_loss_validation_token_count_mismatch_debug.md"
+      },
+      {
+        "topic_id": "B05-MLF-0020",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0020_loss_validation_validation_recompute_after_bugfix.md"
+      },
+      {
+        "topic_id": "B05-MLF-0090",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/failure_scenarios/b05-mlf-0090_failure_scenarios_val_metric_name_swapped.py"
+      },
+      {
+        "topic_id": "B05-MLF-0024",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/overfitting_diagnostics/b05-mlf-0024_overfitting_diagnostics_train_gap_without_quality_gain.py"
+      },
+      {
+        "topic_id": "B05-MLF-0064",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/gradient_behavior/b05-mlf-0064_gradient_behavior_gradient_noise_vs_signal.py"
+      },
+      {
+        "topic_id": "B05-MLF-0042",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/optimization_dynamics/b05-mlf-0042_optimization_dynamics_lr_too_low_flat_progress.py"
+      },
+      {
+        "topic_id": "B05-MLF-0018",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc1_ml_foundations/loss_validation/b05-mlf-0018_loss_validation_entropy_floor_for_easy_vocab.py"
+      }
+    ],
+    "rewrite_examples": [
+      {
+        "topic_id": "B05-PDS-0065",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/config_checks/b05_pds_0065_log_frequency_without_eval_interval.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0053",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/batching_debug/b05_pds_0053_packed_vs_unpacked_batch_tradeoff.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0083",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/metrics_diagnostics/b05_pds_0083_train_val_merge_confusion.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0027",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0027_schema_version_upgrade_notes.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0033",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0033_field_rename_without_backfill.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0039",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0039_row_level_schema_repair_order.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0001",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0001_broken_jsonl_first_bad_line.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=medium; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0003",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0003_embedded_tab_normalization.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-PDS-0092",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/metrics_diagnostics/b05_pds_0092_render_metric_summary_table.md",
+        "review_notes": "quality-review flags carried into sampling: repeated_internal_line; topic_specificity=medium; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-COD-0077",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc6_code_snippets/config_validation/b05-cod-0077_config_validation_017.py",
+        "review_notes": "quality-review flags carried into sampling: trace_note_residue; topic_specificity=high; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      },
+      {
+        "topic_id": "B05-COD-0027",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc6_code_snippets/checkpoint_metadata/b05-cod-0027_checkpoint_metadata_007.py",
+        "review_notes": "quality-review flags carried into sampling: trace_note_residue; topic_specificity=high; concrete_anchor_quality=high; template_repetition_risk=high; promotion_decision=needs_rewrite"
+      }
+    ]
+  }
+}

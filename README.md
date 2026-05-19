@@ -31,6 +31,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Batch_04 draft aggregation, structural validation, and automated quality review have completed across `6000` review-only files from six worker deliveries.
 - Batch_04 passed structural validation and passed quality review with concentrated notes in `CC-2`, `CC-3`, markdown-heavy `CC-5`, and markdown-heavy `CC-6`; the next step is targeted human sampling, not promotion.
 - Batch_05 repair-aware draft validation and automated quality review have completed across `600` review-only files, with structural validation clean and concentrated residual notes in `CC-2`, `CC-5`, and `CC-6`.
+- Batch_05 targeted sampling review has completed across a `120`-file bounded review pack, yielding `92` strong candidates, `17` keep candidates, and `11` rewrite cases; the result supports a small future promotion-candidate discussion but not promotion in this step.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -237,3 +238,5 @@ Current implementation note:
 - D18.3 batch 04 sampling review aggregate
 - D19.2 batch_05 repair-aware validation and quality review
 - D19.3 batch_05 sampling review plan
+- D19.3 batch_05 targeted sampling review
+- D20 promotion subset plan
