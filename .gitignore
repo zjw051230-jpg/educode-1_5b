@@ -17,3 +17,6 @@ wandb/
 
 # Generated experiment run directories
 experiments/*/*/
+
+data/research_papers/inbox/raw_papers/*
+!data/research_papers/inbox/raw_papers/.gitkeep
