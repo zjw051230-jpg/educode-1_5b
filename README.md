@@ -240,3 +240,4 @@ Current implementation note:
 - D19.3 batch_05 sampling review plan
 - D19.3 batch_05 targeted sampling review
 - D20 promotion subset plan
+- D20.1 batch 05 promotion subset candidate selection

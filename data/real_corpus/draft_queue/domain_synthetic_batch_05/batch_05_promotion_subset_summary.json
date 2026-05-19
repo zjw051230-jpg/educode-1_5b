@@ -1,0 +1,23 @@
+{
+  "selected_count": 92,
+  "excluded_keep_as_candidate": 17,
+  "excluded_needs_rewrite": 11,
+  "excluded_reject": 0,
+  "selected_by_worker": {
+    "CC-1": 20,
+    "CC-2": 11,
+    "CC-3": 20,
+    "CC-4": 20,
+    "CC-5": 11,
+    "CC-6": 10
+  },
+  "selected_file_type_counts": {
+    "markdown": 45,
+    "python": 47
+  },
+  "source_batch_id": "domain_synthetic_batch_05",
+  "formal_promotion_done": false,
+  "intake_done": false,
+  "tokenizer_training_done": false,
+  "model_training_done": false
+}
