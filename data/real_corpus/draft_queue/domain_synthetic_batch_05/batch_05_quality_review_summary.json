@@ -1,0 +1,209 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_05",
+  "validation_reference": {
+    "validation_status": "passed_with_notes",
+    "validation_manifest_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/batch_05_validation_manifest.jsonl",
+    "validation_summary_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/batch_05_validation_summary.json"
+  },
+  "total_records": 600,
+  "quality_pass_count": 435,
+  "needs_edit_count": 165,
+  "reject_count": 0,
+  "quality_gate_status": "passed_with_notes",
+  "worker_counts": {
+    "CC-1": 100,
+    "CC-2": 100,
+    "CC-3": 100,
+    "CC-4": 100,
+    "CC-5": 100,
+    "CC-6": 100
+  },
+  "worker_quality_state_counts": {
+    "CC-1": {
+      "quality_pass": 100
+    },
+    "CC-2": {
+      "needs_edit": 60,
+      "quality_pass": 40
+    },
+    "CC-3": {
+      "quality_pass": 100
+    },
+    "CC-4": {
+      "quality_pass": 100
+    },
+    "CC-5": {
+      "needs_edit": 34,
+      "quality_pass": 66
+    },
+    "CC-6": {
+      "needs_edit": 71,
+      "quality_pass": 29
+    }
+  },
+  "file_type_counts": {
+    "markdown": 365,
+    "python": 235
+  },
+  "flag_counts": {
+    "bilingual_pairing_missing": 31,
+    "repeated_internal_line": 60,
+    "thin_section_structure": 41,
+    "trace_note_residue": 41
+  },
+  "line_count_stats": {
+    "min": 28,
+    "max": 129,
+    "mean": 60.36
+  },
+  "char_count_stats": {
+    "min": 849,
+    "max": 4410,
+    "mean": 2237.01
+  },
+  "review_samples": {
+    "needs_edit_examples": [
+      {
+        "topic_id": "B05-PDS-0001",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0001_broken_jsonl_first_bad_line.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0003",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0003_embedded_tab_normalization.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0005",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0005_multi_line_field_rejection.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0007",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0007_repair_order_for_utf8_then_parse.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0009",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0009_row_id_collision_after_repair.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0011",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0011_comment_line_policy_in_jsonl.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0013",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0013_reader_preview_budget.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0014",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0014_sample_bad_rows_for_manifest.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0015",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0015_json_decode_error_to_row_action.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0017",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0017_single_object_per_line_boundary.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0018",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0018_repair_tab_prefixed_objects.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0019",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/jsonl_repair/b05_pds_0019_line_count_drift_after_filtering.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0021",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0021_int_string_schema_drift.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0023",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0023_nullable_field_boundary.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0025",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0025_shape_field_pair_consistency.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0027",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0027_schema_version_upgrade_notes.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0029",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0029_missing_split_column_diagnosis.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0031",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0031_train_val_test_ratio_schema_mixup.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0033",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0033_field_rename_without_backfill.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B05-PDS-0034",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_05/cc2_python_data_systems/schema_validation/b05_pds_0034_repair_bool_string_fields.md",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      }
+    ],
+    "reject_examples": []
+  }
+}

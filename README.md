@@ -30,6 +30,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - A draft-only corpus worker framework now exists under `data/real_corpus/draft_queue/domain_synthetic_batch_03/` with a 120-topic reservation registry and review-only templates.
 - Batch_04 draft aggregation, structural validation, and automated quality review have completed across `6000` review-only files from six worker deliveries.
 - Batch_04 passed structural validation and passed quality review with concentrated notes in `CC-2`, `CC-3`, markdown-heavy `CC-5`, and markdown-heavy `CC-6`; the next step is targeted human sampling, not promotion.
+- Batch_05 repair-aware draft validation and automated quality review have completed across `600` review-only files, with structural validation clean and concentrated residual notes in `CC-2`, `CC-5`, and `CC-6`.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -234,3 +235,5 @@ Current implementation note:
 - D18 batch_04 draft corpus validation and quality review
 - D18.1 targeted sampling review pack
 - D18.3 batch 04 sampling review aggregate
+- D19.2 batch_05 repair-aware validation and quality review
+- D19.3 batch_05 sampling review plan

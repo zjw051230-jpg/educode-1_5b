@@ -1,0 +1,58 @@
+# Batch Summary
+
+- worker_id: CC-3
+- target_count: 100
+- generated_count: 100
+- markdown_count: 60
+- python_count: 40
+- writing_form_distribution:
+  - explainer note: 5
+  - mini lab: 5
+  - code walkthrough: 5
+  - checklist: 5
+  - debugging diary: 5
+  - failure analysis: 5
+  - Q&A: 5
+  - before/after comparison: 5
+  - metric interpretation: 5
+  - pseudo-run log: 5
+  - config review: 5
+  - decision memo: 5
+  - trace notebook style note: 5
+  - bug triage note: 5
+  - worked example: 5
+  - shape audit: 5
+  - debugging transcript: 5
+  - comparison table: 5
+  - smoke-test sheet: 5
+  - repair checklist: 5
+- concrete_anchor_distribution:
+  - tensor shape: 11
+  - decision checklist: 8
+  - numeric toy example: 11
+  - small pseudo-run log: 9
+  - failure scenario: 12
+  - debugging transcript: 9
+  - metrics interpretation: 12
+  - mini code trace: 9
+  - before/after comparison: 11
+  - config snippet: 8
+- subtopic_distribution:
+  - qkv_shapes: 15
+  - attention_masking: 15
+  - logits_projection: 12
+  - layer_norm_residual: 12
+  - shape_debugging: 14
+  - attention_scores: 12
+  - position_embedding_checks: 10
+  - generation_decoding: 10
+- anti_template_strategy:
+  - topic matrix planned before drafting
+  - 8-topic hybrid with capped subtopic concentration
+  - rotated writing forms every 20 files
+  - every file anchored by a concrete artifact
+  - python files bound to topic-specific traces instead of generic summaries
+- known_duplicates_or_none: none known from planned matrix
+- secret_scan_result: no matches for api_key, password, private_key, or sk- in the worker directory
+- no intake/tokenizer/model training confirmation: confirmed
+- no git commit/push confirmation: confirmed

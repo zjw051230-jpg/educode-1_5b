@@ -1,0 +1,26 @@
+# Progress 0025
+
+- worker_id: CC-3
+- generated_so_far: 25
+- markdown_so_far: 15
+- python_so_far: 10
+- forms_seen:
+  - explainer note: 5
+  - mini lab: 5
+  - code walkthrough: 5
+  - checklist: 5
+  - debugging diary: 2
+  - failure analysis: 1
+  - Q&A: 1
+  - before/after comparison: 1
+- subtopics_seen:
+  - qkv_shapes: 3
+  - attention_masking: 3
+  - logits_projection: 3
+  - layer_norm_residual: 4
+  - shape_debugging: 3
+  - attention_scores: 3
+  - position_embedding_checks: 3
+  - generation_decoding: 3
+- anti_template_note:
+  - Rotated opening style, subtopic mix, and anchor mix were maintained in this wave.

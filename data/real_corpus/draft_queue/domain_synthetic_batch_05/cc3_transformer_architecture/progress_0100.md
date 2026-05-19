@@ -1,0 +1,38 @@
+# Progress 0100
+
+- worker_id: CC-3
+- generated_so_far: 100
+- markdown_so_far: 60
+- python_so_far: 40
+- forms_seen:
+  - explainer note: 5
+  - mini lab: 5
+  - code walkthrough: 5
+  - checklist: 5
+  - debugging diary: 5
+  - failure analysis: 5
+  - Q&A: 5
+  - before/after comparison: 5
+  - metric interpretation: 5
+  - pseudo-run log: 5
+  - config review: 5
+  - decision memo: 5
+  - trace notebook style note: 5
+  - bug triage note: 5
+  - worked example: 5
+  - shape audit: 5
+  - debugging transcript: 5
+  - comparison table: 5
+  - smoke-test sheet: 5
+  - repair checklist: 5
+- subtopics_seen:
+  - qkv_shapes: 15
+  - attention_masking: 15
+  - logits_projection: 12
+  - layer_norm_residual: 12
+  - shape_debugging: 14
+  - attention_scores: 12
+  - position_embedding_checks: 10
+  - generation_decoding: 10
+- anti_template_note:
+  - Rotated opening style, subtopic mix, and anchor mix were maintained in this wave.

@@ -1,0 +1,60 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_05",
+  "validation_status": "passed_with_notes",
+  "total_topic_files": 600,
+  "markdown_topic_files": 365,
+  "python_topic_files": 235,
+  "worker_manifest_count": 6,
+  "batch_summary_count": 6,
+  "anti_template_self_check_count": 6,
+  "progress_checkpoint_count": 24,
+  "worker_counts": {
+    "CC-1": 100,
+    "CC-2": 100,
+    "CC-3": 100,
+    "CC-4": 100,
+    "CC-5": 100,
+    "CC-6": 100
+  },
+  "file_type_counts_by_worker": {
+    "CC-1": {
+      "markdown": 70,
+      "python": 30
+    },
+    "CC-2": {
+      "markdown": 60,
+      "python": 40
+    },
+    "CC-3": {
+      "markdown": 60,
+      "python": 40
+    },
+    "CC-4": {
+      "markdown": 60,
+      "python": 40
+    },
+    "CC-5": {
+      "markdown": 85,
+      "python": 15
+    },
+    "CC-6": {
+      "markdown": 30,
+      "python": 70
+    }
+  },
+  "line_count_min": 28,
+  "line_count_max": 129,
+  "line_count_mean": 60.36,
+  "char_count_total": 1342207,
+  "missing_files": 0,
+  "metadata_errors": 0,
+  "scope_errors": 0,
+  "duplicate_topic_id_count": 0,
+  "duplicate_file_path_count": 0,
+  "explanatory_secret_hit_count": 143,
+  "credential_style_secret_hit_count": 0,
+  "secret_scan_result": "explanatory-only",
+  "missing_file_examples": [],
+  "metadata_error_examples": [],
+  "scope_error_examples": []
+}
