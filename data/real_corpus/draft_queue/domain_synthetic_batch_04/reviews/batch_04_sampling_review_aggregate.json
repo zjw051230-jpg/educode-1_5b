@@ -1,0 +1,282 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_04",
+  "reviews_root": "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews",
+  "review_input_files": [
+    "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews/CC-1_sampling_review.jsonl",
+    "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews/CC-2_sampling_review.jsonl",
+    "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews/CC-3_sampling_review.jsonl",
+    "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews/CC-4_sampling_review.jsonl",
+    "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews/CC-5_sampling_review.jsonl",
+    "data/real_corpus/draft_queue/domain_synthetic_batch_04/reviews/CC-6_sampling_review.jsonl"
+  ],
+  "expected_records_per_worker": 40,
+  "expected_total_records": 240,
+  "reviewed_samples": 240,
+  "decision_counts": {
+    "strong_candidate_for_promotion": 0,
+    "keep_as_candidate": 24,
+    "needs_rewrite": 216,
+    "reject": 0
+  },
+  "needs_rewrite_rate": 0.9,
+  "promotion_readiness": "not_ready_for_promotion",
+  "decision_counts_by_worker": {
+    "CC-1": {
+      "keep_as_candidate": 7,
+      "needs_rewrite": 33
+    },
+    "CC-2": {
+      "keep_as_candidate": 6,
+      "needs_rewrite": 34
+    },
+    "CC-3": {
+      "needs_rewrite": 40
+    },
+    "CC-4": {
+      "keep_as_candidate": 1,
+      "needs_rewrite": 39
+    },
+    "CC-5": {
+      "keep_as_candidate": 10,
+      "needs_rewrite": 30
+    },
+    "CC-6": {
+      "needs_rewrite": 40
+    }
+  },
+  "average_template_repetition_risk_by_worker": {
+    "CC-1": 3,
+    "CC-2": 3,
+    "CC-3": 3,
+    "CC-4": 2.98,
+    "CC-5": 3,
+    "CC-6": 3
+  },
+  "educational_value_distribution": {
+    "low": 176,
+    "medium": 64,
+    "high": 0
+  },
+  "practical_usefulness_distribution": {
+    "low": 173,
+    "medium": 67,
+    "high": 0
+  },
+  "domain_backbone_alignment_distribution": {
+    "low": 0,
+    "medium": 114,
+    "high": 126
+  },
+  "external_copy_risk_distribution": {
+    "low": 240,
+    "medium": 0,
+    "high": 0
+  },
+  "misleading_claim_risk_distribution": {
+    "low": 239,
+    "medium": 1,
+    "high": 0
+  },
+  "worker_summaries": {
+    "CC-1": {
+      "records": 40,
+      "decision_counts": {
+        "keep_as_candidate": 7,
+        "needs_rewrite": 33
+      },
+      "average_template_repetition_risk": 3,
+      "educational_value_distribution": {
+        "low": 33,
+        "medium": 7,
+        "high": 0
+      },
+      "practical_usefulness_distribution": {
+        "low": 30,
+        "medium": 10,
+        "high": 0
+      },
+      "domain_backbone_alignment_distribution": {
+        "low": 0,
+        "medium": 33,
+        "high": 7
+      },
+      "external_copy_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "misleading_claim_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    "CC-2": {
+      "records": 40,
+      "decision_counts": {
+        "keep_as_candidate": 6,
+        "needs_rewrite": 34
+      },
+      "average_template_repetition_risk": 3,
+      "educational_value_distribution": {
+        "low": 34,
+        "medium": 6,
+        "high": 0
+      },
+      "practical_usefulness_distribution": {
+        "low": 34,
+        "medium": 6,
+        "high": 0
+      },
+      "domain_backbone_alignment_distribution": {
+        "low": 0,
+        "medium": 40,
+        "high": 0
+      },
+      "external_copy_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "misleading_claim_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    "CC-3": {
+      "records": 40,
+      "decision_counts": {
+        "needs_rewrite": 40
+      },
+      "average_template_repetition_risk": 3,
+      "educational_value_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "practical_usefulness_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "domain_backbone_alignment_distribution": {
+        "low": 0,
+        "medium": 1,
+        "high": 39
+      },
+      "external_copy_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "misleading_claim_risk_distribution": {
+        "low": 39,
+        "medium": 1,
+        "high": 0
+      }
+    },
+    "CC-4": {
+      "records": 40,
+      "decision_counts": {
+        "keep_as_candidate": 1,
+        "needs_rewrite": 39
+      },
+      "average_template_repetition_risk": 2.98,
+      "educational_value_distribution": {
+        "low": 39,
+        "medium": 1,
+        "high": 0
+      },
+      "practical_usefulness_distribution": {
+        "low": 39,
+        "medium": 1,
+        "high": 0
+      },
+      "domain_backbone_alignment_distribution": {
+        "low": 0,
+        "medium": 0,
+        "high": 40
+      },
+      "external_copy_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "misleading_claim_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    "CC-5": {
+      "records": 40,
+      "decision_counts": {
+        "keep_as_candidate": 10,
+        "needs_rewrite": 30
+      },
+      "average_template_repetition_risk": 3,
+      "educational_value_distribution": {
+        "low": 0,
+        "medium": 40,
+        "high": 0
+      },
+      "practical_usefulness_distribution": {
+        "low": 0,
+        "medium": 40,
+        "high": 0
+      },
+      "domain_backbone_alignment_distribution": {
+        "low": 0,
+        "medium": 0,
+        "high": 40
+      },
+      "external_copy_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "misleading_claim_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    "CC-6": {
+      "records": 40,
+      "decision_counts": {
+        "needs_rewrite": 40
+      },
+      "average_template_repetition_risk": 3,
+      "educational_value_distribution": {
+        "low": 30,
+        "medium": 10,
+        "high": 0
+      },
+      "practical_usefulness_distribution": {
+        "low": 30,
+        "medium": 10,
+        "high": 0
+      },
+      "domain_backbone_alignment_distribution": {
+        "low": 0,
+        "medium": 40,
+        "high": 0
+      },
+      "external_copy_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      },
+      "misleading_claim_risk_distribution": {
+        "low": 40,
+        "medium": 0,
+        "high": 0
+      }
+    }
+  },
+  "quality_summary": {
+    "main_problem": "quality/template repetition",
+    "promotion_blocker": "strong promotion candidates were not found and needs_rewrite dominates the reviewed sample"
+  }
+}

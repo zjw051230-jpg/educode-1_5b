@@ -233,3 +233,4 @@ Current implementation note:
 - D17.2 draft corpus review gate
 - D18 batch_04 draft corpus validation and quality review
 - D18.1 targeted sampling review pack
+- D18.3 batch 04 sampling review aggregate
