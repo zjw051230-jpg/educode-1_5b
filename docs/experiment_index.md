@@ -10,7 +10,7 @@ The purpose of the experiment index is to:
 - Tokenizer planning, BPE artifact creation, config migration, processed-data smoke, validation-loop smoke, corpus expansion, tokenizer retraining, and bounded mixed/domain small-training validation have been completed through D16.4.
 - The current stage has moved from A100 scaling validation through permitted corpus expansion into bounded local mixed/domain BPE training validation.
 - The project has validated real A100 single-GPU smoke behavior through 2.15B-scale optimizer profiling, but meaningful longer training is now limited by corpus scale, tokenizer quality, and approved data sources rather than raw GPU feasibility.
-- A draft-only worker framework now exists for future parallel educational corpus drafting without promoting content into the formal training corpus.
+- A draft-only worker framework plus validation/review pipeline now exists for future parallel educational corpus drafting without promoting content into the formal training corpus.
 
 ## 2. Experiment Tracking Principles
 - every experiment gets a unique `experiment_id`
@@ -152,7 +152,8 @@ Meaning:
 | EXP-20260517-008-a2-a100-mixed-domain-training-plan | N/A | A2 | planning | `docs/a2_a100_mixed_domain_training_plan.md` | 0e2838c | success | A100 mixed/domain training plan created | `docs/a2_a100_mixed_domain_training_plan.md` | create an A100 300M mixed/domain config draft and validation script next |
 | EXP-20260517-009-d17-0-draft-corpus-worker-framework | N/A | D17.0 | planning | `data/real_corpus/draft_queue/domain_synthetic_batch_03/00_framework/topic_registry.jsonl` | 6970f7a | success | draft corpus taxonomy, topic registry, and worker framework created | `docs/d17_0_draft_corpus_taxonomy_worker_framework.md` | validate future written drafts against the registry before any promotion discussion |
 | EXP-20260517-010-d17-1-draft-corpus-generation-validation | N/A | D17.1 | validation | `scripts/validate_draft_corpus_batch_03.py` | 8d9dd8b | success | 120 draft corpus candidates generated and validated in draft_queue | `docs/d17_1_draft_corpus_generation_validation.md` | enter D17.2 draft corpus review gate |
-| EXP-20260517-011-d17-2-draft-corpus-review-gate | N/A | D17.2 | review | `scripts/review_draft_corpus_batch_03.py` | pending local commit | success | draft corpus review gate completed for 120 candidate files | `docs/d17_2_draft_corpus_review_gate.md` | prepare D17.3 promotion sampling and duplicate-filename disposition |
+| EXP-20260517-011-d17-2-draft-corpus-review-gate | N/A | D17.2 | review | `scripts/review_draft_corpus_batch_03.py` | b4680cc | success | draft corpus review gate completed for 120 candidate files | `docs/d17_2_draft_corpus_review_gate.md` | prepare D17.3 promotion sampling and duplicate-filename disposition |
+| EXP-20260517-012-d18-batch-04-draft-corpus-validation-review | N/A | D18 | validation/review | `scripts/validate_draft_corpus_batch_04.py` | pending local commit | success | batch_04 draft aggregation passed structural validation and automated quality review passed with concentrated notes for targeted human sampling | `docs/d18_batch_04_draft_corpus_validation_review.md` | run targeted human sampling on the note-heavy worker clusters before any promotion discussion |
 
 Notes:
 - These entries include planning records, inspections, and real bounded local training runs.

@@ -1,0 +1,449 @@
+{
+  "validation_status": "passed",
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_04",
+  "total_manifest_rows": 6000,
+  "total_topic_files": 6000,
+  "expected_total_topic_files": 6000,
+  "markdown_count": 3950,
+  "python_count": 2050,
+  "expected_markdown_count": 3950,
+  "expected_python_count": 2050,
+  "passed_record_count": 6000,
+  "failed_record_count": 0,
+  "duplicate_topic_id_count": 0,
+  "duplicate_file_path_count": 0,
+  "worker_rollup": {
+    "CC-1": {
+      "worker_directory": "cc1_ml_foundations",
+      "expected_total": 1000,
+      "expected_markdown": 700,
+      "expected_python": 300,
+      "manifest_rows": 1000,
+      "manifest_markdown": 700,
+      "manifest_python": 300,
+      "disk_markdown": 700,
+      "disk_python": 300,
+      "progress_file_count": 10,
+      "batch_summary_check": {
+        "worker_id": "CC-1",
+        "batch_summary_values": {
+          "worker_id": "CC-1",
+          "target_count": "1000",
+          "generated_count": "1000",
+          "markdown_count": "700",
+          "python_count": "300"
+        },
+        "batch_summary_errors": [],
+        "progress_file_count": 10,
+        "progress_files": [
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0100.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0200.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0300.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0400.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0500.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0600.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0700.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0800.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_0900.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/progress_1000.md"
+        ]
+      },
+      "validation_status_counts": {
+        "passed": 1000
+      }
+    },
+    "CC-2": {
+      "worker_directory": "cc2_python_data_systems",
+      "expected_total": 1000,
+      "expected_markdown": 700,
+      "expected_python": 300,
+      "manifest_rows": 1000,
+      "manifest_markdown": 700,
+      "manifest_python": 300,
+      "disk_markdown": 700,
+      "disk_python": 300,
+      "progress_file_count": 10,
+      "batch_summary_check": {
+        "worker_id": "CC-2",
+        "batch_summary_values": {
+          "worker_id": "CC-2",
+          "target_count": "1000",
+          "generated_count": "1000",
+          "markdown_count": "700",
+          "python_count": "300"
+        },
+        "batch_summary_errors": [],
+        "progress_file_count": 10,
+        "progress_files": [
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0100.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0200.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0300.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0400.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0500.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0600.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0700.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0800.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_0900.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/progress_1000.md"
+        ]
+      },
+      "validation_status_counts": {
+        "passed": 1000
+      }
+    },
+    "CC-3": {
+      "worker_directory": "cc3_transformer_architecture",
+      "expected_total": 1000,
+      "expected_markdown": 700,
+      "expected_python": 300,
+      "manifest_rows": 1000,
+      "manifest_markdown": 700,
+      "manifest_python": 300,
+      "disk_markdown": 700,
+      "disk_python": 300,
+      "progress_file_count": 10,
+      "batch_summary_check": {
+        "worker_id": "CC-3",
+        "batch_summary_values": {
+          "worker_id": "CC-3",
+          "target_count": "1000",
+          "generated_count": "1000",
+          "markdown_count": "700",
+          "python_count": "300"
+        },
+        "batch_summary_errors": [],
+        "progress_file_count": 10,
+        "progress_files": [
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0100.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0200.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0300.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0400.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0500.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0600.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0700.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0800.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_0900.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc3_transformer_architecture/progress_checkpoint_1000.md"
+        ]
+      },
+      "validation_status_counts": {
+        "passed": 1000
+      }
+    },
+    "CC-4": {
+      "worker_directory": "cc4_training_runtime_systems",
+      "expected_total": 1000,
+      "expected_markdown": 700,
+      "expected_python": 300,
+      "manifest_rows": 1000,
+      "manifest_markdown": 700,
+      "manifest_python": 300,
+      "disk_markdown": 700,
+      "disk_python": 300,
+      "progress_file_count": 10,
+      "batch_summary_check": {
+        "worker_id": "CC-4",
+        "batch_summary_values": {
+          "worker_id": "CC-4",
+          "target_count": "1000",
+          "generated_count": "1000",
+          "markdown_count": "700",
+          "python_count": "300"
+        },
+        "batch_summary_errors": [],
+        "progress_file_count": 10,
+        "progress_files": [
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0100.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0200.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0300.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0400.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0500.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0600.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0700.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0800.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_0900.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc4_training_runtime_systems/progress_checkpoint_1000.md"
+        ]
+      },
+      "validation_status_counts": {
+        "passed": 1000
+      }
+    },
+    "CC-5": {
+      "worker_directory": "cc5_bilingual_qa",
+      "expected_total": 1000,
+      "expected_markdown": 850,
+      "expected_python": 150,
+      "manifest_rows": 1000,
+      "manifest_markdown": 850,
+      "manifest_python": 150,
+      "disk_markdown": 850,
+      "disk_python": 150,
+      "progress_file_count": 10,
+      "batch_summary_check": {
+        "worker_id": "CC-5",
+        "batch_summary_values": {
+          "worker_id": "CC-5",
+          "target_count": "1000",
+          "generated_count": "1000",
+          "markdown_count": "850",
+          "python_count": "150"
+        },
+        "batch_summary_errors": [],
+        "progress_file_count": 10,
+        "progress_files": [
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0100.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0200.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0300.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0400.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0500.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0600.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0700.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0800.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_0900.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc5_bilingual_qa/progress_checkpoint_1000.md"
+        ]
+      },
+      "validation_status_counts": {
+        "passed": 1000
+      }
+    },
+    "CC-6": {
+      "worker_directory": "cc6_code_snippets",
+      "expected_total": 1000,
+      "expected_markdown": 300,
+      "expected_python": 700,
+      "manifest_rows": 1000,
+      "manifest_markdown": 300,
+      "manifest_python": 700,
+      "disk_markdown": 300,
+      "disk_python": 700,
+      "progress_file_count": 10,
+      "batch_summary_check": {
+        "worker_id": "CC-6",
+        "batch_summary_values": {
+          "worker_id": "CC-6",
+          "target_count": "1000",
+          "generated_count": "1000",
+          "markdown_count": "300",
+          "python_count": "700"
+        },
+        "batch_summary_errors": [],
+        "progress_file_count": 10,
+        "progress_files": [
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_01_0100.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_02_0200.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_03_0300.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_04_0400.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_05_0500.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_06_0600.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_07_0700.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_08_0800.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_09_0900.md",
+          "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc6_code_snippets/progress_checkpoint_10_1000.md"
+        ]
+      },
+      "validation_status_counts": {
+        "passed": 1000
+      }
+    }
+  },
+  "registry_errors": [],
+  "metadata_errors": [],
+  "metadata_errors_count": 0,
+  "missing_files": [],
+  "missing_files_count": 0,
+  "scope_errors": [],
+  "scope_errors_count": 0,
+  "unexpected_files": [],
+  "git_scope": {
+    "checked_with_git_status": true,
+    "allowed_exact_paths": [
+      "README.md",
+      "docs/d18_batch_04_draft_corpus_validation_review.md",
+      "docs/d18_batch_04_human_sampling_plan.md",
+      "docs/d18_batch_04_worker_aggregation_summary.md",
+      "docs/experiment_index.md",
+      "scripts/review_draft_corpus_quality_batch_04.py",
+      "scripts/validate_draft_corpus_batch_04.py"
+    ],
+    "allowed_prefixes": [
+      "data/real_corpus/draft_queue/domain_synthetic_batch_04/"
+    ],
+    "observed_entries": [
+      {
+        "status": "??",
+        "path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/"
+      },
+      {
+        "status": "??",
+        "path": "scripts/validate_draft_corpus_batch_04.py"
+      }
+    ],
+    "out_of_scope_errors": [],
+    "out_of_scope_error_count": 0
+  },
+  "secret_scan": {
+    "result": "explanatory-only",
+    "explanatory_only_count": 5546,
+    "credential_style_count": 0,
+    "explanatory_only_examples": [
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 14,
+        "pattern": "token",
+        "context": "# Next-Token Alignment for Next-Token Objective And Loss Interpretation (1)",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 17,
+        "pattern": "token",
+        "context": "This draft focuses on next-token alignment within the broader theme of next-token objective and loss interpretation.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 21,
+        "pattern": "token",
+        "context": "In small next-token experiments, next-token alignment often appears as a local signal rather than a final verdict.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 23,
+        "pattern": "token",
+        "context": "The same scalar can mean something different when token distribution, sequence length, or masking assumptions change.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 29,
+        "pattern": "token",
+        "context": "Imagine a synthetic run where topic B04-MLF-0001 tracks next-token alignment over three short checkpoints.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 40,
+        "pattern": "token",
+        "context": "- Treating next-token alignment as if it had the same meaning in every batch and every split.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 52,
+        "pattern": "token",
+        "context": "It also helps compare train loss, validation loss, and token-distribution context without collapsing them into one story.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0001_loss_validation_next_token_alignment_v01.md",
+        "line": 55,
+        "pattern": "token",
+        "context": "The teaching objective for this file is: Explain next-token alignment through a synthetic educational example focused on next-token objective and loss interpret",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0002_loss_validation_cross_entropy_reading_v01.md",
+        "line": 14,
+        "pattern": "token",
+        "context": "# Cross-Entropy Reading for Next-Token Objective And Loss Interpretation (1)",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0002_loss_validation_cross_entropy_reading_v01.md",
+        "line": 17,
+        "pattern": "token",
+        "context": "This draft focuses on cross-entropy reading within the broader theme of next-token objective and loss interpretation.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0002_loss_validation_cross_entropy_reading_v01.md",
+        "line": 21,
+        "pattern": "token",
+        "context": "In small next-token experiments, cross-entropy reading often appears as a local signal rather than a final verdict.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0002_loss_validation_cross_entropy_reading_v01.md",
+        "line": 23,
+        "pattern": "token",
+        "context": "The same scalar can mean something different when token distribution, sequence length, or masking assumptions change.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0002_loss_validation_cross_entropy_reading_v01.md",
+        "line": 52,
+        "pattern": "token",
+        "context": "It also helps compare train loss, validation loss, and token-distribution context without collapsing them into one story.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0002_loss_validation_cross_entropy_reading_v01.md",
+        "line": 55,
+        "pattern": "token",
+        "context": "The teaching objective for this file is: Explain cross-entropy reading through a synthetic educational example focused on next-token objective and loss interpre",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0003_loss_validation_negative_log_likelihood_intuition_v01.py",
+        "line": 12,
+        "pattern": "token",
+        "context": "\"\"\"Negative Log Likelihood Intuition for Next-Token Objective And Loss Interpretation (1).\"\"\"",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0003_loss_validation_negative_log_likelihood_intuition_v01.py",
+        "line": 17,
+        "pattern": "token",
+        "context": "\"theme\": \"next-token objective and loss interpretation\",",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0003_loss_validation_negative_log_likelihood_intuition_v01.py",
+        "line": 19,
+        "pattern": "token",
+        "context": "\"teaching_goal\": \"Explain negative log likelihood intuition through a synthetic educational example focused on next-token objective and loss interpretation.\",",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0003_loss_validation_negative_log_likelihood_intuition_v01.py",
+        "line": 34,
+        "pattern": "token",
+        "context": "\"Ignoring how token distribution can change the meaning of a scalar metric.\",",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0003_loss_validation_negative_log_likelihood_intuition_v01.py",
+        "line": 49,
+        "pattern": "token",
+        "context": "# review_note_03: synthetic note about negative log likelihood intuition and next-token objective and loss interpretation.",
+        "classification": "explanatory-only"
+      },
+      {
+        "file": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc1_ml_foundations/loss_validation/b04-mlf-0004_loss_validation_logits_target_matching_v01.md",
+        "line": 14,
+        "pattern": "token",
+        "context": "# Logits-Target Matching for Next-Token Objective And Loss Interpretation (1)",
+        "classification": "explanatory-only"
+      }
+    ],
+    "credential_style_examples": []
+  },
+  "line_count_stats": {
+    "min": 46,
+    "max": 96,
+    "mean": 59.6
+  },
+  "char_count_stats": {
+    "min": 1628,
+    "max": 3630,
+    "mean": 2789.39
+  },
+  "approval_state": {
+    "all_records_approved_for_training_false": true,
+    "all_records_contains_external_text_false": true,
+    "all_records_contains_private_data_false": true
+  }
+}

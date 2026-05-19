@@ -1,0 +1,221 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_04",
+  "validation_reference": {
+    "validation_status": "passed",
+    "validation_manifest_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/batch_04_validation_manifest.jsonl",
+    "validation_summary_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/batch_04_validation_summary.json"
+  },
+  "total_records": 6000,
+  "quality_pass_count": 2850,
+  "needs_edit_count": 3150,
+  "reject_count": 0,
+  "quality_gate_status": "passed_with_notes",
+  "worker_counts": {
+    "CC-1": 1000,
+    "CC-2": 1000,
+    "CC-3": 1000,
+    "CC-4": 1000,
+    "CC-5": 1000,
+    "CC-6": 1000
+  },
+  "worker_quality_state_counts": {
+    "CC-1": {
+      "quality_pass": 1000
+    },
+    "CC-2": {
+      "needs_edit": 1000
+    },
+    "CC-3": {
+      "needs_edit": 1000
+    },
+    "CC-4": {
+      "quality_pass": 1000
+    },
+    "CC-5": {
+      "needs_edit": 850,
+      "quality_pass": 150
+    },
+    "CC-6": {
+      "needs_edit": 300,
+      "quality_pass": 700
+    }
+  },
+  "file_type_counts": {
+    "markdown": 3950,
+    "python": 2050
+  },
+  "flag_counts": {
+    "boilerplate_density_high": 1850,
+    "repeated_internal_line": 1300,
+    "templated_opening_family": 1700
+  },
+  "line_count_stats": {
+    "min": 46,
+    "max": 96,
+    "mean": 59.6
+  },
+  "char_count_stats": {
+    "min": 1628,
+    "max": 3630,
+    "mean": 2789.39
+  },
+  "review_samples": {
+    "needs_edit_examples": [
+      {
+        "topic_id": "B04-PDS-0001",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0001_line_by_line_reader.py",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0002",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0002_append_safe_writer.py",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0003",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0003_blank_line_handling.py",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0004",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0004_utf8_field_preservation.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0005",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0005_object_only_row_checks.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0006",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0006_newline_aware_dumping.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0007",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0007_source_category_carryover.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0008",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0008_stable_record_id_handling.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0009",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0009_preview_sampling.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0010",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0010_malformed_row_reporting.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0011",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0011_manifest_sidecar_expectations.py",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0012",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0012_field_ordering_choices.py",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0013",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0013_streaming_read_memory_limits.py",
+        "quality_flags": [
+          "repeated_internal_line"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0014",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0014_writer_flush_timing.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0015",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0015_counting_rows_safely.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0016",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0016_nested_text_field_extraction.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0017",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0017_json_decode_diagnostics.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0018",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0018_reader_path_validation.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0019",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0019_single_object_per_line_policy.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      },
+      {
+        "topic_id": "B04-PDS-0020",
+        "file_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/cc2_python_data_systems/jsonl_pipeline/b04_pds_0020_trailing_whitespace_handling.md",
+        "quality_flags": [
+          "templated_opening_family",
+          "boilerplate_density_high"
+        ]
+      }
+    ],
+    "reject_examples": []
+  }
+}
