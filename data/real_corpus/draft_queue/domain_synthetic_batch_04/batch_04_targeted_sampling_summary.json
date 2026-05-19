@@ -1,0 +1,285 @@
+{
+  "batch_root": "data/real_corpus/draft_queue/domain_synthetic_batch_04",
+  "source_quality_manifest_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/batch_04_quality_review_manifest.jsonl",
+  "source_quality_summary_path": "data/real_corpus/draft_queue/domain_synthetic_batch_04/batch_04_quality_review_summary.json",
+  "d18_quality_gate_status": "passed_with_notes",
+  "d18_total_records": 6000,
+  "target_total_samples": 240,
+  "sampled_total_files": 240,
+  "sampled_worker_counts": {
+    "CC-1": 40,
+    "CC-2": 40,
+    "CC-3": 40,
+    "CC-4": 40,
+    "CC-5": 40,
+    "CC-6": 40
+  },
+  "sampled_quality_state_counts": {
+    "needs_edit": 140,
+    "quality_pass": 100
+  },
+  "sampled_high_risk_file_count": 140,
+  "sampled_risk_flag_counts": {
+    "boilerplate_density_high": 99,
+    "repeated_internal_line": 41,
+    "templated_opening_family": 108
+  },
+  "sampled_file_type_counts": {
+    "markdown": 216,
+    "python": 24
+  },
+  "worker_priority": [
+    "CC-2",
+    "CC-3",
+    "CC-5",
+    "CC-6",
+    "CC-1",
+    "CC-4"
+  ],
+  "worker_sampling_targets": {
+    "CC-1": {
+      "total": 40,
+      "quality_pass": 20,
+      "risk": 20,
+      "markdown_focus": false
+    },
+    "CC-2": {
+      "total": 40,
+      "quality_pass": 10,
+      "risk": 30,
+      "markdown_focus": false
+    },
+    "CC-3": {
+      "total": 40,
+      "quality_pass": 10,
+      "risk": 30,
+      "markdown_focus": false
+    },
+    "CC-4": {
+      "total": 40,
+      "quality_pass": 20,
+      "risk": 20,
+      "markdown_focus": false
+    },
+    "CC-5": {
+      "total": 40,
+      "quality_pass": 10,
+      "risk": 30,
+      "markdown_focus": true
+    },
+    "CC-6": {
+      "total": 40,
+      "quality_pass": 10,
+      "risk": 30,
+      "markdown_focus": true
+    }
+  },
+  "worker_sampling_results": {
+    "CC-1": {
+      "requested_total": 40,
+      "requested_quality_pass": 20,
+      "requested_risk": 20,
+      "available_quality_pass": 1000,
+      "available_risk": 0,
+      "sampled_total": 40,
+      "sampled_quality_pass": 40,
+      "sampled_risk": 0,
+      "sampled_file_type_counts": {
+        "markdown": 39,
+        "python": 1
+      },
+      "sampled_flag_counts": {},
+      "covered_subcategory_count": 10,
+      "covered_subcategories": [
+        "curriculum_notes",
+        "data_distribution",
+        "debugging_metrics",
+        "evaluation_overfitting",
+        "gradient_behavior",
+        "learning_dynamics",
+        "loss_validation",
+        "optimization",
+        "regularization",
+        "review_checklists"
+      ],
+      "fallback_fill_count": 32,
+      "constraint_notes": [
+        "requested 20 risk samples but only 0 were available"
+      ]
+    },
+    "CC-2": {
+      "requested_total": 40,
+      "requested_quality_pass": 10,
+      "requested_risk": 30,
+      "available_quality_pass": 0,
+      "available_risk": 1000,
+      "sampled_total": 40,
+      "sampled_quality_pass": 0,
+      "sampled_risk": 40,
+      "sampled_file_type_counts": {
+        "markdown": 39,
+        "python": 1
+      },
+      "sampled_flag_counts": {
+        "boilerplate_density_high": 39,
+        "repeated_internal_line": 1,
+        "templated_opening_family": 39
+      },
+      "covered_subcategory_count": 10,
+      "covered_subcategories": [
+        "config_validation",
+        "jsonl_pipeline",
+        "loss_curve_tools",
+        "metrics_logging",
+        "provenance_metadata",
+        "safe_text_cleaning",
+        "sanity_checks",
+        "sequence_chunking",
+        "split_management",
+        "tokenizer_batching"
+      ],
+      "fallback_fill_count": 34,
+      "constraint_notes": [
+        "requested 10 quality_pass samples but only 0 were available"
+      ]
+    },
+    "CC-3": {
+      "requested_total": 40,
+      "requested_quality_pass": 10,
+      "requested_risk": 30,
+      "available_quality_pass": 0,
+      "available_risk": 1000,
+      "sampled_total": 40,
+      "sampled_quality_pass": 0,
+      "sampled_risk": 40,
+      "sampled_file_type_counts": {
+        "markdown": 39,
+        "python": 1
+      },
+      "sampled_flag_counts": {
+        "repeated_internal_line": 40,
+        "templated_opening_family": 39
+      },
+      "covered_subcategory_count": 10,
+      "covered_subcategories": [
+        "architecture_debugging",
+        "attention_masking",
+        "decoder_only",
+        "embeddings_positions",
+        "generation_sampling",
+        "layer_norm_residual",
+        "logits_projection",
+        "mlp_blocks",
+        "multi_head_attention",
+        "qkv_shapes"
+      ],
+      "fallback_fill_count": 30,
+      "constraint_notes": [
+        "requested 10 quality_pass samples but only 0 were available"
+      ]
+    },
+    "CC-4": {
+      "requested_total": 40,
+      "requested_quality_pass": 20,
+      "requested_risk": 20,
+      "available_quality_pass": 1000,
+      "available_risk": 0,
+      "sampled_total": 40,
+      "sampled_quality_pass": 40,
+      "sampled_risk": 0,
+      "sampled_file_type_counts": {
+        "markdown": 39,
+        "python": 1
+      },
+      "sampled_flag_counts": {},
+      "covered_subcategory_count": 10,
+      "covered_subcategories": [
+        "a100_smoke_tests",
+        "checkpointing",
+        "cuda_memory",
+        "experiment_logging",
+        "gradient_clipping",
+        "optimizer_steps",
+        "overfit_detection",
+        "runbook_checklists",
+        "throughput_profiles",
+        "validation_loop"
+      ],
+      "fallback_fill_count": 33,
+      "constraint_notes": [
+        "requested 20 risk samples but only 0 were available"
+      ]
+    },
+    "CC-5": {
+      "requested_total": 40,
+      "requested_quality_pass": 10,
+      "requested_risk": 30,
+      "available_quality_pass": 150,
+      "available_risk": 850,
+      "sampled_total": 40,
+      "sampled_quality_pass": 10,
+      "sampled_risk": 30,
+      "sampled_file_type_counts": {
+        "markdown": 30,
+        "python": 10
+      },
+      "sampled_flag_counts": {
+        "boilerplate_density_high": 30
+      },
+      "covered_subcategory_count": 10,
+      "covered_subcategories": [
+        "a100_profile_zh_en",
+        "attention_mask_zh_en",
+        "bpe_zh_en",
+        "checkpoint_zh_en",
+        "concept_contrast_zh_en",
+        "data_pipeline_zh_en",
+        "debugging_zh_en",
+        "tokenizer_zh_en",
+        "training_loop_zh_en",
+        "validation_zh_en"
+      ],
+      "fallback_fill_count": 0,
+      "constraint_notes": []
+    },
+    "CC-6": {
+      "requested_total": 40,
+      "requested_quality_pass": 10,
+      "requested_risk": 30,
+      "available_quality_pass": 700,
+      "available_risk": 300,
+      "sampled_total": 40,
+      "sampled_quality_pass": 10,
+      "sampled_risk": 30,
+      "sampled_file_type_counts": {
+        "markdown": 30,
+        "python": 10
+      },
+      "sampled_flag_counts": {
+        "boilerplate_density_high": 30,
+        "templated_opening_family": 30
+      },
+      "covered_subcategory_count": 10,
+      "covered_subcategories": [
+        "batching_helpers",
+        "checkpoint_metadata",
+        "config_validators",
+        "jsonl_sanity_checkers",
+        "loss_examples",
+        "metrics_writers",
+        "minimal_pytorch",
+        "source_category_tools",
+        "tokenizer_utils",
+        "validation_loop"
+      ],
+      "fallback_fill_count": 0,
+      "constraint_notes": []
+    }
+  },
+  "notes": [
+    "Worker-level pass/risk targets are treated as desired sampling shapes, with fallback fill from available within-worker records when D18 state availability makes an exact split impossible.",
+    "CC-1 and CC-4 remain cleaner baseline workers with no D18 needs_edit records.",
+    "CC-2 and CC-3 remain all-needs_edit workers with no D18 quality_pass records available for sampling.",
+    "CC-5 and CC-6 prioritize markdown-heavy risk sampling while preserving a small clean-control slice from the available quality_pass subset."
+  ]
+}
