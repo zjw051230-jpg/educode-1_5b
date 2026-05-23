@@ -117,7 +117,8 @@ Current implementation note:
 - First A100 MVP public corpus selected as FineWeb-Edu sample-10BT bounded slice.
 - MVP-7 implemented the A100 FineWeb-Edu 300M 10-step smoke script with local dry-run validation, exact parameter counting, and explicit declared-vs-core feature compatibility reporting.
 - A100/A800 MVP training loop validated with 319M model on FineWeb-Edu 50MB public corpus.
-- Next objective is to use the imported A800 bounded-run results as training-systems evidence while keeping architecture-parity caveats explicit and avoiding model-quality claims.
+- After successful A800 10-step and 100-step runs, the next recommended route is 500MB public corpus expansion, public 16k tokenizer, then a 300M 1000-step bounded run.
+- Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
 ## Resume Resources
 - [Resume Bullets](docs/resume_bullets.md)
@@ -266,3 +267,4 @@ Current implementation note:
 - MVP-8.P A100 execution preflight gate
 - MVP-8 A800 300M 10-step training smoke completed
 - MVP-9 A800 300M 100-step bounded run completed
+- MVP-10 post-A800 review and next-scale decision
