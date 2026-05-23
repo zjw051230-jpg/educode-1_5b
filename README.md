@@ -35,6 +35,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - An E1 research paper assistant corpus framework now exists with inbox, metadata, derived, draft-queue, and RAG-library boundaries; raw paper files remain source-library only by default and do not enter the formal training corpus in this step.
 - E1.R1 aligned the research paper metadata schema, source policy, and paper-to-corpus taxonomy around standardized fields and task names without introducing any real paper data.
 - MVP-2 selected FineWeb-Edu `sample-10BT` as the first bounded public corpus source for the A100 MVP without downloading a real slice in this step.
+- MVP-3.R hardened the FineWeb-Edu dry-run path and confirmed a tiny preview-only dry-run could succeed without generating `raw.jsonl`.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -252,3 +253,4 @@ Current implementation note:
 - E1 research paper assistant corpus framework
 - E1.R1 research paper schema and taxonomy alignment
 - MVP-2 FineWeb-Edu public corpus source decision
+- MVP-3.R FineWeb-Edu dry-run troubleshooting

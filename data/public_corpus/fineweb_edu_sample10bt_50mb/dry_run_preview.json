@@ -1,0 +1,9 @@
+{
+  "record_count": 3,
+  "text_field": "text",
+  "first_text_chars_preview": "The Independent Jane\nFor all the love, romance and scandal in Jane Austen’s books, what they are really about is freedom and independence. Independence of thought and the freedom to choose.\nElizabeth’s refusal of Mr. Collins offer of marriage showed an independence seldom seen in heroines of the day",
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "split": "train",
+  "error": null
+}
