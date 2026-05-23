@@ -157,3 +157,18 @@ Even if this run later succeeds, it should be described as:
 Immediate next step: MVP-13.1 local public `16k` data/model/loss smoke plan and execution.
 
 If MVP-13.1 passes, a later MVP can approve the `300M` `1000-step` A100/A800 execution using the draft config from this step.
+
+## 10. MVP-14.P Cleanup Gate Completed
+
+MVP-14.P completed the pre-execution logging and path cleanup gate for the public16k `300M` `1000-step` draft.
+
+Completed gate results:
+
+- MVP-13.1 public16k data/model/loss smoke passed;
+- `run_id` is now derived from the current config `run_name` instead of a hardcoded `10step` phrase;
+- checkpoint paths are constrained to the current `output_dir/checkpoints`;
+- standalone `validation_metrics.jsonl` writing is supported during evaluation;
+- post-run artifact validation is available for summary, metrics, validation metrics, config, metadata, checkpoint path, and checkpoint reload status;
+- public16k readiness passed with `blockers=0`.
+
+The `1000-step` GPU run may proceed only after the readiness summary remains passing on the execution machine and the user explicitly approves the real A800/A100 execution.

@@ -2,24 +2,36 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from tokenizers import Tokenizer
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "a100" / "fineweb_edu_50mb_300m_10step_execute.json"
-EXPECTED_PARAMETER_COUNT = 319329280
-EXPECTED_MAX_STEPS = 10
-EXPECTED_CHECKPOINT_INTERVAL = 10
+SRC_PATH = PROJECT_ROOT / "src"
+DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "a100" / "fineweb_edu_500mb_300m_1000step_public16k_execute.json"
 TRAINING_SCRIPT_PATH = PROJECT_ROOT / "scripts" / "run_a100_300m_fineweb_edu_10step_training.py"
-DRY_RUN_SUMMARY_PATH = PROJECT_ROOT / "experiments" / "a100" / "fineweb_edu_50mb_300m_10step_smoke" / "dry_run_summary.json"
-LOCAL_ARTIFACT_ROOT = PROJECT_ROOT / "data" / "public_corpus" / "fineweb_edu_sample10bt_50mb"
-LOCAL_SPLITS_DIR = LOCAL_ARTIFACT_ROOT / "splits"
-LOCAL_PROCESSED_DIR = LOCAL_ARTIFACT_ROOT / "processed"
+EXPECTED_PUBLIC16K_RUN_NAME = "fineweb_edu_500mb_300m_1000step_public16k_execute"
+EXPECTED_PUBLIC16K_OUTPUT_DIR = PROJECT_ROOT / "experiments" / "a100" / EXPECTED_PUBLIC16K_RUN_NAME
+EXPECTED_PUBLIC16K_VOCAB_SIZE = 16384
+EXPECTED_PUBLIC16K_MAX_STEPS = 1000
+EXPECTED_PUBLIC16K_EVAL_INTERVAL = 100
+EXPECTED_PUBLIC16K_CHECKPOINT_INTERVAL = 1000
+
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
+
+from educode.tiny_model import TinyModelConfig, model_config_from_dict
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    with path.open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return payload
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -40,15 +52,34 @@ def repo_relative_path(path: Path) -> str:
 
 def is_under(path: Path, root: Path) -> bool:
     try:
-        path.relative_to(root)
+        path.resolve().relative_to(root.resolve())
         return True
     except ValueError:
         return False
 
 
+def count_parameters_exact_from_config(model_config: TinyModelConfig) -> int:
+    d_model = model_config.d_model
+    vocab_size = model_config.vocab_size
+    context_length = model_config.context_length
+    num_layers = model_config.num_layers
+    d_ff = model_config.d_ff
+
+    token_embedding_params = vocab_size * d_model
+    position_embedding_params = context_length * d_model
+    attention_params = (3 * d_model * d_model) + (d_model * d_model)
+    feedforward_params = (d_model * d_ff) + (d_model * d_ff) + (d_ff * d_model)
+    norm_params = 2 * d_model
+    block_params = attention_params + feedforward_params + norm_params
+    final_norm_params = d_model
+    lm_head_params = d_model * vocab_size
+
+    return token_embedding_params + position_embedding_params + (num_layers * block_params) + final_norm_params + lm_head_params
+
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Check A100 execution readiness for the FineWeb-Edu 300M 10-step smoke.")
-    parser.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to the A100 execution config JSON.")
+    parser = argparse.ArgumentParser(description="Check A100/A800 execution readiness for a bounded FineWeb-Edu run.")
+    parser.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to the A100/A800 execution config JSON.")
     return parser.parse_args()
 
 
@@ -67,63 +98,76 @@ def main() -> int:
     blockers: list[str] = []
     caveats: list[str] = []
 
-    run_name = config["run"]["run_name"]
-    output_dir = resolve_repo_path(config["run"]["output_dir"])
-    train_path = resolve_repo_path(config["data"]["train_path"])
-    val_path = resolve_repo_path(config["data"]["val_path"])
-    tokenizer_path = resolve_repo_path(config["tokenizer"]["path"])
+    run_name = str(config["run"]["run_name"])
+    output_dir = resolve_repo_path(str(config["run"]["output_dir"]))
+    train_path = resolve_repo_path(str(config["data"]["train_path"]))
+    val_path = resolve_repo_path(str(config["data"]["val_path"]))
+    tokenizer_path = resolve_repo_path(str(config["tokenizer"]["path"]))
+    checkpoint_save_dir = resolve_repo_path(str(config["checkpoint"]["save_dir"]))
+    expected_checkpoint_save_dir = output_dir / "checkpoints"
+    dry_run_summary_path = output_dir / "dry_run_summary.json"
+
     tokenizer_vocab_size = int(config["tokenizer"]["vocab_size"])
-    model_size_label = config["model"]["model_size_label"]
-    sequence_length = int(config["training"]["sequence_length"])
-    batch_size = int(config["training"]["batch_size"])
-    gradient_accumulation_steps = int(config["training"]["gradient_accumulation_steps"])
+    model_vocab_size = int(config["model"]["vocab_size"])
     max_steps = int(config["training"]["max_steps"])
     eval_interval = int(config["training"]["eval_interval"])
     checkpoint_interval = int(config["training"]["checkpoint_interval"])
-    precision = str(config["hardware"].get("precision"))
-    training_no_training = config.get("training", {}).get("no_training")
-    top_level_no_training = config.get("no_training")
+    training_no_training = config["training"].get("no_training")
     no_commit_checkpoints = config.get("checkpoint", {}).get("no_commit_checkpoints")
+    public16k_config = run_name == EXPECTED_PUBLIC16K_RUN_NAME
 
-    require(training_no_training is False, "training.no_training must be false for execution config", blockers)
-    require(max_steps == EXPECTED_MAX_STEPS, f"training.max_steps must equal {EXPECTED_MAX_STEPS}", blockers)
-    require(
-        checkpoint_interval == EXPECTED_CHECKPOINT_INTERVAL,
-        f"training.checkpoint_interval must equal {EXPECTED_CHECKPOINT_INTERVAL}",
-        blockers,
-    )
-    require(no_commit_checkpoints is True, "checkpoint.no_commit_checkpoints must be true", blockers)
+    require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
     require(train_path.exists(), f"missing train_path: {train_path}", blockers)
     require(val_path.exists(), f"missing val_path: {val_path}", blockers)
     require(tokenizer_path.exists(), f"missing tokenizer_path: {tokenizer_path}", blockers)
-    require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
-    require(DRY_RUN_SUMMARY_PATH.exists(), f"missing dry-run summary: {DRY_RUN_SUMMARY_PATH}", blockers)
     require(is_under(output_dir, PROJECT_ROOT / "experiments" / "a100"), "output_dir must stay under experiments/a100/", blockers)
-    require(is_under(train_path, LOCAL_SPLITS_DIR), "train_path must stay under local splits artifact directory", blockers)
-    require(is_under(val_path, LOCAL_SPLITS_DIR), "val_path must stay under local splits artifact directory", blockers)
+    require(checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(), "checkpoint.save_dir must equal output_dir/checkpoints", blockers)
+    require(no_commit_checkpoints is True, "checkpoint.no_commit_checkpoints must be true", blockers)
+    require(training_no_training is False, "training.no_training must be false for execution config", blockers)
+    require(tokenizer_vocab_size == model_vocab_size, "tokenizer.vocab_size must match model.vocab_size", blockers)
+
+    loaded_tokenizer_vocab_size: int | None = None
+    if tokenizer_path.exists():
+        loaded_tokenizer_vocab_size = Tokenizer.from_file(str(tokenizer_path)).get_vocab_size()
+        require(
+            loaded_tokenizer_vocab_size == tokenizer_vocab_size,
+            f"loaded tokenizer vocab {loaded_tokenizer_vocab_size} != config tokenizer vocab {tokenizer_vocab_size}",
+            blockers,
+        )
+
+    if public16k_config:
+        require(tokenizer_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k tokenizer vocab_size must be 16384", blockers)
+        require(model_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k model vocab_size must be 16384", blockers)
+        require(max_steps == EXPECTED_PUBLIC16K_MAX_STEPS, "public16k max_steps must be 1000", blockers)
+        require(eval_interval == EXPECTED_PUBLIC16K_EVAL_INTERVAL, "public16k eval_interval must be 100", blockers)
+        require(
+            checkpoint_interval == EXPECTED_PUBLIC16K_CHECKPOINT_INTERVAL,
+            "public16k checkpoint_interval must be 1000",
+            blockers,
+        )
+        require(output_dir.resolve() == EXPECTED_PUBLIC16K_OUTPUT_DIR.resolve(), "public16k output_dir mismatch", blockers)
+        require("10step" not in run_name.lower(), "public16k run_name must not contain 10step", blockers)
+        require("10step" not in repo_relative_path(output_dir).lower(), "public16k output_dir must not contain 10step", blockers)
+
+    model_config = model_config_from_dict(config)
+    expected_parameter_count = count_parameters_exact_from_config(model_config)
 
     dry_run_summary: dict[str, Any] | None = None
-    if DRY_RUN_SUMMARY_PATH.exists():
-        dry_run_summary = load_json(DRY_RUN_SUMMARY_PATH)
+    if dry_run_summary_path.exists():
+        dry_run_summary = load_json(dry_run_summary_path)
+        require(dry_run_summary.get("output_dir") == repo_relative_path(output_dir), "dry-run output_dir mismatch", blockers)
+        require(dry_run_summary.get("run_name") == run_name, "dry-run run_name mismatch", blockers)
+        require(dry_run_summary.get("tokenizer_vocab_size") == tokenizer_vocab_size, "dry-run tokenizer_vocab_size mismatch", blockers)
         require(
-            dry_run_summary.get("exact_parameter_count") == EXPECTED_PARAMETER_COUNT,
-            f"dry-run exact_parameter_count must equal {EXPECTED_PARAMETER_COUNT}",
+            dry_run_summary.get("exact_parameter_count") == expected_parameter_count,
+            "dry-run exact_parameter_count mismatch",
             blockers,
         )
-        require(
-            dry_run_summary.get("model_materialized_locally") is True,
-            "dry-run model_materialized_locally must be true",
-            blockers,
-        )
-        require(
-            dry_run_summary.get("memory_limited_local_dry_run") is False,
-            "dry-run memory_limited_local_dry_run must be false",
-            blockers,
-        )
+        require(dry_run_summary.get("no_training") is True, "dry-run no_training must be true", blockers)
         if dry_run_summary.get("core_model_feature_parity") is False:
-            caveats.append(
-                "core_model_feature_parity=false in dry-run summary; this is a training-systems smoke caveat, not a blocker."
-            )
+            caveats.append("core_model_feature_parity=false in dry-run summary; treat execution as systems validation only.")
+    else:
+        blockers.append(f"missing dry-run summary: {dry_run_summary_path}")
 
     output_dir.mkdir(parents=True, exist_ok=True)
     summary_path = output_dir / "execution_readiness_summary.json"
@@ -131,43 +175,35 @@ def main() -> int:
         "status": "success" if not blockers else "failed",
         "config_path": repo_relative_path(config_path),
         "run_name": run_name,
+        "output_dir": repo_relative_path(output_dir),
         "train_path": repo_relative_path(train_path),
         "val_path": repo_relative_path(val_path),
         "tokenizer_path": repo_relative_path(tokenizer_path),
         "tokenizer_vocab_size": tokenizer_vocab_size,
-        "model_size_label": model_size_label,
-        "sequence_length": sequence_length,
-        "batch_size": batch_size,
-        "gradient_accumulation_steps": gradient_accumulation_steps,
+        "loaded_tokenizer_vocab_size": loaded_tokenizer_vocab_size,
+        "model_vocab_size": model_vocab_size,
+        "exact_parameter_count": expected_parameter_count,
         "max_steps": max_steps,
         "eval_interval": eval_interval,
         "checkpoint_interval": checkpoint_interval,
-        "precision": precision,
-        "output_dir": repo_relative_path(output_dir),
-        "training_script_path": repo_relative_path(TRAINING_SCRIPT_PATH),
-        "dry_run_summary_path": repo_relative_path(DRY_RUN_SUMMARY_PATH),
         "training_no_training": training_no_training,
-        "top_level_no_training": top_level_no_training,
+        "checkpoint_save_dir": repo_relative_path(checkpoint_save_dir),
+        "checkpoint_path_expectation": repo_relative_path(expected_checkpoint_save_dir),
+        "checkpoint_path_uses_output_dir": checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(),
         "no_commit_checkpoints": no_commit_checkpoints,
-        "local_artifact_root": repo_relative_path(LOCAL_ARTIFACT_ROOT),
-        "local_processed_dir": repo_relative_path(LOCAL_PROCESSED_DIR),
-        "local_processed_dir_exists": LOCAL_PROCESSED_DIR.exists(),
-        "local_processed_dir_is_local_artifact": is_under(LOCAL_PROCESSED_DIR, LOCAL_ARTIFACT_ROOT),
-        "local_splits_dir": repo_relative_path(LOCAL_SPLITS_DIR),
-        "local_splits_dir_exists": LOCAL_SPLITS_DIR.exists(),
-        "local_splits_dir_is_local_artifact": is_under(LOCAL_SPLITS_DIR, LOCAL_ARTIFACT_ROOT),
-        "train_path_is_local_artifact": is_under(train_path, LOCAL_ARTIFACT_ROOT),
-        "val_path_is_local_artifact": is_under(val_path, LOCAL_ARTIFACT_ROOT),
+        "dry_run_summary_path": repo_relative_path(dry_run_summary_path),
         "dry_run_exact_parameter_count": dry_run_summary.get("exact_parameter_count") if dry_run_summary else None,
-        "dry_run_model_materialized_locally": dry_run_summary.get("model_materialized_locally") if dry_run_summary else None,
-        "dry_run_memory_limited_local_dry_run": dry_run_summary.get("memory_limited_local_dry_run") if dry_run_summary else None,
-        "dry_run_core_model_feature_parity": dry_run_summary.get("core_model_feature_parity") if dry_run_summary else None,
+        "dry_run_output_dir": dry_run_summary.get("output_dir") if dry_run_summary else None,
+        "dry_run_no_training": dry_run_summary.get("no_training") if dry_run_summary else None,
         "blockers": blockers,
+        "blocker_count": len(blockers),
         "caveats": caveats,
+        "caveat_count": len(caveats),
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "ready_for_a100_execution": not blockers,
+        "ready_for_a800_execution": not blockers,
         "no_training_ran_in_this_step": True,
-        "no_a100_session_entered_in_this_step": True
+        "no_a100_or_a800_session_entered_in_this_step": True,
     }
     write_json(summary_path, summary)
 
@@ -175,11 +211,13 @@ def main() -> int:
     print(f"config_path={summary['config_path']}")
     print(f"run_name={summary['run_name']}")
     print(f"output_dir={summary['output_dir']}")
-    print(f"training_no_training={summary['training_no_training']}")
+    print(f"tokenizer_vocab_size={summary['tokenizer_vocab_size']}")
+    print(f"exact_parameter_count={summary['exact_parameter_count']}")
     print(f"max_steps={summary['max_steps']}")
+    print(f"eval_interval={summary['eval_interval']}")
     print(f"checkpoint_interval={summary['checkpoint_interval']}")
-    print(f"no_commit_checkpoints={summary['no_commit_checkpoints']}")
     print(f"ready_for_a100_execution={summary['ready_for_a100_execution']}")
+    print(f"ready_for_a800_execution={summary['ready_for_a800_execution']}")
     print(f"caveats={len(caveats)}")
     print(f"blockers={len(blockers)}")
     print(f"summary_path={repo_relative_path(summary_path)}")

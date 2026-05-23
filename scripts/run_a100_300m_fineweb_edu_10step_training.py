@@ -29,7 +29,7 @@ from educode.checkpoint import compare_model_parameters, load_checkpoint, save_c
 from educode.config_loader import load_json_config
 from educode.config_validator import validate_config
 from educode.losses import next_token_cross_entropy
-from educode.run_logging import build_summary_markdown, write_json, write_metrics_record, write_text
+from educode.run_logging import append_jsonl, build_summary_markdown, write_json, write_metrics_record, write_text
 from educode.run_setup import collect_basic_environment, get_git_branch, get_git_commit, make_run_id, snapshot_config, write_run_metadata
 from educode.sequence_dataset import batch_samples, make_next_token_samples
 from educode.tiny_model import TinyDecoderOnlyTransformer, TinyModelConfig, model_config_from_dict
@@ -47,6 +47,111 @@ def validate_output_dir(output_dir: Path) -> None:
     relative_path = repo_relative_path(output_dir)
     if not relative_path.startswith("experiments/a100/"):
         raise ValueError("output_dir must stay under experiments/a100/")
+
+
+def path_is_under(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def build_run_id_from_config(config: dict[str, Any]) -> str:
+    run_name = str(config.get("run", {}).get("run_name", "")).strip()
+    if not run_name:
+        raise ValueError("run.run_name must be non-empty")
+    return f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{run_name}"
+
+
+def calculate_expected_validation_rows(max_steps: int, eval_interval: int) -> int:
+    if eval_interval <= 0:
+        return 0
+    return max_steps // eval_interval
+
+
+def count_jsonl_rows(path: Path) -> int:
+    if not path.exists():
+        return 0
+    with path.open("r", encoding="utf-8") as handle:
+        return sum(1 for line in handle if line.strip())
+
+
+def write_validation_metrics_record(path: Path, *, step: int, tokens_seen: int, val_loss: float, timestamp: str) -> None:
+    append_jsonl(
+        path,
+        {
+            "step": step,
+            "tokens_seen": tokens_seen,
+            "val_loss": val_loss,
+            "timestamp": timestamp,
+        },
+    )
+
+
+def validate_post_run_artifacts(output_dir: Path, *, max_steps: int, expected_validation_rows: int) -> dict[str, Any]:
+    summary_json_path = output_dir / "summary.json"
+    metrics_path = output_dir / "metrics.jsonl"
+    validation_metrics_path = output_dir / "validation_metrics.jsonl"
+    run_config_path = output_dir / "run_config.json"
+    run_metadata_path = output_dir / "run_metadata.json"
+    blockers: list[str] = []
+
+    summary_data: dict[str, Any] = {}
+    if summary_json_path.exists():
+        summary_data = json.loads(summary_json_path.read_text(encoding="utf-8"))
+    else:
+        blockers.append("summary.json missing")
+
+    metrics_rows_actual = count_jsonl_rows(metrics_path)
+    validation_rows_actual = count_jsonl_rows(validation_metrics_path)
+
+    if not metrics_path.exists():
+        blockers.append("metrics.jsonl missing")
+    if not validation_metrics_path.exists():
+        blockers.append("validation_metrics.jsonl missing")
+    if not run_config_path.exists():
+        blockers.append("run_config.json missing")
+    if not run_metadata_path.exists():
+        blockers.append("run_metadata.json missing")
+    if metrics_rows_actual != max_steps:
+        blockers.append(f"metrics.jsonl row count {metrics_rows_actual} != max_steps {max_steps}")
+    if validation_rows_actual != expected_validation_rows:
+        blockers.append(
+            f"validation_metrics.jsonl row count {validation_rows_actual} != expected {expected_validation_rows}"
+        )
+
+    if summary_data:
+        if summary_data.get("metrics_rows") != metrics_rows_actual:
+            blockers.append("summary metrics_rows does not match metrics.jsonl actual rows")
+        if summary_data.get("validation_rows") != validation_rows_actual:
+            blockers.append("summary validation_rows does not match validation_metrics.jsonl actual rows")
+        checkpoint_path_text = summary_data.get("checkpoint_path")
+        if not isinstance(checkpoint_path_text, str):
+            blockers.append("summary checkpoint_path missing")
+        else:
+            checkpoint_path = resolve_repo_path(checkpoint_path_text)
+            if not path_is_under(checkpoint_path, output_dir):
+                blockers.append("summary checkpoint_path is outside current output_dir")
+        if summary_data.get("success") is not True:
+            blockers.append("summary success is not true")
+        if summary_data.get("checkpoint_reload_match") is not True:
+            blockers.append("checkpoint_reload_match is not true")
+
+    return {
+        "passed": not blockers,
+        "blockers": blockers,
+        "summary_json_path": repo_relative_path(summary_json_path),
+        "metrics_path": repo_relative_path(metrics_path),
+        "validation_metrics_path": repo_relative_path(validation_metrics_path),
+        "run_config_path": repo_relative_path(run_config_path),
+        "run_metadata_path": repo_relative_path(run_metadata_path),
+        "metrics_rows_actual": metrics_rows_actual,
+        "validation_rows_actual": validation_rows_actual,
+        "expected_metrics_rows": max_steps,
+        "expected_validation_rows": expected_validation_rows,
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -377,6 +482,7 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
         "config_path": repo_relative_path(config_path),
         "output_dir": repo_relative_path(output_dir),
         "run_name": config["run"]["run_name"],
+        "run_id_will_include_run_name": True,
         "expected_hardware_target": config["hardware"].get("target"),
         "expected_gpu": config["hardware"].get("gpu"),
         "runtime_device": str(runtime_device),
@@ -497,7 +603,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         eos_token_id=eos_token_id,
     )
 
-    run_id = make_run_id(stage="a100", short_name="fineweb_edu_50mb_300m_10step_smoke")
+    run_id = build_run_id_from_config(config)
     snapshot_path = snapshot_config(config_path, output_dir)
     env = collect_basic_environment()
     metadata_path = write_run_metadata(
@@ -511,7 +617,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         git_branch=get_git_branch(PROJECT_ROOT),
         env=env,
         status="running",
-        notes="MVP-7 A100 FineWeb-Edu 300M 10-step smoke in progress",
+        notes=f"{config['run']['run_name']} in progress",
     )
 
     model_config = model_config_from_dict(config)
@@ -535,10 +641,14 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
     scaler = torch.cuda.amp.GradScaler(enabled=model_dtype == torch.float16)
 
     metrics_path = output_dir / "metrics.jsonl"
+    validation_metrics_path = output_dir / "validation_metrics.jsonl"
     summary_json_path = output_dir / "summary.json"
     summary_path = output_dir / "summary.md"
     checkpoint_manifest_path = output_dir / "checkpoints_manifest.json"
-    checkpoint_save_dir = resolve_repo_path(config["checkpoint"]["save_dir"])
+    configured_checkpoint_save_dir = resolve_repo_path(config["checkpoint"]["save_dir"])
+    checkpoint_save_dir = output_dir / "checkpoints"
+    if configured_checkpoint_save_dir.resolve() != checkpoint_save_dir.resolve():
+        raise ValueError("checkpoint.save_dir must equal current output_dir/checkpoints")
     checkpoint_save_dir.mkdir(parents=True, exist_ok=True)
 
     first_train_loss: float | None = None
@@ -613,6 +723,10 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         final_grad_norm = float(grad_norm)
         train_losses.append(current_train_loss)
 
+        tokens_this_step = batch_size * sequence_length * gradient_accumulation_steps
+        total_tokens_seen += tokens_this_step
+        tokens_per_sec = tokens_this_step / elapsed_seconds if elapsed_seconds > 0 else None
+
         current_val_loss: float | None = None
         if eval_interval > 0 and step % eval_interval == 0:
             val_batch_x, val_batch_y = val_batches[(step // eval_interval) - 1]
@@ -620,10 +734,13 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
             final_val_loss = current_val_loss
             val_losses.append(current_val_loss)
             val_loss_all_finite = val_loss_all_finite and math.isfinite(current_val_loss)
-
-        tokens_this_step = batch_size * sequence_length * gradient_accumulation_steps
-        total_tokens_seen += tokens_this_step
-        tokens_per_sec = tokens_this_step / elapsed_seconds if elapsed_seconds > 0 else None
+            write_validation_metrics_record(
+                validation_metrics_path,
+                step=step,
+                tokens_seen=total_tokens_seen,
+                val_loss=current_val_loss,
+                timestamp=datetime.now().isoformat(timespec="seconds"),
+            )
 
         gpu_memory_allocated_gib = torch.cuda.memory_allocated(runtime_device) / (1024**3)
         gpu_memory_reserved_gib = torch.cuda.memory_reserved(runtime_device) / (1024**3)
@@ -657,7 +774,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
                 metadata={
                     "run_id": run_id,
                     "stage": "a100",
-                    "notes": "MVP-7 A100 FineWeb-Edu 300M 10-step smoke checkpoint",
+                    "notes": f"{config['run']['run_name']} checkpoint",
                 },
             )
 
@@ -680,7 +797,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
             metadata={
                 "run_id": run_id,
                 "stage": "a100",
-                "notes": "MVP-7 A100 FineWeb-Edu 300M 10-step smoke final checkpoint",
+                "notes": f"{config['run']['run_name']} final checkpoint",
             },
         )
 
@@ -698,10 +815,15 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
     parameter_compare = compare_model_parameters(model_cpu, reloaded_model)
     checkpoint_reload_match = parameter_compare["all_match"] and checkpoint.get("step") == max_steps
 
-    metrics_rows = len(train_losses)
-    validation_rows = len(val_losses)
+    if not path_is_under(last_checkpoint_path, output_dir):
+        raise ValueError("checkpoint_path must resolve inside current output_dir")
+
+    metrics_rows = count_jsonl_rows(metrics_path)
+    validation_rows = count_jsonl_rows(validation_metrics_path)
+    expected_validation_row_count = calculate_expected_validation_rows(max_steps, eval_interval)
     approximate_tokens_per_sec = total_tokens_seen / total_elapsed_seconds if total_elapsed_seconds > 0 else None
     feature_mismatches = collect_feature_mismatches(config)
+    scheduler_config_present = isinstance(config.get("scheduler"), dict)
 
     success = (
         first_train_loss is not None
@@ -709,19 +831,20 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         and final_val_loss is not None
         and final_grad_norm is not None
         and metrics_rows == max_steps
-        and validation_rows == (max_steps // eval_interval if eval_interval > 0 else 0)
+        and validation_rows == expected_validation_row_count
         and loss_all_finite
         and val_loss_all_finite
         and grad_all_finite
         and last_checkpoint_path.exists()
         and checkpoint_reload_match
         and metrics_path.exists()
+        and validation_metrics_path.exists()
     )
 
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     metadata["end_time"] = datetime.now().isoformat(timespec="seconds")
     metadata["status"] = "success" if success else "failed"
-    metadata["notes"] = "MVP-7 A100 FineWeb-Edu 300M 10-step smoke complete"
+    metadata["notes"] = f"{config['run']['run_name']} complete"
     metadata["torch_version"] = torch.__version__
     metadata["cuda_available"] = torch.cuda.is_available()
     metadata["cuda_version"] = torch.version.cuda
@@ -735,6 +858,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "checkpoint_path": repo_relative_path(last_checkpoint_path),
         "checkpoint_exists": last_checkpoint_path.exists(),
         "checkpoint_reload_match": checkpoint_reload_match,
+        "checkpoint_path_starts_with_output_dir": path_is_under(last_checkpoint_path, output_dir),
         "step": max_steps,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
     }
@@ -742,6 +866,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
 
     summary_data = {
         "run_id": run_id,
+        "run_name": config["run"]["run_name"],
         "config_path": repo_relative_path(config_path),
         "output_dir": repo_relative_path(output_dir),
         "runtime_device": str(runtime_device),
@@ -765,14 +890,18 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "val_loss_all_finite": val_loss_all_finite,
         "grad_all_finite": grad_all_finite,
         "grad_norm_final": round(final_grad_norm, 6) if final_grad_norm is not None else None,
+        "metrics_path": repo_relative_path(metrics_path),
+        "validation_metrics_path": repo_relative_path(validation_metrics_path),
         "metrics_rows": metrics_rows,
         "validation_rows": validation_rows,
+        "expected_validation_rows": expected_validation_row_count,
         "tokens_seen": total_tokens_seen,
         "elapsed_seconds": round(total_elapsed_seconds, 6),
         "approximate_tokens_per_sec": round(approximate_tokens_per_sec, 6)
         if approximate_tokens_per_sec is not None
         else None,
         "checkpoint_path": repo_relative_path(last_checkpoint_path),
+        "checkpoint_path_starts_with_output_dir": path_is_under(last_checkpoint_path, output_dir),
         "checkpoint_reload_match": checkpoint_reload_match,
         "last_gpu_memory_allocated_gib": round(last_gpu_memory_allocated_gib, 6)
         if last_gpu_memory_allocated_gib is not None
@@ -783,23 +912,38 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "declared_model_features": build_declared_model_features(config),
         "current_core_model_features": build_current_core_model_features(),
         "declared_vs_core_feature_mismatches": feature_mismatches,
-        "scheduler_config_present_but_not_applied": True,
+        "scheduler_config_present": scheduler_config_present,
+        "scheduler_applied": False,
+        "scheduler_policy": "not_applied",
+        "scheduler_config_present_but_not_applied": scheduler_config_present,
         "bounded_prefix_batches_only": True,
         "success": bool(success),
     }
     write_json(summary_json_path, summary_data)
+    artifact_validation = validate_post_run_artifacts(
+        output_dir,
+        max_steps=max_steps,
+        expected_validation_rows=expected_validation_row_count,
+    )
+    write_json(output_dir / "post_run_artifact_validation_summary.json", artifact_validation)
+    success = bool(success and artifact_validation["passed"])
+    summary_data["post_run_artifact_validation"] = artifact_validation
+    summary_data["success"] = success
+    write_json(summary_json_path, summary_data)
+    metadata["status"] = "success" if success else "failed"
+    write_json(metadata_path, metadata)
 
     summary_markdown = build_summary_markdown(
         {
             "run_id": run_id,
-            "goal": "Validate the A100 FineWeb-Edu 300M 10-step training chain with the existing core model and mixed-domain 8k tokenizer.",
+            "goal": f"Validate the bounded A100/A800 training chain for {config['run']['run_name']}.",
             "hardware": f"{runtime_device} / {config['hardware'].get('target')}",
             "config_path": str(snapshot_path),
             "result": "success" if success else "failed",
             "key_metrics": summary_data,
             "generation_preview": "",
-            "notes": "This script uses the current core model implementation without adding new core-model features. The config still declares rope, but the current core model path uses learned position embeddings. Scheduler fields remain config-only in MVP-7.",
-            "next_step": "Review the bounded A100 smoke artifacts and proceed only with an approved A100 execution session.",
+            "notes": "This script uses the current core model implementation without adding new core-model features. Scheduler fields are recorded as present but not applied unless a future implementation actually applies a scheduler.",
+            "next_step": "Review the bounded GPU artifacts with the post-run validator before making any model-quality claims.",
         }
     )
     write_text(summary_path, summary_markdown)

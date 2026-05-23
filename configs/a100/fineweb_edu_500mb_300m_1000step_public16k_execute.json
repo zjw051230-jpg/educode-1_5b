@@ -1,5 +1,5 @@
 {
-  "status": "draft_execution_plan_not_run",
+  "status": "preflight_ready_not_run",
   "run": {
     "run_name": "fineweb_edu_500mb_300m_1000step_public16k_execute",
     "seed": 336,
@@ -7,7 +7,7 @@
     "notes": "Draft A100/A800 300M 1000-step execution config for the FineWeb-Edu 500MB public corpus and public 16k tokenizer. This config is not approved for execution until MVP-13.1 public16k data/model/loss smoke passes and MVP-10 logging cleanup requirements are satisfied. This remains a bounded training-systems run and must not be treated as a model-quality claim."
   },
   "hardware": {
-    "target": "a100_or_a800_cuda",
+    "target": "a100_cuda",
     "gpu": "A100-80GB or A800-40GB",
     "device": "cuda",
     "dtype": "bf16",
@@ -135,8 +135,8 @@
     "post_run_artifact_validation_required": true
   },
   "prerequisites": {
-    "mvp_13_1_public16k_data_model_loss_smoke_passed": false,
-    "logging_cleanup_requirements_satisfied": false,
+    "mvp_13_1_public16k_data_model_loss_smoke_passed": true,
+    "logging_cleanup_requirements_satisfied": true,
     "no_raw_or_processed_corpus_files_committed": true,
     "no_checkpoints_committed": true
   },
