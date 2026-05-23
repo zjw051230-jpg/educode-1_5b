@@ -1,0 +1,36 @@
+{
+  "run_name": "fineweb_edu_500mb_public16k_data_model_loss_smoke",
+  "config_path": "configs/windows/fineweb_edu_500mb_public16k_data_model_loss_smoke.json",
+  "train_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.train.jsonl",
+  "val_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.val.jsonl",
+  "train_docs": 103619,
+  "val_docs": 5498,
+  "train_docs_used_for_batch": 1,
+  "val_docs_used_for_batch": 1,
+  "tokenizer_path": "tokenizers/fineweb_edu_public_bpe_16k/tokenizer.json",
+  "tokenizer_vocab_size": 16384,
+  "sequence_length": 128,
+  "batch_size": 4,
+  "input_ids_shape": [
+    4,
+    128
+  ],
+  "targets_shape": [
+    4,
+    128
+  ],
+  "logits_shape": [
+    4,
+    128,
+    16384
+  ],
+  "loss_value": 9.8125,
+  "loss_finite": true,
+  "device": "cuda",
+  "model_dtype": "bfloat16",
+  "parameter_count": 336106496,
+  "no_backward": true,
+  "no_optimizer_step": true,
+  "no_checkpoint": true,
+  "no_training": true
+}
