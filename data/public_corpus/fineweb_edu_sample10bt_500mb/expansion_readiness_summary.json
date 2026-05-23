@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "ready_for_500mb_fetch": true,
+  "blockers": 0,
+  "blocker_details": [],
+  "warnings": [
+    "Existing intake scripts are config-driven for directories but currently use 50mb output basenames; align MVP-11.1 expected filenames before intake if strict 500mb names are required."
+  ],
+  "config_path": "configs/data/fineweb_edu_sample10bt_500mb.json",
+  "target_size_mb": 500,
+  "output_dir": "data/public_corpus/fineweb_edu_sample10bt_500mb",
+  "output_jsonl": "data/public_corpus/fineweb_edu_sample10bt_500mb/raw.jsonl",
+  "manifest_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/manifest.json",
+  "raw_jsonl_ignored": true,
+  "processed_splits_ignored": true,
+  "output_dir_exists": true,
+  "raw_jsonl_exists": false,
+  "processed_dir_exists": false,
+  "splits_dir_exists": false,
+  "required_scripts_present": true,
+  "no_data_downloaded_in_this_step": true,
+  "checked_at": "2026-05-23T17:00:22.751664+00:00"
+}
