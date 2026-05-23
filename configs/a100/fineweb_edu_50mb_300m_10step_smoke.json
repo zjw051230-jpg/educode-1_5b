@@ -1,0 +1,131 @@
+{
+  "status": "draft_not_run",
+  "run": {
+    "run_name": "fineweb_edu_50mb_300m_10step_smoke",
+    "seed": 336,
+    "output_dir": "experiments/a100/fineweb_edu_50mb_300m_10step_smoke",
+    "notes": "A100 FineWeb-Edu 300M 10-step smoke draft only. This config is for future A100 preflight and short training-chain validation only. It reuses the existing mixed-domain 8k tokenizer and the local FineWeb-Edu 50MB public-corpus train/val split artifacts. This draft is not run in MVP-6 and does not claim model quality."
+  },
+  "hardware": {
+    "target": "a100_cuda",
+    "gpu": "A100",
+    "device": "cuda",
+    "dtype": "bf16",
+    "precision": "bf16_if_available_else_fp16",
+    "use_tf32": true,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "tokenizer_source": "educode_bpe_mixed_domain_8k",
+    "vocab_size": 8192,
+    "path": "tokenizers/educode_bpe_mixed_domain_8k/tokenizer.json",
+    "artifact_dir": "tokenizers/educode_bpe_mixed_domain_8k",
+    "special_tokens": ["<pad>", "<bos>", "<eos>", "<unk>"],
+    "pad_token_id": 0,
+    "bos_token_id": 1,
+    "eos_token_id": 2,
+    "unk_token_id": 3
+  },
+  "data": {
+    "dataset_name": "fineweb_edu_50mb_public",
+    "train_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/splits/fineweb_edu_50mb.train.jsonl",
+    "val_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/splits/fineweb_edu_50mb.val.jsonl",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 512,
+    "num_workers": 4,
+    "shuffle": true,
+    "streaming": false,
+    "max_tokens": 50000000
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "model_size_label": "300m",
+    "vocab_size": 8192,
+    "context_length": 512,
+    "num_layers": 18,
+    "d_model": 1024,
+    "num_heads": 16,
+    "head_dim": 64,
+    "ffn_type": "swiglu",
+    "d_ff": 4096,
+    "norm_type": "rmsnorm",
+    "position_encoding": "rope",
+    "rope_theta": 10000,
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 10,
+    "batch_size": 8,
+    "gradient_accumulation_steps": 4,
+    "global_batch_tokens": 16384,
+    "sequence_length": 512,
+    "eval_interval": 5,
+    "log_interval": 1,
+    "save_interval": 10,
+    "checkpoint_interval": 10,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16",
+    "no_training": true
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "name": "cosine",
+    "warmup_steps": 2,
+    "min_lr": 3e-5,
+    "max_lr": 0.0003
+  },
+  "checkpoint": {
+    "save_dir": "experiments/a100/fineweb_edu_50mb_300m_10step_smoke/checkpoints",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": false,
+    "keep_last_n": 1,
+    "save_optimizer_state": true,
+    "no_commit_checkpoints": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 5,
+    "eval_tokens": 8192,
+    "metrics": ["loss"]
+  },
+  "generation": {
+    "enabled": false,
+    "prompts": ["def train_step(batch):"],
+    "max_new_tokens": 32,
+    "temperature": 0.7,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 10],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": true,
+    "attention_backend": "sdpa",
+    "attention_backend_note": "MVP-6 keeps SDPA in the draft. FlashAttention-2 can be evaluated later after the shortest A100 smoke succeeds."
+  },
+  "logging": {
+    "log_dir": "experiments/a100/fineweb_edu_50mb_300m_10step_smoke/logs",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null
+  },
+  "purpose": "A100 short training smoke, not model quality claim"
+}

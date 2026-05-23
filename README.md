@@ -114,6 +114,7 @@ Current implementation note:
 - add a reviewable research-paper assistant corpus line that keeps raw papers inbox-only by default while allowing later metadata, RAG, note-taking, and non-replicative derived-artifact workflows
 - E line now uses standardized paper metadata fields and standardized paper-to-corpus task names.
 - First A100 MVP public corpus selected as FineWeb-Edu sample-10BT bounded slice.
+- Next objective is A100 300M 10-step training smoke using FineWeb-Edu 50MB slice and existing mixed-domain 8k tokenizer.
 
 ## Resume Resources
 - [Resume Bullets](docs/resume_bullets.md)
@@ -257,3 +258,4 @@ Current implementation note:
 - MVP-3.1 FineWeb-Edu 50MB slice fetch and validation
 - MVP-4 FineWeb-Edu public corpus intake and tokenizer decision
 - MVP-5 FineWeb-Edu data/model/loss smoke
+- MVP-6 A100 300M 10-step smoke plan
