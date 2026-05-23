@@ -1,0 +1,10 @@
+{"step": 300, "tokens_seen": 153600, "val_loss": 13.07868480682373, "timestamp": "2026-05-24T05:28:14"}
+{"step": 600, "tokens_seen": 307200, "val_loss": 12.215747833251953, "timestamp": "2026-05-24T05:28:31"}
+{"step": 900, "tokens_seen": 460800, "val_loss": 12.195722579956055, "timestamp": "2026-05-24T05:28:49"}
+{"step": 1200, "tokens_seen": 614400, "val_loss": 11.888091087341309, "timestamp": "2026-05-24T05:29:06"}
+{"step": 1500, "tokens_seen": 768000, "val_loss": 11.888909339904785, "timestamp": "2026-05-24T05:29:24"}
+{"step": 1800, "tokens_seen": 921600, "val_loss": 11.55512809753418, "timestamp": "2026-05-24T05:29:41"}
+{"step": 2100, "tokens_seen": 1075200, "val_loss": 12.220687866210938, "timestamp": "2026-05-24T05:29:59"}
+{"step": 2400, "tokens_seen": 1228800, "val_loss": 13.368861198425293, "timestamp": "2026-05-24T05:30:17"}
+{"step": 2700, "tokens_seen": 1382400, "val_loss": 12.817232131958008, "timestamp": "2026-05-24T05:30:34"}
+{"step": 3000, "tokens_seen": 1536000, "val_loss": 12.515621185302734, "timestamp": "2026-05-24T05:30:52"}
