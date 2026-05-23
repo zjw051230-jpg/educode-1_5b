@@ -255,3 +255,4 @@ Current implementation note:
 - MVP-2 FineWeb-Edu public corpus source decision
 - MVP-3.R FineWeb-Edu dry-run troubleshooting
 - MVP-3.1 FineWeb-Edu 50MB slice fetch and validation
+- MVP-4 FineWeb-Edu public corpus intake and tokenizer decision

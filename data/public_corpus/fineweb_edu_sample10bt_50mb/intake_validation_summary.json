@@ -1,0 +1,18 @@
+{
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "license": "odc-by",
+  "allowed_for_training": true,
+  "processed_count": 11070,
+  "train_count": 10503,
+  "val_count": 567,
+  "dropped_empty_count": 0,
+  "dropped_duplicate_count": 1,
+  "total_text_bytes": 52433758,
+  "train_text_bytes": 49654094,
+  "val_text_bytes": 2779664,
+  "processed_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/processed/fineweb_edu_50mb.processed.jsonl",
+  "train_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/splits/fineweb_edu_50mb.train.jsonl",
+  "val_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/splits/fineweb_edu_50mb.val.jsonl",
+  "validated_at": "2026-05-23T09:39:44.078973+00:00"
+}
