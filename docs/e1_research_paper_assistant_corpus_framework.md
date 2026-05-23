@@ -53,11 +53,10 @@ Blocked behavior includes:
 E1 adds a paper-source registry and template record so every paper can carry:
 - stable identity
 - source path
-- citation
-- license status
+- citation context
+- license state
 - use scope
 - training eligibility state
-- content-state flags
 - review status
 
 This allows later steps to reason explicitly about what a paper may be used for.
@@ -78,16 +77,27 @@ E1 updates `.gitignore` so raw paper files under:
 
 remain excluded from commits by default, while `.gitkeep` can preserve the directory skeleton.
 
-## 8. Result of This Step
-After E1:
+## 8. E1.R1 Alignment Update
+E1.R1 adds the following alignment work:
+- aligned metadata schema on standardized paper fields
+- standardized paper-to-corpus task taxonomy using explicit `task_name` entries
+- explicit citation and grounding guardrails in the source policy
+- registry and template examples that remain template-only and do not imply real paper intake
+
+## 9. Result of This Step
+After E1 and E1.R1:
 - the repository has a dedicated research-paper intake skeleton
 - raw paper inbox handling is separated from formal corpus paths
 - metadata and policy scaffolding exist for later reviewable paper workflows
+- standardized metadata fields are defined for formal E-line records
+- standardized task names are defined for paper-to-corpus workflows
 - no paper full text has been promoted into the training corpus
-- no intake or training stage has been run
+- no concrete papers have been processed in this step
+- no raw paper files have been added to Git in this step
+- no intake, tokenizer training, or model training stage has been run
 
-## 9. Recommended Next Step
-Recommended next step after E1:
-- register a small number of user-provided paper records in the metadata registry
+## 10. Recommended Next Step
+Recommended next step after E1.R1:
+- register a small number of user-provided paper records in the metadata registry only when real paper sources are intentionally provided
 - keep them inbox-only
 - then discuss a narrow E2 step for reviewed derived-note or method-summary generation without copying raw full text into the formal corpus

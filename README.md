@@ -33,6 +33,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - Batch_05 repair-aware draft validation and automated quality review have completed across `600` review-only files, with structural validation clean and concentrated residual notes in `CC-2`, `CC-5`, and `CC-6`.
 - Batch_05 targeted sampling review has completed across a `120`-file bounded review pack, yielding `92` strong candidates, `17` keep candidates, and `11` rewrite cases; the result supports a small future promotion-candidate discussion but not promotion in this step.
 - An E1 research paper assistant corpus framework now exists with inbox, metadata, derived, draft-queue, and RAG-library boundaries; raw paper files remain source-library only by default and do not enter the formal training corpus in this step.
+- E1.R1 aligned the research paper metadata schema, source policy, and paper-to-corpus taxonomy around standardized fields and task names without introducing any real paper data.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -109,6 +110,7 @@ Current implementation note:
 
 ## Current Direction
 - add a reviewable research-paper assistant corpus line that keeps raw papers inbox-only by default while allowing later metadata, RAG, note-taking, and non-replicative derived-artifact workflows
+- E line now uses standardized paper metadata fields and standardized paper-to-corpus task names.
 
 ## Resume Resources
 - [Resume Bullets](docs/resume_bullets.md)
@@ -246,3 +248,4 @@ Current implementation note:
 - D20 promotion subset plan
 - D20.1 batch 05 promotion subset candidate selection
 - E1 research paper assistant corpus framework
+- E1.R1 research paper schema and taxonomy alignment

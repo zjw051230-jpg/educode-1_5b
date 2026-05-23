@@ -5,7 +5,7 @@ The purpose of this policy is to define what kinds of research-paper material ma
 
 ## 2. Default Handling Rule
 Default rule:
-- research paper source files are treated as source-library material, not training corpus material
+- research paper source files are treated as inbox and source-library material, not training corpus material
 
 This default applies especially to:
 - user-dropped PDFs
@@ -45,10 +45,10 @@ Important rule:
 Every paper-related artifact must remain traceable to its source record.
 At minimum, preserve:
 - `paper_id`
-- source path
+- source path or local raw path
 - title
-- citation
-- license status
+- citation or source identifier context
+- license state
 - use scope
 
 ## 7. RAG vs Training Separation
@@ -64,7 +64,14 @@ The project must not create false records such as:
 - calling copied excerpts "synthetic" when they are only light rewrites of original text
 - omitting license uncertainty from metadata
 
-## 9. What This Policy Does Not Do
+## 9. No Fabricated Citations
+The system must not invent citations, paper titles, venues, authors, years, DOIs, arXiv IDs, or experimental claims.
+Citation-grounded outputs must be traceable to registered paper records or user-provided notes.
+
+## 10. No Ungrounded Paper Generation
+The system must not generate full paper content, related work claims, method claims, or experiment summaries as if grounded in sources unless the relevant source records, notes, or RAG references are available and cited internally.
+
+## 11. What This Policy Does Not Do
 This policy does not:
 - download papers
 - parse PDFs

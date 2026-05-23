@@ -1,30 +1,19 @@
 {
-  "paper_id": "paper_0001",
-  "title": "Example Paper Title",
-  "authors": [
-    "Author One",
-    "Author Two"
-  ],
-  "year": 2026,
-  "venue": "arXiv",
-  "source_type": "pdf",
-  "source_path": "data/research_papers/inbox/raw_papers/example-paper.pdf",
-  "source_origin": "user_provided",
-  "license_status": "unknown_pending_review",
-  "license_notes": "Confirm redistribution and training rights before any corpus promotion discussion.",
-  "use_scope": [
-    "source_library",
-    "rag_candidate",
-    "metadata_only"
-  ],
-  "training_eligibility": "not_approved",
-  "contains_full_text": true,
-  "contains_user_notes": false,
-  "contains_project_authored_summary": false,
-  "provenance_status": "source_path_recorded",
-  "citation": "Author One, Author Two. Example Paper Title. arXiv, 2026.",
-  "abstract_status": "not_recorded",
-  "method_summary_status": "not_recorded",
-  "notes": "Use this record as a starting point; later steps may add abstract, notes, summaries, or review decisions.",
-  "review_status": "inbox_only"
+  "paper_id": "paper_000000",
+  "title": "",
+  "authors": [],
+  "venue": "",
+  "year": null,
+  "url": "",
+  "local_raw_path": "",
+  "source_type": "pdf|arxiv|openalex|pmc_oa|user_note|other",
+  "license": "unknown",
+  "license_confidence": "unknown|low|medium|high|confirmed",
+  "full_text_use_scope": "source_library_only|rag_only|metadata_only|open_license_training_candidate|user_authored_note",
+  "allowed_for_training": false,
+  "allowed_for_rag": "pending",
+  "contains_external_text": true,
+  "user_note_available": false,
+  "review_status": "inbox_unreviewed",
+  "notes": "template only; not a real paper record"
 }
