@@ -1,0 +1,25 @@
+{
+  "tokenizer_name": "fineweb_edu_public_bpe_16k",
+  "target_vocab_size": 16384,
+  "observed_vocab_size": 16384,
+  "train_records_seen": 103619,
+  "text_field": "text",
+  "input_train_jsonl": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.train.jsonl",
+  "output_tokenizer_json": "tokenizers/fineweb_edu_public_bpe_16k/tokenizer.json",
+  "special_tokens": [
+    "<|endoftext|>",
+    "<|pad|>",
+    "<|unk|>"
+  ],
+  "special_token_ids": {
+    "<|endoftext|>": 0,
+    "<|pad|>": 1,
+    "<|unk|>": 2
+  },
+  "license": "odc-by",
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "source_slice": "500MB",
+  "created_at": "2026-05-23T17:33:23.039888+00:00",
+  "existing_mixed_domain_tokenizer_unchanged": true
+}

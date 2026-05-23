@@ -1,0 +1,21 @@
+{
+  "tokenizer_name": "fineweb_edu_public_bpe_16k",
+  "tokenizer_type": "bpe",
+  "target_vocab_size": 16384,
+  "input_train_jsonl": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.train.jsonl",
+  "input_val_jsonl": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.val.jsonl",
+  "text_field": "text",
+  "output_dir": "tokenizers/fineweb_edu_public_bpe_16k",
+  "output_tokenizer_json": "tokenizers/fineweb_edu_public_bpe_16k/tokenizer.json",
+  "special_tokens": [
+    "<|endoftext|>",
+    "<|pad|>",
+    "<|unk|>"
+  ],
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "source_slice": "500MB",
+  "license": "odc-by",
+  "seed": 336,
+  "notes": "Public FineWeb-Edu 500MB BPE tokenizer for MVP public corpus experiments"
+}
