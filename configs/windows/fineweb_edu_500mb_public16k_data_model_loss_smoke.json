@@ -1,0 +1,24 @@
+{
+  "run_name": "fineweb_edu_500mb_public16k_data_model_loss_smoke",
+  "train_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.train.jsonl",
+  "val_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.val.jsonl",
+  "tokenizer_path": "tokenizers/fineweb_edu_public_bpe_16k/tokenizer.json",
+  "tokenizer_source": "fineweb_edu_public_bpe_16k",
+  "vocab_size": 16384,
+  "sequence_length": 128,
+  "batch_size": 4,
+  "seed": 336,
+  "device_preference": "cuda_if_available_else_cpu",
+  "no_training": true,
+  "purpose": "local data/model/loss smoke before A800 300M 1000-step",
+  "expected_checks": {
+    "load_public_tokenizer": true,
+    "form_train_batch": true,
+    "form_val_batch": true,
+    "instantiate_small_model_with_vocab_size": 16384,
+    "forward_loss_train_batch": true,
+    "forward_loss_val_batch": true,
+    "optimizer_step": false,
+    "checkpoint_write": false
+  }
+}

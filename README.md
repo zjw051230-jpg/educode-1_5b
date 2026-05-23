@@ -120,6 +120,7 @@ Current implementation note:
 - After successful A800 10-step and 100-step runs, the next recommended route is 500MB public corpus expansion, public 16k tokenizer, then a 300M 1000-step bounded run.
 - FineWeb-Edu public corpus has been expanded from 50MB to 500MB for public tokenizer and longer 300M training experiments.
 - Public 16k tokenizer is now available for 500MB FineWeb-Edu experiments, while mixed-domain 8k remains unchanged.
+- MVP-13 selected the public 16k tokenizer as the intended next 300M public-corpus tokenizer, gated by a local public16k data/model/loss smoke before any 1000-step GPU execution.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
 ## Resume Resources
@@ -273,3 +274,4 @@ Current implementation note:
 - MVP-11 FineWeb-Edu 500MB public corpus expansion plan
 - MVP-11.1 FineWeb-Edu 500MB fetch and intake
 - MVP-12 public FineWeb-Edu 16k tokenizer trained
+- MVP-13 300M 1000-step public tokenizer decision and run plan
