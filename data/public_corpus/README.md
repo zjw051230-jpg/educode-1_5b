@@ -9,9 +9,9 @@ This directory stores bounded public-corpus source skeletons, manifests, summari
 | slice | config | target_size_mb | status | artifact policy |
 |---|---|---:|---|---|
 | FineWeb-Edu `sample-10BT` 50MB | `configs/data/fineweb_edu_sample10bt_50mb.json` | 50 | fetched and intaked in prior MVP steps | raw, processed, and splits are local-only |
-| FineWeb-Edu `sample-10BT` 500MB | `configs/data/fineweb_edu_sample10bt_500mb.json` | 500 | planned, not fetched | raw, processed, and splits are local-only |
+| FineWeb-Edu `sample-10BT` 500MB | `configs/data/fineweb_edu_sample10bt_500mb.json` | 500 | fetched and intaked in MVP-11.1 | raw, processed, and splits are local-only |
 
-The 500MB planned slice exists only as a config, directory skeleton, and readiness summary in MVP-11. No 500MB `raw.jsonl`, `processed/`, or `splits/` artifacts are created in this step.
+The 500MB slice has been fetched, raw-validated, intaked, and intake-validated. Its raw, processed, and split corpus files remain local-only and ignored by Git.
 
 ## 3. Directory Layout
 
@@ -33,9 +33,9 @@ Per-source subdirectories may contain:
 - small manifests, summaries, docs, configs, and `.gitkeep` files may be committed.
 - before any public release, re-check this directory for unexpected large artifacts.
 
-## 5. FineWeb-Edu 500MB Planned Slice
+## 5. FineWeb-Edu 500MB Slice
 
-The planned 500MB slice uses:
+The 500MB slice uses:
 
 - dataset: `HuggingFaceFW/fineweb-edu`
 - dataset config: `sample-10BT`
@@ -45,13 +45,21 @@ The planned 500MB slice uses:
 - license: `odc-by`
 - config path: `configs/data/fineweb_edu_sample10bt_500mb.json`
 - output directory: `data/public_corpus/fineweb_edu_sample10bt_500mb/`
-- status: planned, not fetched
+- status: fetched and intaked
+- manifest path: `data/public_corpus/fineweb_edu_sample10bt_500mb/manifest.json`
+- validation summary path: `data/public_corpus/fineweb_edu_sample10bt_500mb/validation_summary.json`
+- intake summary path: `data/public_corpus/fineweb_edu_sample10bt_500mb/intake_summary.json`
+- intake validation summary path: `data/public_corpus/fineweb_edu_sample10bt_500mb/intake_validation_summary.json`
 
-MVP-11 only prepares this slice. A later MVP-11.1 step may fetch, validate, intake, and review it.
+Local-only ignored artifacts:
+
+- `data/public_corpus/fineweb_edu_sample10bt_500mb/raw.jsonl`
+- `data/public_corpus/fineweb_edu_sample10bt_500mb/processed/`
+- `data/public_corpus/fineweb_edu_sample10bt_500mb/splits/`
 
 ## 6. Scope Guardrails
 
 - public availability does not remove the need for provenance and scope tracking.
 - raw corpus data remains local-only by default.
 - tokenizer training and model training require separate approved MVP steps.
-- no A100 or A800 execution is triggered from this directory by MVP-11.
+- no A100 or A800 execution is triggered from this directory by MVP-11.1.

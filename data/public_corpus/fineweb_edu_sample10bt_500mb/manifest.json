@@ -1,0 +1,12 @@
+{
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "split": "train",
+  "target_size_mb": 500,
+  "actual_size_bytes": 524292588,
+  "record_count": 109130,
+  "license": "odc-by",
+  "created_at": "2026-05-23T17:17:21.165017+00:00",
+  "text_field": "text",
+  "allowed_for_training": true
+}

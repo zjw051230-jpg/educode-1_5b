@@ -9,9 +9,6 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "data" / "fineweb_edu_sample10bt_50mb.json"
-PROCESSED_FILENAME = "fineweb_edu_50mb.processed.jsonl"
-TRAIN_FILENAME = "fineweb_edu_50mb.train.jsonl"
-VAL_FILENAME = "fineweb_edu_50mb.val.jsonl"
 INTAKE_SUMMARY_FILENAME = "intake_summary.json"
 SPLIT_SEED = 336
 TRAIN_BUCKET_CUTOFF = 95
@@ -23,6 +20,19 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def resolve_repo_path(path_text: str) -> Path:
     return PROJECT_ROOT / Path(path_text)
+
+
+def build_output_basename(config: dict[str, Any]) -> str:
+    return f"fineweb_edu_{int(config['target_size_mb'])}mb"
+
+
+def build_output_paths(output_root: Path, config: dict[str, Any]) -> tuple[Path, Path, Path]:
+    output_basename = build_output_basename(config)
+    return (
+        output_root / "processed" / f"{output_basename}.processed.jsonl",
+        output_root / "splits" / f"{output_basename}.train.jsonl",
+        output_root / "splits" / f"{output_basename}.val.jsonl",
+    )
 
 
 def build_doc_id(text: str) -> str:
@@ -66,11 +76,9 @@ def main() -> int:
     manifest = read_json(resolve_repo_path(config["manifest_path"]))
     raw_jsonl_path = resolve_repo_path(config["output_jsonl"])
     output_root = resolve_repo_path(config["output_dir"])
-    processed_dir = output_root / "processed"
-    splits_dir = output_root / "splits"
-    processed_path = processed_dir / PROCESSED_FILENAME
-    train_path = splits_dir / TRAIN_FILENAME
-    val_path = splits_dir / VAL_FILENAME
+    processed_path, train_path, val_path = build_output_paths(output_root, config)
+    processed_dir = processed_path.parent
+    splits_dir = train_path.parent
     intake_summary_path = output_root / INTAKE_SUMMARY_FILENAME
 
     if not raw_jsonl_path.exists():
