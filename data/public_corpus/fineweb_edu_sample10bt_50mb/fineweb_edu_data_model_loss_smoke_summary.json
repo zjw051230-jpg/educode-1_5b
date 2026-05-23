@@ -1,0 +1,28 @@
+{
+  "train_docs": 10503,
+  "val_docs": 567,
+  "tokenizer_path": "tokenizers/educode_bpe_mixed_domain_8k/tokenizer.json",
+  "tokenizer_vocab_size": 8192,
+  "sequence_length": 128,
+  "batch_size": 4,
+  "input_ids_shape": [
+    4,
+    128
+  ],
+  "targets_shape": [
+    4,
+    128
+  ],
+  "logits_shape": [
+    4,
+    128,
+    8192
+  ],
+  "loss_value": 9.149983406066895,
+  "loss_finite": true,
+  "device": "cuda",
+  "no_backward": true,
+  "no_optimizer_step": true,
+  "no_checkpoint": true,
+  "no_training": true
+}
