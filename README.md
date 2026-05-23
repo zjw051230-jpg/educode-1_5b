@@ -27,6 +27,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - This A100 draft still uses the current observed tokenizer vocab size `1174` from the current `educode_bpe_8k` tokenizer artifact trained on the synthetic seed corpus.
 - An A100 first-session command checklist has been prepared for the selected single `A100 80GB` provider path.
 - A100 80GB single-GPU smoke path validated up to 2.15B-scale optimizer profiling.
+- A local dry-run of the FineWeb-Edu `300M` A100 smoke script now validates config, tokenizer, bounded public-corpus batch formation, and exact parameter counting at `319329280` parameters without entering A100.
 - A draft-only corpus worker framework now exists under `data/real_corpus/draft_queue/domain_synthetic_batch_03/` with a 120-topic reservation registry and review-only templates.
 - Batch_04 draft aggregation, structural validation, and automated quality review have completed across `6000` review-only files from six worker deliveries.
 - Batch_04 passed structural validation and passed quality review with concentrated notes in `CC-2`, `CC-3`, markdown-heavy `CC-5`, and markdown-heavy `CC-6`; the next step is targeted human sampling, not promotion.
@@ -114,7 +115,8 @@ Current implementation note:
 - add a reviewable research-paper assistant corpus line that keeps raw papers inbox-only by default while allowing later metadata, RAG, note-taking, and non-replicative derived-artifact workflows
 - E line now uses standardized paper metadata fields and standardized paper-to-corpus task names.
 - First A100 MVP public corpus selected as FineWeb-Edu sample-10BT bounded slice.
-- Next objective is A100 300M 10-step training smoke using FineWeb-Edu 50MB slice and existing mixed-domain 8k tokenizer.
+- MVP-7 implemented the A100 FineWeb-Edu 300M 10-step smoke script with local dry-run validation, exact parameter counting, and explicit declared-vs-core feature compatibility reporting.
+- Next objective is reviewed A100-side execution of the FineWeb-Edu 50MB 300M 10-step smoke using the existing mixed-domain 8k tokenizer.
 
 ## Resume Resources
 - [Resume Bullets](docs/resume_bullets.md)
@@ -259,3 +261,4 @@ Current implementation note:
 - MVP-4 FineWeb-Edu public corpus intake and tokenizer decision
 - MVP-5 FineWeb-Edu data/model/loss smoke
 - MVP-6 A100 300M 10-step smoke plan
+- MVP-7 A100 FineWeb-Edu 300M 10-step training script
