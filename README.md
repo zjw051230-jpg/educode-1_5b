@@ -254,3 +254,4 @@ Current implementation note:
 - E1.R1 research paper schema and taxonomy alignment
 - MVP-2 FineWeb-Edu public corpus source decision
 - MVP-3.R FineWeb-Edu dry-run troubleshooting
+- MVP-3.1 FineWeb-Edu 50MB slice fetch and validation
