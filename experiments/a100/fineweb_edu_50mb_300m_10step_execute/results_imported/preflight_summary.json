@@ -1,0 +1,18 @@
+{
+  "config_path": "configs/a100/fineweb_edu_50mb_300m_10step_execute.json",
+  "run_name": "fineweb_edu_50mb_300m_10step_execute",
+  "train_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/splits/fineweb_edu_50mb.train.jsonl",
+  "val_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/splits/fineweb_edu_50mb.val.jsonl",
+  "tokenizer_path": "tokenizers/educode_bpe_mixed_domain_8k/tokenizer.json",
+  "tokenizer_vocab_size": 8192,
+  "torch_cuda_available": true,
+  "gpu_name": "NVIDIA A800-SXM4-40GB",
+  "device_count": 1,
+  "cuda_version": "12.4",
+  "bf16_supported": true,
+  "expected_gpu": "A100",
+  "output_dir": "experiments/a100/fineweb_edu_50mb_300m_10step_execute",
+  "no_training": true,
+  "no_checkpoint": true,
+  "checked_at": "2026-05-23T13:09:18.193421+00:00"
+}

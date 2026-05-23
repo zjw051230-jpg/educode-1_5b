@@ -1,0 +1,27 @@
+{
+  "run": "mvp8",
+  "label": "MVP-8 A800 300M 10-step training smoke",
+  "results_dir": "experiments/a100/fineweb_edu_50mb_300m_10step_execute/results_imported",
+  "summary_path": "experiments/a100/fineweb_edu_50mb_300m_10step_execute/results_imported/summary.json",
+  "metrics_path": "experiments/a100/fineweb_edu_50mb_300m_10step_execute/results_imported/metrics.jsonl",
+  "status": "success",
+  "success": true,
+  "metrics_rows": 10,
+  "validation_rows_in_metrics": 2,
+  "final_step_present": true,
+  "runtime_device": "cuda",
+  "runtime_dtype": "bf16",
+  "exact_parameter_count": 319329280,
+  "loss_all_finite": true,
+  "val_loss_all_finite": true,
+  "grad_all_finite": true,
+  "checkpoint_reload_match": true,
+  "checkpoint_path": "experiments/a100/fineweb_edu_50mb_300m_10step_execute/checkpoints/checkpoint_step_0010.pt",
+  "final_train_loss": 2.769437,
+  "final_val_loss": 9.134018,
+  "blockers": [],
+  "caveats": [
+    "core_model_feature_parity=false due to declared rope vs implemented learned_position_embedding",
+    "standalone validation_metrics.jsonl is missing; validation rows are embedded in metrics.jsonl"
+  ]
+}

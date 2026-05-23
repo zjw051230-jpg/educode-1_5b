@@ -116,7 +116,8 @@ Current implementation note:
 - E line now uses standardized paper metadata fields and standardized paper-to-corpus task names.
 - First A100 MVP public corpus selected as FineWeb-Edu sample-10BT bounded slice.
 - MVP-7 implemented the A100 FineWeb-Edu 300M 10-step smoke script with local dry-run validation, exact parameter counting, and explicit declared-vs-core feature compatibility reporting.
-- Next objective is reviewed A100-side execution of the FineWeb-Edu 50MB 300M 10-step smoke using the existing mixed-domain 8k tokenizer.
+- A100/A800 MVP training loop validated with 319M model on FineWeb-Edu 50MB public corpus.
+- Next objective is to use the imported A800 bounded-run results as training-systems evidence while keeping architecture-parity caveats explicit and avoiding model-quality claims.
 
 ## Resume Resources
 - [Resume Bullets](docs/resume_bullets.md)
@@ -263,3 +264,5 @@ Current implementation note:
 - MVP-6 A100 300M 10-step smoke plan
 - MVP-7 A100 FineWeb-Edu 300M 10-step training script
 - MVP-8.P A100 execution preflight gate
+- MVP-8 A800 300M 10-step training smoke completed
+- MVP-9 A800 300M 100-step bounded run completed

@@ -1,0 +1,28 @@
+{
+  "run": "mvp9",
+  "label": "MVP-9 A800 300M 100-step bounded run",
+  "results_dir": "experiments/a100/fineweb_edu_50mb_300m_100step_execute/results_imported",
+  "summary_path": "experiments/a100/fineweb_edu_50mb_300m_100step_execute/results_imported/summary.json",
+  "metrics_path": "experiments/a100/fineweb_edu_50mb_300m_100step_execute/results_imported/metrics.jsonl",
+  "status": "success",
+  "success": true,
+  "metrics_rows": 100,
+  "validation_rows_in_metrics": 5,
+  "final_step_present": true,
+  "runtime_device": "cuda",
+  "runtime_dtype": "bf16",
+  "exact_parameter_count": 319329280,
+  "loss_all_finite": true,
+  "val_loss_all_finite": true,
+  "grad_all_finite": true,
+  "checkpoint_reload_match": true,
+  "checkpoint_path": "experiments/a100/fineweb_edu_50mb_300m_10step_execute/checkpoints/checkpoint_step_0100.pt",
+  "final_train_loss": 2.413716,
+  "final_val_loss": 8.900962,
+  "blockers": [],
+  "caveats": [
+    "core_model_feature_parity=false due to declared rope vs implemented learned_position_embedding",
+    "standalone validation_metrics.jsonl is missing; validation rows are embedded in metrics.jsonl",
+    "checkpoint_path logging/path mismatch: experiments/a100/fineweb_edu_50mb_300m_10step_execute/checkpoints/checkpoint_step_0100.pt does not start with experiments/a100/fineweb_edu_50mb_300m_100step_execute/"
+  ]
+}
