@@ -262,3 +262,4 @@ Current implementation note:
 - MVP-5 FineWeb-Edu data/model/loss smoke
 - MVP-6 A100 300M 10-step smoke plan
 - MVP-7 A100 FineWeb-Edu 300M 10-step training script
+- MVP-8.P A100 execution preflight gate
