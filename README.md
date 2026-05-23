@@ -123,6 +123,7 @@ Current implementation note:
 - MVP-13 selected the public 16k tokenizer as the intended next 300M public-corpus tokenizer, gated by a local public16k data/model/loss smoke before any 1000-step GPU execution.
 - Public 16k tokenizer has passed local data/model/loss smoke and is eligible for the next 300M 1000-step bounded run plan.
 - Before the next A800 run, logging/path validation has been added for validation_metrics.jsonl, checkpoint_path, run_id, and output_dir correctness.
+- Next A800 rental should run public16k 1000-step first, then 3000-step if the first run succeeds and time remains.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
 ## Resume Resources
@@ -279,3 +280,4 @@ Current implementation note:
 - MVP-13 300M 1000-step public tokenizer decision and run plan
 - MVP-13.1 public 16k data/model/loss smoke
 - MVP-14.P A800 1000-step public16k preflight gate
+- MVP-14.Q A800 one-hour utilization queue prepared

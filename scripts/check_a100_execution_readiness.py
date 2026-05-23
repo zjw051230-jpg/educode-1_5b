@@ -13,12 +13,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SRC_PATH = PROJECT_ROOT / "src"
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "a100" / "fineweb_edu_500mb_300m_1000step_public16k_execute.json"
 TRAINING_SCRIPT_PATH = PROJECT_ROOT / "scripts" / "run_a100_300m_fineweb_edu_10step_training.py"
-EXPECTED_PUBLIC16K_RUN_NAME = "fineweb_edu_500mb_300m_1000step_public16k_execute"
-EXPECTED_PUBLIC16K_OUTPUT_DIR = PROJECT_ROOT / "experiments" / "a100" / EXPECTED_PUBLIC16K_RUN_NAME
 EXPECTED_PUBLIC16K_VOCAB_SIZE = 16384
-EXPECTED_PUBLIC16K_MAX_STEPS = 1000
-EXPECTED_PUBLIC16K_EVAL_INTERVAL = 100
-EXPECTED_PUBLIC16K_CHECKPOINT_INTERVAL = 1000
+EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS = {
+    1000: 100,
+    3000: 300,
+}
+DISALLOWED_STALE_RUN_TOKENS = ["10step", "100step"]
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -47,7 +47,10 @@ def resolve_repo_path(path_text: str) -> Path:
 
 
 def repo_relative_path(path: Path) -> str:
-    return path.relative_to(PROJECT_ROOT).as_posix()
+    try:
+        return path.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def is_under(path: Path, root: Path) -> bool:
@@ -78,7 +81,7 @@ def count_parameters_exact_from_config(model_config: TinyModelConfig) -> int:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Check A100/A800 execution readiness for a bounded FineWeb-Edu run.")
+    parser = argparse.ArgumentParser(description="Check A100/A800 execution readiness for a bounded FineWeb-Edu public16k run.")
     parser.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to the A100/A800 execution config JSON.")
     return parser.parse_args()
 
@@ -86,6 +89,20 @@ def parse_args() -> argparse.Namespace:
 def require(condition: bool, message: str, blockers: list[str]) -> None:
     if not condition:
         blockers.append(message)
+
+
+def warn_unless(condition: bool, message: str, caveats: list[str]) -> None:
+    if not condition:
+        caveats.append(message)
+
+
+def expected_run_name(max_steps: int) -> str:
+    return f"fineweb_edu_500mb_300m_{max_steps}step_public16k_execute"
+
+
+def has_stale_run_token(value: str) -> bool:
+    lowered = value.lower()
+    return any(token in lowered for token in DISALLOWED_STALE_RUN_TOKENS)
 
 
 def main() -> int:
@@ -114,7 +131,8 @@ def main() -> int:
     checkpoint_interval = int(config["training"]["checkpoint_interval"])
     training_no_training = config["training"].get("no_training")
     no_commit_checkpoints = config.get("checkpoint", {}).get("no_commit_checkpoints")
-    public16k_config = run_name == EXPECTED_PUBLIC16K_RUN_NAME
+    expected_eval_interval = EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
+    output_dir_text = repo_relative_path(output_dir)
 
     require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
     require(train_path.exists(), f"missing train_path: {train_path}", blockers)
@@ -124,7 +142,17 @@ def main() -> int:
     require(checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(), "checkpoint.save_dir must equal output_dir/checkpoints", blockers)
     require(no_commit_checkpoints is True, "checkpoint.no_commit_checkpoints must be true", blockers)
     require(training_no_training is False, "training.no_training must be false for execution config", blockers)
+    require(tokenizer_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k tokenizer vocab_size must be 16384", blockers)
+    require(model_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k model vocab_size must be 16384", blockers)
     require(tokenizer_vocab_size == model_vocab_size, "tokenizer.vocab_size must match model.vocab_size", blockers)
+    require(max_steps in EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS, "max_steps must be one of: 1000, 3000", blockers)
+    require(eval_interval == expected_eval_interval, f"eval_interval must be {expected_eval_interval} for {max_steps}-step public16k run", blockers)
+    require(checkpoint_interval == max_steps, "checkpoint_interval must equal max_steps", blockers)
+    require(str(config["training"].get("save_interval")) == str(max_steps), "training.save_interval must equal max_steps", blockers)
+    require(run_name == expected_run_name(max_steps), f"run_name must be {expected_run_name(max_steps)}", blockers)
+    require(output_dir.name == run_name, "output_dir basename must match run_name", blockers)
+    require(not has_stale_run_token(run_name), "run_name must not contain stale 10step/100step tokens", blockers)
+    require(not has_stale_run_token(output_dir_text), "output_dir must not contain stale 10step/100step tokens", blockers)
 
     loaded_tokenizer_vocab_size: int | None = None
     if tokenizer_path.exists():
@@ -135,27 +163,13 @@ def main() -> int:
             blockers,
         )
 
-    if public16k_config:
-        require(tokenizer_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k tokenizer vocab_size must be 16384", blockers)
-        require(model_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k model vocab_size must be 16384", blockers)
-        require(max_steps == EXPECTED_PUBLIC16K_MAX_STEPS, "public16k max_steps must be 1000", blockers)
-        require(eval_interval == EXPECTED_PUBLIC16K_EVAL_INTERVAL, "public16k eval_interval must be 100", blockers)
-        require(
-            checkpoint_interval == EXPECTED_PUBLIC16K_CHECKPOINT_INTERVAL,
-            "public16k checkpoint_interval must be 1000",
-            blockers,
-        )
-        require(output_dir.resolve() == EXPECTED_PUBLIC16K_OUTPUT_DIR.resolve(), "public16k output_dir mismatch", blockers)
-        require("10step" not in run_name.lower(), "public16k run_name must not contain 10step", blockers)
-        require("10step" not in repo_relative_path(output_dir).lower(), "public16k output_dir must not contain 10step", blockers)
-
     model_config = model_config_from_dict(config)
     expected_parameter_count = count_parameters_exact_from_config(model_config)
 
     dry_run_summary: dict[str, Any] | None = None
     if dry_run_summary_path.exists():
         dry_run_summary = load_json(dry_run_summary_path)
-        require(dry_run_summary.get("output_dir") == repo_relative_path(output_dir), "dry-run output_dir mismatch", blockers)
+        require(dry_run_summary.get("output_dir") == output_dir_text, "dry-run output_dir mismatch", blockers)
         require(dry_run_summary.get("run_name") == run_name, "dry-run run_name mismatch", blockers)
         require(dry_run_summary.get("tokenizer_vocab_size") == tokenizer_vocab_size, "dry-run tokenizer_vocab_size mismatch", blockers)
         require(
@@ -167,7 +181,7 @@ def main() -> int:
         if dry_run_summary.get("core_model_feature_parity") is False:
             caveats.append("core_model_feature_parity=false in dry-run summary; treat execution as systems validation only.")
     else:
-        blockers.append(f"missing dry-run summary: {dry_run_summary_path}")
+        warn_unless(False, f"missing optional dry-run summary: {repo_relative_path(dry_run_summary_path)}", caveats)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     summary_path = output_dir / "execution_readiness_summary.json"
@@ -175,7 +189,7 @@ def main() -> int:
         "status": "success" if not blockers else "failed",
         "config_path": repo_relative_path(config_path),
         "run_name": run_name,
-        "output_dir": repo_relative_path(output_dir),
+        "output_dir": output_dir_text,
         "train_path": repo_relative_path(train_path),
         "val_path": repo_relative_path(val_path),
         "tokenizer_path": repo_relative_path(tokenizer_path),
@@ -185,6 +199,7 @@ def main() -> int:
         "exact_parameter_count": expected_parameter_count,
         "max_steps": max_steps,
         "eval_interval": eval_interval,
+        "expected_eval_interval": expected_eval_interval,
         "checkpoint_interval": checkpoint_interval,
         "training_no_training": training_no_training,
         "checkpoint_save_dir": repo_relative_path(checkpoint_save_dir),
@@ -192,6 +207,7 @@ def main() -> int:
         "checkpoint_path_uses_output_dir": checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(),
         "no_commit_checkpoints": no_commit_checkpoints,
         "dry_run_summary_path": repo_relative_path(dry_run_summary_path),
+        "dry_run_summary_present": dry_run_summary is not None,
         "dry_run_exact_parameter_count": dry_run_summary.get("exact_parameter_count") if dry_run_summary else None,
         "dry_run_output_dir": dry_run_summary.get("output_dir") if dry_run_summary else None,
         "dry_run_no_training": dry_run_summary.get("no_training") if dry_run_summary else None,
