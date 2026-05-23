@@ -1,0 +1,14 @@
+{
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "split": "train",
+  "streaming": true,
+  "target_size_mb": 50,
+  "text_field": "text",
+  "output_dir": "data/public_corpus/fineweb_edu_sample10bt_50mb",
+  "output_jsonl": "data/public_corpus/fineweb_edu_sample10bt_50mb/raw.jsonl",
+  "manifest_path": "data/public_corpus/fineweb_edu_sample10bt_50mb/manifest.json",
+  "license": "odc-by",
+  "allowed_for_training": true,
+  "notes": "bounded public corpus slice for A100 MVP"
+}

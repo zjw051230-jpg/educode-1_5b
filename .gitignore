@@ -20,3 +20,8 @@ experiments/*/*/
 
 data/research_papers/inbox/raw_papers/*
 !data/research_papers/inbox/raw_papers/.gitkeep
+
+data/public_corpus/*/raw.jsonl
+data/public_corpus/*/*.parquet
+data/public_corpus/*/cache/
+data/public_corpus/*/shards/
