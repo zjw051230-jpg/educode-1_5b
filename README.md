@@ -125,6 +125,7 @@ Current implementation note:
 - Before the next A800 run, logging/path validation has been added for validation_metrics.jsonl, checkpoint_path, run_id, and output_dir correctness.
 - Next A800 rental should run public16k 1000-step first, then 3000-step if the first run succeeds and time remains.
 - Low-RAM A800 runs completed; next experiments should use 32GB+ host/container RAM or improve streaming batch preparation before larger batch runs.
+- Next engineering priority is host-RAM-efficient streaming batch preparation before larger-batch A800 training.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
 ## Resume Resources
@@ -284,3 +285,4 @@ Current implementation note:
 - MVP-14.Q A800 one-hour utilization queue prepared
 - MVP-14 A800 1000-step public16k low-RAM fallback completed
 - MVP-15 A800 3000-step public16k low-RAM fallback completed
+- MVP-16 host-RAM and batching fix plan
