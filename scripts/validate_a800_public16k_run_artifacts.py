@@ -10,7 +10,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "experiments" / "a100" / "fineweb_edu_500mb_300m_1000step_public16k_execute"
 EXPECTED_TOKENIZER_VOCAB_SIZE = 16384
 MIN_VALIDATION_ROWS = 10
-SUPPORTED_MAX_STEPS = {1000, 3000}
 
 
 def resolve_repo_path(path_text: str) -> Path:
@@ -91,13 +90,16 @@ def main() -> int:
     validation_rows_actual = count_jsonl_rows(validation_metrics_path)
     max_steps = summary.get("max_steps") if summary else None
     validation_rows_summary = summary.get("validation_rows") if summary else None
+    data_loading_mode = summary.get("data_loading_mode") if summary else None
     checkpoint_path_value = summary.get("checkpoint_path") if summary else None
     checkpoint_path = resolve_repo_path(checkpoint_path_value) if isinstance(checkpoint_path_value, str) else None
     checkpoint_path_starts_with_output_dir = bool(checkpoint_path and path_is_under(checkpoint_path, output_dir))
 
     if summary:
         require(summary.get("success") is True, "summary success must be true", blockers)
-        require(max_steps in SUPPORTED_MAX_STEPS, "summary max_steps must be one of: 1000, 3000", blockers)
+        require(isinstance(max_steps, int) and max_steps > 0, "summary max_steps must be a positive integer", blockers)
+        if data_loading_mode is not None:
+            require(data_loading_mode == "streaming", "summary data_loading_mode must be streaming when present", blockers)
         if isinstance(max_steps, int):
             require(summary.get("metrics_rows") == max_steps, "summary metrics_rows must equal max_steps", blockers)
             require(metrics_rows_actual == max_steps, "metrics.jsonl actual rows must equal max_steps", blockers)
@@ -140,6 +142,7 @@ def main() -> int:
         "checkpoint_path": checkpoint_path_value,
         "checkpoint_path_starts_with_output_dir": checkpoint_path_starts_with_output_dir if summary else None,
         "tokenizer_vocab_size": summary.get("tokenizer_vocab_size") if summary else None,
+        "data_loading_mode": data_loading_mode,
         "exact_parameter_count": summary.get("exact_parameter_count") if summary else None,
         "blockers": blockers,
         "blocker_count": len(blockers),

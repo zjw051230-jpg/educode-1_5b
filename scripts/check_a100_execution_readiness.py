@@ -17,6 +17,7 @@ EXPECTED_PUBLIC16K_VOCAB_SIZE = 16384
 EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS = {
     1000: 100,
     3000: 300,
+    5000: 500,
 }
 DISALLOWED_STALE_RUN_TOKENS = ["10step", "100step"]
 
@@ -130,8 +131,10 @@ def main() -> int:
     eval_interval = int(config["training"]["eval_interval"])
     checkpoint_interval = int(config["training"]["checkpoint_interval"])
     training_no_training = config["training"].get("no_training")
+    data_loading_mode = str(config.get("data", {}).get("data_loading_mode", config.get("data_loading_mode", ""))).strip().lower()
     no_commit_checkpoints = config.get("checkpoint", {}).get("no_commit_checkpoints")
     expected_eval_interval = EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
+    supported_max_steps_text = ", ".join(str(step) for step in sorted(EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS))
     output_dir_text = repo_relative_path(output_dir)
 
     require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
@@ -142,10 +145,11 @@ def main() -> int:
     require(checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(), "checkpoint.save_dir must equal output_dir/checkpoints", blockers)
     require(no_commit_checkpoints is True, "checkpoint.no_commit_checkpoints must be true", blockers)
     require(training_no_training is False, "training.no_training must be false for execution config", blockers)
+    require(data_loading_mode == "streaming", "data_loading_mode must be streaming", blockers)
     require(tokenizer_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k tokenizer vocab_size must be 16384", blockers)
     require(model_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k model vocab_size must be 16384", blockers)
     require(tokenizer_vocab_size == model_vocab_size, "tokenizer.vocab_size must match model.vocab_size", blockers)
-    require(max_steps in EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS, "max_steps must be one of: 1000, 3000", blockers)
+    require(max_steps in EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS, f"max_steps must be one of: {supported_max_steps_text}", blockers)
     require(eval_interval == expected_eval_interval, f"eval_interval must be {expected_eval_interval} for {max_steps}-step public16k run", blockers)
     require(checkpoint_interval == max_steps, "checkpoint_interval must equal max_steps", blockers)
     require(str(config["training"].get("save_interval")) == str(max_steps), "training.save_interval must equal max_steps", blockers)
@@ -195,6 +199,7 @@ def main() -> int:
         "tokenizer_path": repo_relative_path(tokenizer_path),
         "tokenizer_vocab_size": tokenizer_vocab_size,
         "loaded_tokenizer_vocab_size": loaded_tokenizer_vocab_size,
+        "data_loading_mode": data_loading_mode,
         "model_vocab_size": model_vocab_size,
         "exact_parameter_count": expected_parameter_count,
         "max_steps": max_steps,
@@ -228,6 +233,7 @@ def main() -> int:
     print(f"run_name={summary['run_name']}")
     print(f"output_dir={summary['output_dir']}")
     print(f"tokenizer_vocab_size={summary['tokenizer_vocab_size']}")
+    print(f"data_loading_mode={summary['data_loading_mode']}")
     print(f"exact_parameter_count={summary['exact_parameter_count']}")
     print(f"max_steps={summary['max_steps']}")
     print(f"eval_interval={summary['eval_interval']}")
