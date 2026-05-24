@@ -1,0 +1,87 @@
+{
+  "run_name": "fineweb_edu_500mb_300m_1000step_public16k_execute",
+  "config_path": "configs/a100/fineweb_edu_500mb_300m_1000step_public16k_execute.json",
+  "train_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.train.jsonl",
+  "val_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.val.jsonl",
+  "tokenizer_path": "tokenizers/fineweb_edu_public_bpe_16k/tokenizer.json",
+  "tokenizer_vocab_size": 16384,
+  "data_loading_mode": "streaming",
+  "host_ram_efficient_batching": true,
+  "batch_precompute_disabled": true,
+  "smoke_sequence_length": 128,
+  "smoke_batch_size": 2,
+  "config_sequence_length": 512,
+  "config_batch_size": 8,
+  "input_ids_shape": [
+    2,
+    128
+  ],
+  "targets_shape": [
+    2,
+    128
+  ],
+  "val_input_ids_shape": [
+    2,
+    128
+  ],
+  "val_targets_shape": [
+    2,
+    128
+  ],
+  "logits_shape": [
+    2,
+    128,
+    16384
+  ],
+  "val_logits_shape": [
+    2,
+    128,
+    16384
+  ],
+  "loss_value": 9.875,
+  "val_loss_value": 9.9375,
+  "loss_finite": true,
+  "val_loss_finite": true,
+  "device": "cuda",
+  "model_dtype": "bfloat16",
+  "parameter_count": 336106496,
+  "train_data_probe": {
+    "split_name": "train",
+    "records_seen": 1,
+    "docs_used": 1,
+    "empty_text_count": 0,
+    "token_ids_streamed": 130,
+    "blocks_yielded": 2,
+    "available_batches": 1,
+    "required_batches": 1,
+    "used_batches": 1,
+    "sequence_length": 128,
+    "batch_size": 2,
+    "cycle_restarts": 0,
+    "streaming_mode": true,
+    "host_ram_efficient_batching": true,
+    "batch_precompute_disabled": true
+  },
+  "val_data_probe": {
+    "split_name": "val",
+    "records_seen": 1,
+    "docs_used": 1,
+    "empty_text_count": 0,
+    "token_ids_streamed": 130,
+    "blocks_yielded": 2,
+    "available_batches": 1,
+    "required_batches": 1,
+    "used_batches": 1,
+    "sequence_length": 128,
+    "batch_size": 2,
+    "cycle_restarts": 0,
+    "streaming_mode": true,
+    "host_ram_efficient_batching": true,
+    "batch_precompute_disabled": true
+  },
+  "no_backward": true,
+  "no_optimizer_step": true,
+  "no_checkpoint": true,
+  "no_training": true,
+  "checked_at": "2026-05-24T10:53:25.906077+00:00"
+}

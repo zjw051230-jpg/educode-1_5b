@@ -37,6 +37,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - E1.R1 aligned the research paper metadata schema, source policy, and paper-to-corpus taxonomy around standardized fields and task names without introducing any real paper data.
 - MVP-2 selected FineWeb-Edu `sample-10BT` as the first bounded public corpus source for the A100 MVP without downloading a real slice in this step.
 - MVP-3.R hardened the FineWeb-Edu dry-run path and confirmed a tiny preview-only dry-run could succeed without generating `raw.jsonl`.
+- MVP-17 added a host-RAM-efficient streaming batch iterator for public16k A800/A100 configs and validated it locally with unit tests, memory inspection, streaming data/model/loss smoke, and dry-runs.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -125,7 +126,8 @@ Current implementation note:
 - Before the next A800 run, logging/path validation has been added for validation_metrics.jsonl, checkpoint_path, run_id, and output_dir correctness.
 - Next A800 rental should run public16k 1000-step first, then 3000-step if the first run succeeds and time remains.
 - Low-RAM A800 runs completed; next experiments should use 32GB+ host/container RAM or improve streaming batch preparation before larger batch runs.
-- Next engineering priority is host-RAM-efficient streaming batch preparation before larger-batch A800 training.
+- MVP-17 implemented host-RAM-efficient streaming batch preparation for the public16k 1000/3000-step A800 configs, with local unit tests, memory inspection, streaming data/model/loss smoke, and dry-runs passing.
+- Next GPU-facing step is a short approved A800/A100 streaming 1000-step validation before any 3000-step follow-up.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
 ## Resume Resources
@@ -286,3 +288,4 @@ Current implementation note:
 - MVP-14 A800 1000-step public16k low-RAM fallback completed
 - MVP-15 A800 3000-step public16k low-RAM fallback completed
 - MVP-16 host-RAM and batching fix plan
+- MVP-17 streaming batch iterator implemented

@@ -44,7 +44,11 @@
     "sequence_length": 512,
     "num_workers": 4,
     "shuffle": true,
-    "streaming": false,
+    "streaming": true,
+    "data_loading_mode": "streaming",
+    "host_ram_efficient_batching": true,
+    "streaming_train_probe_records": 64,
+    "streaming_val_probe_records": 32,
     "max_tokens": 500000000,
     "bounded_prefix_batches_only": true
   },

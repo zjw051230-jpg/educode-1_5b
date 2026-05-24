@@ -59,6 +59,11 @@ def bytes_to_gib(byte_count: int | float) -> float:
     return round(float(byte_count) / (1024**3), 6)
 
 
+def get_data_loading_mode(config: dict[str, Any]) -> str:
+    data_config = config.get("data", {}) if isinstance(config.get("data"), dict) else {}
+    return str(data_config.get("data_loading_mode", config.get("data_loading_mode", "precomputed"))).strip().lower()
+
+
 def sample_split(path: Path, tokenizer: Tokenizer, max_records: int) -> dict[str, Any]:
     records_seen = 0
     texts_used = 0
@@ -155,8 +160,47 @@ def estimate_current_extract_bounded_batches_memory(
         "estimated_input_plus_label_tensor_memory_mib": bytes_to_mib(input_tensor_bytes + label_tensor_bytes),
         "estimated_token_buffer_python_memory_mib": bytes_to_mib(token_buffer_bytes),
         "estimated_sliding_sample_pointer_memory_gib": bytes_to_gib(sliding_sample_pointer_bytes),
+        "estimated_current_python_precompute_bytes": estimated_current_python_precompute_bytes,
         "estimated_current_python_precompute_memory_gib": bytes_to_gib(estimated_current_python_precompute_bytes),
         "current_plan_likely_precomputes_too_much": sliding_window_samples > max(needed_samples * 8, 100_000),
+    }
+
+
+def estimate_streaming_batch_memory(
+    *,
+    current_precompute_bytes: int,
+    batch_size: int,
+    sequence_length: int,
+) -> dict[str, Any]:
+    tensor_values = batch_size * sequence_length
+    input_tensor_bytes = tensor_values * INT64_BYTES
+    label_tensor_bytes = tensor_values * INT64_BYTES
+    rolling_buffer_bytes = (sequence_length + 1) * (CPYTHON_INT_APPROX_BYTES + LIST_POINTER_BYTES)
+    batch_row_pointer_bytes = 2 * batch_size * LIST_POINTER_BYTES
+    batch_sequence_pointer_bytes = 2 * batch_size * sequence_length * LIST_POINTER_BYTES
+    batch_sequence_container_bytes = 2 * batch_size * LIST_HEADER_APPROX_BYTES
+    batch_container_bytes = 2 * LIST_HEADER_APPROX_BYTES + TUPLE_HEADER_APPROX_BYTES
+    steady_state_python_bytes = (
+        rolling_buffer_bytes
+        + batch_row_pointer_bytes
+        + batch_sequence_pointer_bytes
+        + batch_sequence_container_bytes
+        + batch_container_bytes
+    )
+    steady_state_total_bytes = input_tensor_bytes + label_tensor_bytes + steady_state_python_bytes
+
+    return {
+        "streaming_formula": "current microbatch tensors + rolling token buffer + current Python batch lists",
+        "streaming_estimated_input_tensor_memory_mib": bytes_to_mib(input_tensor_bytes),
+        "streaming_estimated_label_tensor_memory_mib": bytes_to_mib(label_tensor_bytes),
+        "streaming_estimated_batch_tensor_memory_mib": bytes_to_mib(input_tensor_bytes + label_tensor_bytes),
+        "streaming_estimated_rolling_buffer_python_memory_mib": bytes_to_mib(rolling_buffer_bytes),
+        "streaming_estimated_batch_python_memory_mib": bytes_to_mib(steady_state_python_bytes),
+        "streaming_estimated_total_steady_state_memory_mib": bytes_to_mib(steady_state_total_bytes),
+        "streaming_expected_host_ram_safe": steady_state_total_bytes < 1024**3,
+        "reduction_factor_estimate": round(current_precompute_bytes / steady_state_total_bytes, 3)
+        if steady_state_total_bytes > 0
+        else None,
     }
 
 
@@ -167,6 +211,7 @@ def main() -> int:
         config_path = PROJECT_ROOT / config_path
 
     config = load_json(config_path)
+    data_loading_mode = get_data_loading_mode(config)
     train_path = resolve_repo_path(str(config["data"]["train_path"]))
     val_path = resolve_repo_path(str(config["data"]["val_path"]))
     tokenizer_path = resolve_repo_path(str(config["tokenizer"]["path"]))
@@ -197,6 +242,16 @@ def main() -> int:
         batch_size=batch_size,
         sequence_length=sequence_length,
     )
+    train_streaming_memory = estimate_streaming_batch_memory(
+        current_precompute_bytes=int(train_memory["estimated_current_python_precompute_bytes"]),
+        batch_size=batch_size,
+        sequence_length=sequence_length,
+    )
+    val_streaming_memory = estimate_streaming_batch_memory(
+        current_precompute_bytes=int(val_memory["estimated_current_python_precompute_bytes"]),
+        batch_size=batch_size,
+        sequence_length=sequence_length,
+    )
 
     summary = {
         "config_path": repo_relative_path(config_path),
@@ -215,11 +270,22 @@ def main() -> int:
         "gradient_accumulation_steps": gradient_accumulation_steps,
         "sequence_length": sequence_length,
         "eval_interval": eval_interval,
+        "data_loading_mode": data_loading_mode,
+        "host_ram_efficient_batching": data_loading_mode == "streaming",
+        "batch_precompute_disabled": data_loading_mode == "streaming",
         "required_train_batches": required_train_batches,
         "required_val_batches": required_val_batches,
         "current_val_batches_requested": current_val_batches_requested,
         "train_memory_plan": train_memory,
         "val_memory_plan": val_memory,
+        "train_streaming_memory_plan": train_streaming_memory,
+        "val_streaming_memory_plan": val_streaming_memory,
+        "current_precomputed_estimated_python_memory_gib": train_memory["estimated_current_python_precompute_memory_gib"],
+        "streaming_estimated_batch_tensor_memory_mib": train_streaming_memory[
+            "streaming_estimated_batch_tensor_memory_mib"
+        ],
+        "streaming_expected_host_ram_safe": train_streaming_memory["streaming_expected_host_ram_safe"],
+        "reduction_factor_estimate": train_streaming_memory["reduction_factor_estimate"],
         "sample_limits": {
             "max_records_per_split": MAX_SAMPLE_RECORDS,
             "does_not_read_entire_corpus": True,
@@ -227,13 +293,14 @@ def main() -> int:
         "train_sample": train_sample,
         "val_sample": val_sample,
         "risk_review": {
-            "current_training_script_collects_token_ids_until_required_tokens": True,
-            "current_training_script_materializes_make_next_token_samples_list": True,
-            "current_training_script_batches_all_available_sliding_samples_before_slice": True,
-            "current_training_script_keeps_train_batches_list_for_full_run": True,
-            "current_training_script_keeps_val_batches_list_for_full_run": True,
+            "precomputed_path_collects_token_ids_until_required_tokens": True,
+            "precomputed_path_materializes_make_next_token_samples_list": True,
+            "precomputed_path_batches_all_available_sliding_samples_before_slice": True,
+            "active_path_keeps_train_batches_list_for_full_run": data_loading_mode != "streaming",
+            "active_path_keeps_val_batches_list_for_full_run": data_loading_mode != "streaming",
+            "streaming_iterator_enabled": data_loading_mode == "streaming",
             "streaming_iterator_recommended": True,
-            "likely_host_ram_bottleneck": bool(train_memory["current_plan_likely_precomputes_too_much"]),
+            "likely_host_ram_bottleneck_without_streaming": bool(train_memory["current_plan_likely_precomputes_too_much"]),
         },
         "no_training": True,
         "no_model_materialization": True,
@@ -247,10 +314,16 @@ def main() -> int:
     print(f"max_steps={max_steps}")
     print(f"batch_size={batch_size}")
     print(f"gradient_accumulation_steps={gradient_accumulation_steps}")
+    print(f"data_loading_mode={data_loading_mode}")
     print(f"required_train_batches={required_train_batches}")
     print(f"required_val_batches={required_val_batches}")
-    print(f"estimated_train_current_python_precompute_memory_gib={train_memory['estimated_current_python_precompute_memory_gib']}")
-    print(f"likely_host_ram_bottleneck={summary['risk_review']['likely_host_ram_bottleneck']}")
+    print(
+        "current_precomputed_estimated_python_memory_gib="
+        f"{summary['current_precomputed_estimated_python_memory_gib']}"
+    )
+    print(f"streaming_estimated_batch_tensor_memory_mib={summary['streaming_estimated_batch_tensor_memory_mib']}")
+    print(f"streaming_expected_host_ram_safe={summary['streaming_expected_host_ram_safe']}")
+    print(f"reduction_factor_estimate={summary['reduction_factor_estimate']}")
     print("no_training=True")
     return 0
 

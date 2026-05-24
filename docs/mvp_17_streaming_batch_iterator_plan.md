@@ -166,3 +166,9 @@ MVP-17 should be considered ready only when:
 - memory inspection shows no run-sized batch list;
 - summary artifacts record the active `data_loading_mode`;
 - the first GPU retry uses a short bounded run before larger-step execution.
+
+## Implementation Result
+
+MVP-17 implemented the streaming iterator path, switched the public16k 1000/3000-step configs to `data_loading_mode = "streaming"`, and validated the path locally with unit tests, streaming memory inspection, data/model/loss smoke, and dry-runs.
+
+The next execution-facing document is `docs/mvp_18_a800_streaming_1000step_execution_plan.md`.

@@ -145,4 +145,14 @@ MVP-16 does not:
 
 ## 8. Next Step
 
-Proceed to MVP-17 streaming batch iterator implementation, or MVP-17.P planning if the change should be reviewed as a larger refactor before editing the training path.
+MVP-17 has implemented the streaming batch iterator path and updated the public16k 1000/3000-step configs to use `data_loading_mode = "streaming"`.
+
+The next GPU-facing step is MVP-18: run the streaming 1000-step config first on a `32GB+` host/container RAM A800/A100 environment after explicit execution approval.
+
+## 9. MVP-17 Follow-Up Result
+
+MVP-17 confirmed the old precomputed path estimate remains useful as a contrast: the 1000-step config would have required about `129.024313 GiB` of Python precompute memory, while the streaming estimate reports `0.062 MiB` for the current input+label tensor payload and host-RAM-safe steady-state batching.
+
+The 3000-step config similarly reports `387.080954 GiB` for the old precomputed estimate and host-RAM-safe streaming batch formation.
+
+This does not make a model-quality claim. It only removes the identified run-sized host-side batch materialization bottleneck before the next bounded GPU validation.

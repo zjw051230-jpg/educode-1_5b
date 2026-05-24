@@ -15,6 +15,7 @@ from tokenizers import Tokenizer
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SRC_PATH = PROJECT_ROOT / "src"
+SCRIPTS_PATH = PROJECT_ROOT / "scripts"
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "a100" / "fineweb_edu_50mb_300m_10step_smoke.json"
 EXPECTED_SOURCE_CATEGORY = "public_pretraining_corpus"
 EXPECTED_LICENSE = "odc-by"
@@ -22,8 +23,9 @@ EXPECTED_LICENSE = "odc-by"
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
 
-if str(SRC_PATH) not in sys.path:
-    sys.path.insert(0, str(SRC_PATH))
+for path in (SRC_PATH, SCRIPTS_PATH):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 from educode.checkpoint import compare_model_parameters, load_checkpoint, save_checkpoint
 from educode.config_loader import load_json_config
@@ -33,10 +35,25 @@ from educode.run_logging import append_jsonl, build_summary_markdown, write_json
 from educode.run_setup import collect_basic_environment, get_git_branch, get_git_commit, make_run_id, snapshot_config, write_run_metadata
 from educode.sequence_dataset import batch_samples, make_next_token_samples
 from educode.tiny_model import TinyDecoderOnlyTransformer, TinyModelConfig, model_config_from_dict
+from streaming_lm_batch_iterator import create_streaming_batch_iterator
 
 
 def resolve_repo_path(path_text: str) -> Path:
     return PROJECT_ROOT / Path(path_text)
+
+
+def get_data_loading_mode(config: dict[str, Any]) -> str:
+    data_config = config.get("data", {}) if isinstance(config.get("data"), dict) else {}
+    mode = str(data_config.get("data_loading_mode", config.get("data_loading_mode", "precomputed"))).strip().lower()
+    if mode not in {"precomputed", "streaming"}:
+        raise ValueError("data_loading_mode must be either 'precomputed' or 'streaming'")
+    return mode
+
+
+def get_eos_token_id(config: dict[str, Any]) -> int | None:
+    tokenizer_config = config.get("tokenizer", {}) if isinstance(config.get("tokenizer"), dict) else {}
+    eos_token_id = tokenizer_config.get("eos_token_id", tokenizer_config.get("endoftext_token_id"))
+    return eos_token_id if isinstance(eos_token_id, int) else None
 
 
 def repo_relative_path(path: Path) -> str:
@@ -438,33 +455,56 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
     expected_vocab_size = int(config["tokenizer"]["vocab_size"])
     sequence_length = int(config["training"].get("sequence_length", config["model"]["context_length"]))
     batch_size = int(config["training"]["batch_size"])
-    eos_token_id = config.get("tokenizer", {}).get("eos_token_id")
-    if not isinstance(eos_token_id, int):
-        eos_token_id = None
+    data_loading_mode = get_data_loading_mode(config)
+    eos_token_id = get_eos_token_id(config)
 
     tokenizer = Tokenizer.from_file(str(tokenizer_path))
     loaded_vocab_size = tokenizer.get_vocab_size()
     if loaded_vocab_size != expected_vocab_size:
         raise ValueError(f"tokenizer vocab mismatch: expected {expected_vocab_size} but loaded {loaded_vocab_size}")
 
-    train_batches, train_stats = extract_bounded_batches(
-        split_name="train",
-        split_path=train_path,
-        tokenizer=tokenizer,
-        sequence_length=sequence_length,
-        batch_size=batch_size,
-        required_batches=1,
-        eos_token_id=eos_token_id,
-    )
-    val_batches, val_stats = extract_bounded_batches(
-        split_name="val",
-        split_path=val_path,
-        tokenizer=tokenizer,
-        sequence_length=sequence_length,
-        batch_size=batch_size,
-        required_batches=1,
-        eos_token_id=eos_token_id,
-    )
+    if data_loading_mode == "streaming":
+        train_batch_iter, train_stats_tracker = create_streaming_batch_iterator(
+            split_name="train",
+            split_path=train_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=1,
+            eos_token_id=eos_token_id,
+        )
+        val_batch_iter, val_stats_tracker = create_streaming_batch_iterator(
+            split_name="val",
+            split_path=val_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=1,
+            eos_token_id=eos_token_id,
+        )
+        train_batches = [next(train_batch_iter)]
+        val_batches = [next(val_batch_iter)]
+        train_stats = train_stats_tracker.to_dict()
+        val_stats = val_stats_tracker.to_dict()
+    else:
+        train_batches, train_stats = extract_bounded_batches(
+            split_name="train",
+            split_path=train_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=1,
+            eos_token_id=eos_token_id,
+        )
+        val_batches, val_stats = extract_bounded_batches(
+            split_name="val",
+            split_path=val_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=1,
+            eos_token_id=eos_token_id,
+        )
 
     runtime_device, runtime_device_reason = choose_runtime_device(config, dry_run=True)
     model_dtype, model_dtype_label = choose_model_dtype(config, runtime_device)
@@ -495,6 +535,12 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
         "tokenizer_vocab_matches_config": loaded_vocab_size == expected_vocab_size,
         "sequence_length": sequence_length,
         "batch_size": batch_size,
+        "data_loading_mode": data_loading_mode,
+        "streaming_batches_used": train_stats.get("used_batches", 0) + val_stats.get("used_batches", 0)
+        if data_loading_mode == "streaming"
+        else 0,
+        "host_ram_efficient_batching": data_loading_mode == "streaming",
+        "batch_precompute_disabled": data_loading_mode == "streaming",
         "train_batch_shape": [batch_size, sequence_length],
         "val_batch_shape": [batch_size, sequence_length],
         "train_batches_validated": len(train_batches),
@@ -578,30 +624,51 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
     eval_interval = int(config["training"].get("eval_interval", 0))
     checkpoint_interval = int(config["training"].get("checkpoint_interval", 0))
     grad_clip = float(config["training"].get("grad_clip", 0.0))
-    eos_token_id = config.get("tokenizer", {}).get("eos_token_id")
-    if not isinstance(eos_token_id, int):
-        eos_token_id = None
+    data_loading_mode = get_data_loading_mode(config)
+    eos_token_id = get_eos_token_id(config)
 
     train_batches_required = max_steps * gradient_accumulation_steps
     val_batches_required = max_steps // eval_interval if eval_interval > 0 else 0
-    train_batches, train_stats = extract_bounded_batches(
-        split_name="train",
-        split_path=train_path,
-        tokenizer=tokenizer,
-        sequence_length=sequence_length,
-        batch_size=batch_size,
-        required_batches=train_batches_required,
-        eos_token_id=eos_token_id,
-    )
-    val_batches, val_stats = extract_bounded_batches(
-        split_name="val",
-        split_path=val_path,
-        tokenizer=tokenizer,
-        sequence_length=sequence_length,
-        batch_size=batch_size,
-        required_batches=max(val_batches_required, 1) if eval_interval > 0 else 0,
-        eos_token_id=eos_token_id,
-    )
+    if data_loading_mode == "streaming":
+        train_batch_iter, train_stats_tracker = create_streaming_batch_iterator(
+            split_name="train",
+            split_path=train_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=train_batches_required,
+            eos_token_id=eos_token_id,
+        )
+        val_batch_iter, val_stats_tracker = create_streaming_batch_iterator(
+            split_name="val",
+            split_path=val_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=max(val_batches_required, 1) if eval_interval > 0 else 0,
+            eos_token_id=eos_token_id,
+        )
+        train_stats = train_stats_tracker.to_dict()
+        val_stats = val_stats_tracker.to_dict()
+    else:
+        train_batches, train_stats = extract_bounded_batches(
+            split_name="train",
+            split_path=train_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=train_batches_required,
+            eos_token_id=eos_token_id,
+        )
+        val_batches, val_stats = extract_bounded_batches(
+            split_name="val",
+            split_path=val_path,
+            tokenizer=tokenizer,
+            sequence_length=sequence_length,
+            batch_size=batch_size,
+            required_batches=max(val_batches_required, 1) if eval_interval > 0 else 0,
+            eos_token_id=eos_token_id,
+        )
 
     run_id = build_run_id_from_config(config)
     snapshot_path = snapshot_config(config_path, output_dir)
@@ -673,7 +740,10 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         microbatch_losses: list[float] = []
 
         for micro_index in range(gradient_accumulation_steps):
-            batch_x, batch_y = train_batches[((step - 1) * gradient_accumulation_steps) + micro_index]
+            if data_loading_mode == "streaming":
+                batch_x, batch_y = next(train_batch_iter)
+            else:
+                batch_x, batch_y = train_batches[((step - 1) * gradient_accumulation_steps) + micro_index]
             input_ids = torch.tensor(batch_x, dtype=torch.long, device=runtime_device)
             target_ids = torch.tensor(batch_y, dtype=torch.long, device=runtime_device)
 
@@ -729,7 +799,10 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
 
         current_val_loss: float | None = None
         if eval_interval > 0 and step % eval_interval == 0:
-            val_batch_x, val_batch_y = val_batches[(step // eval_interval) - 1]
+            if data_loading_mode == "streaming":
+                val_batch_x, val_batch_y = next(val_batch_iter)
+            else:
+                val_batch_x, val_batch_y = val_batches[(step // eval_interval) - 1]
             current_val_loss = evaluate_loss(model, val_batch_x, val_batch_y, runtime_device, model_dtype)
             final_val_loss = current_val_loss
             val_losses.append(current_val_loss)
@@ -824,6 +897,9 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
     approximate_tokens_per_sec = total_tokens_seen / total_elapsed_seconds if total_elapsed_seconds > 0 else None
     feature_mismatches = collect_feature_mismatches(config)
     scheduler_config_present = isinstance(config.get("scheduler"), dict)
+    if data_loading_mode == "streaming":
+        train_stats = train_stats_tracker.to_dict()
+        val_stats = val_stats_tracker.to_dict()
 
     success = (
         first_train_loss is not None
@@ -877,6 +953,12 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "eval_interval": eval_interval,
         "batch_size": batch_size,
         "sequence_length": sequence_length,
+        "data_loading_mode": data_loading_mode,
+        "streaming_batches_used": train_stats.get("used_batches", 0) + val_stats.get("used_batches", 0)
+        if data_loading_mode == "streaming"
+        else 0,
+        "host_ram_efficient_batching": data_loading_mode == "streaming",
+        "batch_precompute_disabled": data_loading_mode == "streaming",
         "train_batches_used": train_batches_required,
         "val_batches_used": len(val_losses),
         "train_data_probe": train_stats,
