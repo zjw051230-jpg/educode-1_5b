@@ -2,50 +2,49 @@
 
 ## Purpose
 
-This policy records how public-corpus data should move through future A800/A100 runs after MVP-18.
+This note records the data movement policy for public16k A800/A100 runs after MVP-18.
 
-The goal is to keep GPU sessions focused on bounded execution, not large data fetching or corpus preparation.
+The goal is to keep GPU sessions focused on execution and artifact validation, not on large public-corpus fetching or data preparation.
 
-## Policy
+## Policy Summary
 
-Do not fetch 500MB+ Hugging Face or public-corpus slices inside the GPU training container.
+Do not make the GPU container fetch 500MB+ Hugging Face or public-corpus slices during the training session.
 
-For future public16k GPU runs:
+Instead:
 
-1. Prepare raw fetches, cleaned processed files, and train/validation splits locally or on a CPU/data host.
-2. Validate provenance and training approval before packaging.
-3. Transfer only prepared split packages to the GPU host.
-4. Run the GPU script against prepared local split files.
-5. Download only small result artifact packages for review.
-6. Do not download checkpoints unless explicitly approved for a separate purpose.
-7. Do not commit checkpoints, `raw.jsonl`, processed data, split files, or result tarballs.
+1. Prepare data locally or on a CPU cloud/data host.
+2. Build and validate processed files and train/validation splits before GPU rental.
+3. Package the prepared splits as a transfer artifact such as `prepared_splits.tar.gz`.
+4. Transfer the prepared splits package to the GPU machine.
+5. Run the GPU script against prepared local split files.
+6. Download only a small result artifact package after the run.
+7. Leave checkpoints remote unless explicitly approved for a separate purpose.
 
 ## Current 500MB Package
 
-The current 500MB FineWeb-Edu public corpus path should remain the baseline for MVP-19.
+The current FineWeb-Edu 500MB prepared split package is about `207MB`.
 
-The prepared split package used for transfer is about `207MB`, which is small enough to move to a GPU host deliberately while still avoiding live corpus fetching inside the GPU container.
+That size is appropriate for deliberate transfer to a GPU host, but it should still remain outside git. It should be treated as a local/GPU runtime artifact, not a repository artifact.
 
-This package represents prepared train/validation split artifacts, not repository content to commit.
+## Future 2GB and 10GB Data Scale
 
-## Future 2GB and 10GB Corpus Work
+Future 2GB or 10GB public-corpus work should use a local machine or CPU/data host for:
 
-For future 2GB or 10GB public corpus experiments, use a local machine or CPU/data host for:
-
-- public-corpus fetching;
-- raw source staging;
+- raw public-corpus fetch;
+- provenance and license checks;
 - cleaning and metadata validation;
+- processed JSONL creation;
 - train/validation split creation;
-- tokenizer or data compatibility checks;
-- packaging and checksum recording.
+- packaging;
+- checksum recording.
 
-The GPU host should receive prepared split packages only after these steps pass.
+The GPU host should receive prepared splits only. It should not be responsible for live Hugging Face fetching, large raw corpus staging, or corpus preprocessing during the rental window.
 
-This avoids spending GPU rental time on network-bound data preparation and reduces the risk of failed runs caused by live dataset access, bandwidth variability, or host storage surprises.
+## Checkpoint and Result Artifact Policy
 
-## Artifact Download Boundary
+Do not download checkpoints by default. MVP-18's remote checkpoint was about `1.9G` and was intentionally not downloaded or committed.
 
-After a GPU run, download a small result artifact package containing review files such as:
+Download only the small result package needed for review, such as:
 
 - `summary.json`;
 - `summary.md`;
@@ -55,26 +54,23 @@ After a GPU run, download a small result artifact package containing review file
 - `run_metadata.json`;
 - post-run artifact validation summary.
 
-Do not download the checkpoint by default. MVP-18's remote checkpoint was about `1.9G` and was intentionally not downloaded or committed.
-
 ## Commit Boundary
 
 Allowed for commit:
 
 - documentation;
 - validation scripts;
-- small imported review artifacts;
-- summary JSON files explicitly reviewed for size and contents.
+- small reviewed summary artifacts.
 
-Not allowed for commit unless separately approved:
+Not allowed for commit without separate explicit approval:
 
-- checkpoint files;
+- checkpoints;
 - result tarballs;
 - `raw.jsonl`;
 - processed corpus directories;
 - split files;
-- large data packages.
+- prepared data packages.
 
 ## Operational Conclusion
 
-Future GPU sessions should start with prepared data already on the GPU host and should end by returning only small review artifacts. This keeps A800/A100 time focused on training-systems validation and keeps large data/checkpoint artifacts out of git.
+Future GPU work should start from prepared data packages and end with small review artifacts. This keeps A800/A100 time focused on bounded training-systems validation and prevents raw data, processed data, split files, checkpoints, and result tarballs from entering git.

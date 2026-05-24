@@ -2,113 +2,110 @@
 
 ## Purpose
 
-This decision note selects the next scale route after MVP-18 restored the intended public16k streaming batch path on A800.
+This note records the next-scale decision after MVP-18 restored the public16k streaming path with `batch_size=8` / `gradient_accumulation_steps=4` on A800.
 
-The decision is limited to planning. It does not run training, rent or enter GPU hardware, download data, train tokenizer/model artifacts, modify training main logic, or commit checkpoints, raw corpus files, processed data, split files, or result tarballs.
+The decision is limited to documentation and route selection. It does not run training, enter A100/A800, train tokenizer/model artifacts, download data, modify training main logic, or commit checkpoints, `raw.jsonl`, processed data, split files, or result tarballs.
 
 ## Current Evidence
 
-MVP-18 completed a 300M public16k A800 streaming run with:
+MVP-18 completed the 300M public16k A800 streaming 1000-step run with:
 
-- `max_steps=1000`;
+- `data_loading_mode=streaming`;
 - `batch_size=8`;
 - `gradient_accumulation_steps=4`;
-- `sequence_length=512`;
-- `data_loading_mode=streaming`;
+- `max_steps=1000`;
 - `tokens_seen=16384000`;
+- `final_train_loss=2.877289`;
+- `final_val_loss=8.752452`;
 - `metrics_rows=1000`;
 - `validation_rows=10`;
 - `checkpoint_reload_match=true`;
-- post-run artifact validation and import validation passed.
+- post-run artifact validation passed.
 
-This resolves the earlier host-side precompute bottleneck for the current bounded setup. It does not establish model quality.
+This resolves the current host-RAM precompute blocker. It does not prove model quality.
 
-## Options Reviewed
+## A. MVP-19 Streaming 3000-Step on 500MB
 
-### Option 1: MVP-19 streaming 3000-step on the existing 500MB corpus
-
-Run the current 3000-step public16k config with the MVP-17 streaming path and the already prepared 500MB FineWeb-Edu split package.
+Run the existing 3000-step public16k config with the MVP-17 streaming iterator and the prepared 500MB FineWeb-Edu split package.
 
 Pros:
 
-- Tests the longer-run version of the same path that MVP-18 validated.
-- Reuses the current tokenizer, model scale, data package, and artifact validator.
-- Avoids adding a new data-preparation variable before proving the restored larger-batch path over a longer run.
-- Keeps GPU work bounded and reviewable.
+- Directly validates longer streaming stability on the same restored path.
+- Reuses the current tokenizer, 300M model config, 500MB prepared splits, import validator, and artifact policy.
+- Keeps the next GPU run bounded and comparable to the MVP-18 result.
+- Avoids adding corpus-scale or model-scale variables before proving the 3000-step streaming path.
 
 Cons:
 
-- Still not a quality-oriented run.
-- Still bounded to the 500MB prepared corpus.
-- Consumes another GPU session before addressing scheduler/sampling cleanup.
+- Still uses only the 500MB prepared corpus.
+- Still risks bounded-corpus overfitting or repeated-prefix behavior.
+- Still remains training-systems evidence, not a serious quality-oriented training run.
 
-Decision: recommended next GPU execution if GPU time is available.
+Decision: recommended short next GPU run if using the current setup and if GPU time is available.
 
-### Option 2: MVP-20 2GB FineWeb-Edu prepared corpus
+## B. MVP-20 2GB FineWeb-Edu Prepared Corpus
 
-Prepare a larger public corpus slice outside the GPU container, then create processed/split packages for later GPU runs.
+Prepare a larger public corpus slice outside the GPU container and package processed train/validation splits for later GPU execution.
 
 Pros:
 
-- Addresses the next data-scale bottleneck.
-- Better prepares future quality-oriented or longer systems runs.
-- Keeps data preparation on local or CPU/data hosts where bandwidth and storage are easier to control.
+- Improves data scale beyond the current 500MB slice.
+- Reduces the bounded tiny-corpus problem before more serious longer training.
+- Moves network-bound and CPU-bound data preparation away from paid GPU sessions.
+- Creates a better base for later training-quality experiments.
 
 Cons:
 
-- Adds data logistics and validation work before the 3000-step streaming path has been tested.
-- Increases transfer and storage cost.
-- Should not be mixed into the same milestone as the next GPU execution.
+- Requires local or CPU-cloud data preparation.
+- Requires larger transfer packages and stronger checksum/logistics discipline.
+- Adds a new data variable before the 3000-step streaming run if done first.
 
-Decision: recommended after MVP-19, or earlier only if GPU time is not available but CPU/data preparation time is available.
+Decision: recommended next data step before serious longer training.
 
-### Option 3: MVP-21 1B 10-step streaming smoke
+## C. MVP-21 1B 10-Step Streaming Smoke
 
-Create a larger 1B-class smoke configuration and run a very short streaming execution check.
+Create a bounded 1B-class streaming smoke to validate larger-model materialization and memory behavior.
 
 Pros:
 
-- Tests whether the streaming data path remains compatible with a larger model scale.
-- Provides an early read on memory headroom and config validation for future scaling.
+- Tests whether the streaming data path remains compatible with larger model materialization.
+- Gives an early memory and config read for the next model scale.
+- Can stay short and bounded if scoped as a 10-step smoke only.
 
 Cons:
 
-- Introduces model-scale risk before the 300M streaming path has completed its 3000-step follow-up.
-- A 10-step run is useful for systems compatibility but not for learning behavior.
-- Requires careful scope boundaries to avoid becoming a premature architecture-scale detour.
+- Should come after the 300M streaming path is stable.
+- Should come after data-scale and config review decisions are clearer.
+- A 10-step smoke is systems compatibility evidence only, not training evidence.
 
-Decision: defer until after MVP-19 and data/logistics cleanup, unless the goal explicitly shifts to model-scale smoke testing.
+Decision: secondary, after 300M streaming and config review.
 
-### Option 4: Scheduler and sampling cleanup
+## D. Scheduler / Sampling Cleanup
 
-Clean up scheduler application and bounded sampling behavior before future quality-oriented runs.
+Clean up scheduler application and bounded sampling behavior before any quality-oriented claim.
 
 Pros:
 
-- Addresses known engineering caveats from MVP-18: scheduler config was present but not applied.
-- Improves interpretability of later training curves.
-- Reduces the risk of over-reading bounded-prefix behavior.
+- Improves training-curve interpretability.
+- Addresses `scheduler_config_present_but_not_applied=true` from MVP-18.
+- Reduces over-reading risk from `bounded_prefix_batches_only=true`.
+- Makes later longer runs easier to compare.
 
 Cons:
 
-- Does not itself validate the 3000-step streaming path.
-- Should be implemented with test-first coverage and local dry-run validation before any GPU execution.
+- Requires code changes and verification even if the change is smaller than a GPU run.
+- Should be tested locally before any GPU execution.
+- Does not itself prove longer streaming stability.
 
-Decision: important before quality-oriented runs, but not required before the immediate MVP-19 systems follow-up if MVP-19 remains a bounded systems-validation run.
+Decision: should be done before claiming training quality.
 
 ## Recommended Route
 
-1. MVP-19.P: prepare the 3000-step streaming execution/import plan.
-2. MVP-19: run A800 streaming 3000-step on the existing 500MB prepared public16k corpus if GPU time is available.
-3. MVP-20: prepare a 2GB FineWeb-Edu public corpus on local or CPU/data-host infrastructure, not inside the GPU container.
-4. MVP-21: do scheduler/sampling cleanup before any quality-oriented run or larger-model experiment.
+1. MVP-19.P: prepare 3000-step streaming execution/import plan.
+2. MVP-19: A800 streaming 3000-step if GPU time is available.
+3. MVP-20: prepare 2GB public corpus using local/CPU host, not GPU fetch.
+4. MVP-21: scheduler/sampling cleanup before quality-oriented run.
 
 ## Decision Boundary
 
-The next route should stay conservative: prove the restored 300M streaming path over 3000 steps before adding a larger corpus or larger model. If GPU time is not available, use the pause to prepare MVP-20 data logistics and scheduler/sampling cleanup locally.
-
-## Selected Next Step
-
-Selected next step: MVP-19.P, a local execution/import plan for the A800 streaming 3000-step public16k run.
-
-MVP-19 execution should happen only after explicit approval and should still be described as bounded training-systems evidence.
+The immediate route should not jump to H200/B200 or a larger model just because the host-RAM blocker is fixed. The evidence supports one more bounded 300M streaming stability run, followed by data logistics and scheduler/sampling cleanup before stronger training-quality claims.
