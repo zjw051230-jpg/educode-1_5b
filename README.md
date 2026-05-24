@@ -127,7 +127,8 @@ Current implementation note:
 - Next A800 rental should run public16k 1000-step first, then 3000-step if the first run succeeds and time remains.
 - Low-RAM A800 runs completed; next experiments should use 32GB+ host/container RAM or improve streaming batch preparation before larger batch runs.
 - MVP-17 implemented host-RAM-efficient streaming batch preparation for the public16k 1000/3000-step A800 configs, with local unit tests, memory inspection, streaming data/model/loss smoke, and dry-runs passing.
-- Next GPU-facing step is a short approved A800/A100 streaming 1000-step validation before any 3000-step follow-up.
+- Streaming batch iterator successfully restored `batch_size=8` / `gradient_accumulation_steps=4` A800 training under `48GiB` host RAM.
+- MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
 ## Resume Resources
@@ -289,3 +290,4 @@ Current implementation note:
 - MVP-15 A800 3000-step public16k low-RAM fallback completed
 - MVP-16 host-RAM and batching fix plan
 - MVP-17 streaming batch iterator implemented
+- MVP-18 A800 1000-step public16k streaming run completed

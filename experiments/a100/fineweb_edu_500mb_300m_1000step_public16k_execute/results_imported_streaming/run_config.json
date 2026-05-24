@@ -1,0 +1,148 @@
+{
+  "status": "preflight_ready_not_run",
+  "run": {
+    "run_name": "fineweb_edu_500mb_300m_1000step_public16k_execute",
+    "seed": 336,
+    "output_dir": "experiments/a100/fineweb_edu_500mb_300m_1000step_public16k_execute",
+    "notes": "Draft A100/A800 300M 1000-step execution config for the FineWeb-Edu 500MB public corpus and public 16k tokenizer. This config is not approved for execution until MVP-13.1 public16k data/model/loss smoke passes and MVP-10 logging cleanup requirements are satisfied. This remains a bounded training-systems run and must not be treated as a model-quality claim."
+  },
+  "hardware": {
+    "target": "a100_cuda",
+    "gpu": "A100-80GB or A800-40GB",
+    "device": "cuda",
+    "dtype": "bf16",
+    "precision": "bf16_if_available_else_fp16",
+    "use_tf32": true,
+    "compile": false,
+    "distributed": {
+      "enabled": false,
+      "backend": "nccl",
+      "world_size": 1
+    }
+  },
+  "tokenizer": {
+    "type": "bpe",
+    "tokenizer_source": "fineweb_edu_public_bpe_16k",
+    "vocab_size": 16384,
+    "path": "tokenizers/fineweb_edu_public_bpe_16k/tokenizer.json",
+    "artifact_dir": "tokenizers/fineweb_edu_public_bpe_16k",
+    "special_tokens": ["<|endoftext|>", "<|pad|>", "<|unk|>"],
+    "endoftext_token_id": 0,
+    "pad_token_id": 1,
+    "unk_token_id": 2
+  },
+  "data": {
+    "dataset_name": "fineweb_edu_500mb_public",
+    "dataset_id": "HuggingFaceFW/fineweb-edu",
+    "dataset_config": "sample-10BT",
+    "license": "odc-by",
+    "train_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.train.jsonl",
+    "val_path": "data/public_corpus/fineweb_edu_sample10bt_500mb/splits/fineweb_edu_500mb.val.jsonl",
+    "data_paths": [],
+    "train_split": "train",
+    "val_split": "validation",
+    "sequence_length": 512,
+    "num_workers": 4,
+    "shuffle": true,
+    "streaming": true,
+    "data_loading_mode": "streaming",
+    "host_ram_efficient_batching": true,
+    "streaming_train_probe_records": 64,
+    "streaming_val_probe_records": 32,
+    "max_tokens": 500000000,
+    "bounded_prefix_batches_only": true
+  },
+  "model": {
+    "architecture": "dense_decoder_only",
+    "model_size_label": "300m",
+    "vocab_size": 16384,
+    "context_length": 512,
+    "num_layers": 18,
+    "d_model": 1024,
+    "num_heads": 16,
+    "head_dim": 64,
+    "ffn_type": "swiglu",
+    "d_ff": 4096,
+    "norm_type": "rmsnorm",
+    "position_encoding": "learned_position_embedding",
+    "intended_future_position_encoding": "rope_after_dedicated_model_validation",
+    "dropout": 0.0,
+    "tie_embeddings": false
+  },
+  "training": {
+    "max_steps": 1000,
+    "batch_size": 8,
+    "gradient_accumulation_steps": 4,
+    "global_batch_tokens": 16384,
+    "sequence_length": 512,
+    "eval_interval": 100,
+    "log_interval": 1,
+    "save_interval": 1000,
+    "checkpoint_interval": 1000,
+    "grad_clip": 1.0,
+    "mixed_precision": "bf16",
+    "no_training": false
+  },
+  "optimizer": {
+    "name": "adamw",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8
+  },
+  "scheduler": {
+    "enabled": false,
+    "name": null,
+    "reason": "MVP-10 found scheduler_config_present_but_not_applied=true; do not claim a scheduler until the execution script applies one or the report explicitly marks it disabled."
+  },
+  "checkpoint": {
+    "save_dir": "experiments/a100/fineweb_edu_500mb_300m_1000step_public16k_execute/checkpoints",
+    "resume_from": null,
+    "save_latest": true,
+    "save_best": false,
+    "keep_last_n": 1,
+    "save_optimizer_state": true,
+    "no_commit_checkpoints": true,
+    "path_must_resolve_inside_current_output_dir": true
+  },
+  "evaluation": {
+    "enabled": true,
+    "eval_steps": 100,
+    "eval_tokens": 16384,
+    "metrics": ["loss"],
+    "standalone_validation_metrics_required": true
+  },
+  "generation": {
+    "enabled": false,
+    "prompts": ["def train_step(batch):"],
+    "max_new_tokens": 32,
+    "temperature": 0.7,
+    "top_k": 50,
+    "top_p": 0.95
+  },
+  "profiling": {
+    "enabled": true,
+    "profile_steps": [1, 100, 1000],
+    "record_memory": true,
+    "record_tokens_per_sec": true,
+    "record_mfu": true,
+    "attention_backend": "sdpa",
+    "attention_backend_note": "Execution config uses the current SDPA core model path. FlashAttention-2 remains a later optimization after bounded execution validation."
+  },
+  "logging": {
+    "log_dir": "experiments/a100/fineweb_edu_500mb_300m_1000step_public16k_execute/logs",
+    "log_jsonl": true,
+    "use_wandb": false,
+    "wandb_project": null,
+    "run_id_must_include_max_steps": true,
+    "write_standalone_validation_metrics_jsonl": true,
+    "post_run_artifact_validation_required": true
+  },
+  "prerequisites": {
+    "mvp_13_1_public16k_data_model_loss_smoke_passed": true,
+    "logging_cleanup_requirements_satisfied": true,
+    "no_raw_or_processed_corpus_files_committed": true,
+    "no_checkpoints_committed": true
+  },
+  "purpose": "A100/A800 300M 1000-step bounded public16k training-systems run draft, not model quality claim"
+}
