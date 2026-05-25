@@ -38,6 +38,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - MVP-2 selected FineWeb-Edu `sample-10BT` as the first bounded public corpus source for the A100 MVP without downloading a real slice in this step.
 - MVP-3.R hardened the FineWeb-Edu dry-run path and confirmed a tiny preview-only dry-run could succeed without generating `raw.jsonl`.
 - MVP-17 added a host-RAM-efficient streaming batch iterator for public16k A800/A100 configs and validated it locally with unit tests, memory inspection, streaming data/model/loss smoke, and dry-runs.
+- MVP-20 prepared a bounded FineWeb-Edu `sample-10BT` 2GB public corpus slice locally/CPU-side, with raw validation, intake validation, and a local prepared split package for future GPU transfer.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -131,6 +132,7 @@ Current implementation note:
 - Streaming batch iterator is now the baseline for future public16k A800 runs; data should be prepared locally/CPU-side and transferred to GPU hosts.
 - Next GPU run should use prepared local/CPU-side data package and run streaming 3000-step without Hugging Face fetch on the GPU host.
 - Next GPU session can run streaming 3000-step first, then streaming 5000-step only if 3000-step succeeds and time remains.
+- FineWeb-Edu 2GB prepared splits are now available locally for future 300M public16k streaming experiments without Hugging Face fetch on the GPU host.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -297,3 +299,4 @@ Current implementation note:
 - MVP-18.S streaming breakthrough summary and next-scale decision
 - MVP-19.P A800 streaming 3000-step execution plan
 - MVP-19.Q A800 one-hour streaming queue prepared
+- MVP-20 FineWeb-Edu 2GB prepared corpus

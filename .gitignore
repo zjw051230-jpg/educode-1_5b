@@ -27,3 +27,4 @@ data/public_corpus/*/cache/
 data/public_corpus/*/shards/
 data/public_corpus/*/processed/
 data/public_corpus/*/splits/
+data/public_corpus/*/*.tar.gz

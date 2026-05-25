@@ -1,0 +1,29 @@
+{
+  "package_name": "fineweb_edu_2gb_prepared_splits.tar.gz",
+  "package_path": "C:/Users/01/fineweb_edu_2gb_prepared_splits.tar.gz",
+  "package_size_bytes": 847344882,
+  "package_sha256": "1c02cdf74e5a883ac1fcbee2cb9ebcf5917b8de145aaf4bdc59b1da6c120d51a",
+  "source_dir": "data/public_corpus/fineweb_edu_sample10bt_2gb",
+  "included_members": [
+    "manifest.json",
+    "validation_summary.json",
+    "intake_summary.json",
+    "intake_validation_summary.json",
+    "splits/fineweb_edu_2gb.train.jsonl",
+    "splits/fineweb_edu_2gb.val.jsonl"
+  ],
+  "excluded_members": [
+    "raw.jsonl",
+    "processed/"
+  ],
+  "raw_record_count": 449802,
+  "raw_total_text_bytes": 2147485975,
+  "processed_count": 449367,
+  "train_count": 426857,
+  "val_count": 22510,
+  "train_text_bytes": 2036973656,
+  "val_text_bytes": 108562200,
+  "output_basename": "fineweb_edu_2gb",
+  "created_at": "2026-05-25T08:35:00+00:00",
+  "artifact_policy": "local-only prepared split package; do not commit tarball"
+}

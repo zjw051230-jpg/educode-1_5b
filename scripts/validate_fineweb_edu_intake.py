@@ -23,7 +23,10 @@ def resolve_repo_path(path_text: str) -> Path:
 
 
 def build_output_basename(config: dict[str, Any]) -> str:
-    return f"fineweb_edu_{int(config['target_size_mb'])}mb"
+    target_size_mb = int(config["target_size_mb"])
+    if target_size_mb % 1024 == 0:
+        return f"fineweb_edu_{target_size_mb // 1024}gb"
+    return f"fineweb_edu_{target_size_mb}mb"
 
 
 def build_output_paths(output_root: Path, config: dict[str, Any]) -> tuple[Path, Path, Path]:
