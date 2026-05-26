@@ -1,0 +1,22 @@
+{
+  "run_id": "20260526_192023_fineweb_edu_5gb_300m_1000step_public16k_execute",
+  "project": "EduCode-1.5B",
+  "stage": "a100",
+  "hardware_target": "a100_cuda",
+  "hostname": "modal",
+  "os": "Linux-4.4.0-x86_64-with-glibc2.36",
+  "python_version": "3.11.12 (main, May 21 2025, 23:34:13) [GCC 12.2.0]",
+  "torch_version": "2.12.0+cu130",
+  "cuda_available": true,
+  "cuda_version": "13.0",
+  "cudnn_version": 92000,
+  "gpu_name": "NVIDIA A100-SXM4-40GB",
+  "gpu_memory_gib": 39.494,
+  "git_commit": "5c7c1b594d1191e198eb5609a0b74024c8c4130a",
+  "git_branch": "main",
+  "config_path": "/workspace/educode-1_5b/experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/run_config.json",
+  "start_time": "2026-05-26T19:20:23",
+  "end_time": "2026-05-26T19:26:16",
+  "status": "success",
+  "notes": "fineweb_edu_5gb_300m_1000step_public16k_execute complete"
+}
