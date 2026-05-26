@@ -38,8 +38,11 @@ from educode.tiny_model import TinyDecoderOnlyTransformer, TinyModelConfig, mode
 from streaming_lm_batch_iterator import create_streaming_batch_iterator
 
 
-def resolve_repo_path(path_text: str) -> Path:
-    return PROJECT_ROOT / Path(path_text)
+def resolve_repo_path(path_text: str | Path) -> Path:
+    path = Path(path_text)
+    if path.is_absolute():
+        return path
+    return PROJECT_ROOT / path
 
 
 def get_data_loading_mode(config: dict[str, Any]) -> str:
@@ -57,7 +60,8 @@ def get_eos_token_id(config: dict[str, Any]) -> int | None:
 
 
 def repo_relative_path(path: Path) -> str:
-    return path.relative_to(PROJECT_ROOT).as_posix()
+    resolved = path if path.is_absolute() else PROJECT_ROOT / path
+    return resolved.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
 
 
 def validate_output_dir(output_dir: Path) -> None:
@@ -1042,7 +1046,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
 
 def main() -> int:
     args = parse_args()
-    config_path = Path(args.config)
+    config_path = resolve_repo_path(args.config)
     config = load_json_config(config_path)
     errors = validate_config(config, repo_root=PROJECT_ROOT)
     if errors:

@@ -153,15 +153,23 @@ def write_receipt(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def repo_absolute_path(path_text: str) -> Path:
+    path = Path(path_text)
+    if path.is_absolute():
+        return path
+    return REPO_DIR / path
+
+
 def run_preflight(spec: ModeSpec, result_dir: Path) -> dict[str, Any]:
-    run_command(["python", "scripts/inspect_training_batch_memory_plan.py", "--config", spec.config_path], cwd=REPO_DIR)
+    config_path = repo_absolute_path(spec.config_path)
+    run_command(["python", "scripts/inspect_training_batch_memory_plan.py", "--config", config_path.as_posix()], cwd=REPO_DIR)
     run_command(
-        ["python", "scripts/run_a100_300m_fineweb_edu_10step_training.py", "--config", spec.config_path, "--dry-run"],
+        ["python", "scripts/run_a100_300m_fineweb_edu_10step_training.py", "--config", config_path.as_posix(), "--dry-run"],
         cwd=REPO_DIR,
     )
-    run_command(["python", "scripts/check_a100_execution_readiness.py", "--config", spec.config_path], cwd=REPO_DIR)
+    run_command(["python", "scripts/check_a100_execution_readiness.py", "--config", config_path.as_posix()], cwd=REPO_DIR)
 
-    config = load_json(REPO_DIR / spec.config_path)
+    config = load_json(config_path)
     output_dir = REPO_DIR / config["run"]["output_dir"]
     copied_files = []
     for filename in ["batch_memory_plan_summary.json", "dry_run_summary.json", "execution_readiness_summary.json"]:
@@ -190,8 +198,9 @@ def run_preflight(spec: ModeSpec, result_dir: Path) -> dict[str, Any]:
 
 def run_training(spec: ModeSpec, result_dir: Path) -> dict[str, Any]:
     run_preflight(spec, result_dir)
-    run_command(["python", "scripts/run_a100_300m_fineweb_edu_10step_training.py", "--config", spec.config_path], cwd=REPO_DIR)
-    config = load_json(REPO_DIR / spec.config_path)
+    config_path = repo_absolute_path(spec.config_path)
+    run_command(["python", "scripts/run_a100_300m_fineweb_edu_10step_training.py", "--config", config_path.as_posix()], cwd=REPO_DIR)
+    config = load_json(config_path)
     output_dir = REPO_DIR / config["run"]["output_dir"]
     run_command(["python", "scripts/validate_a800_public16k_run_artifacts.py", "--output-dir", config["run"]["output_dir"]], cwd=REPO_DIR)
 
