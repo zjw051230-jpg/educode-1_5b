@@ -315,3 +315,4 @@ Current implementation note:
 - MVP-23 A800 5GB streaming training plan
 - MVP-26.P Modal backend adapter planned
 - MVP-21 Modal A100 2GB 1000-step streaming run completed
+- MVP-22 Modal A100 2GB 3000-step streaming run completed
