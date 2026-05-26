@@ -143,6 +143,7 @@ Current implementation note:
 - Modal can be used as an alternate A100/A100-40GB execution backend; prepared data packages should be uploaded to Modal Volume and GPU functions should not fetch Hugging Face data.
 - Modal A100 can be used as an alternate execution backend for prepared-data streaming runs; future Modal jobs should keep using Volume prepared packages and avoid Hugging Face fetch on GPU workers.
 - Modal A100 backend is validated for 2GB prepared-data streaming runs; next recommended path is scheduler/sampling cleanup or 5GB 1000-step preflight rather than blindly extending 2GB step count.
+- Before further longer or larger-corpus training, scheduler behavior and streaming sampling policy should be made explicit to improve run interpretability.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -318,3 +319,4 @@ Current implementation note:
 - MVP-21 Modal A100 2GB 1000-step streaming run completed
 - MVP-22 Modal A100 2GB 3000-step streaming run completed
 - MVP-22.S Modal 2GB streaming stage summary
+- MVP-23.P scheduler and sampling cleanup plan
