@@ -147,6 +147,7 @@ Current implementation note:
 - Before further longer or larger-corpus training, scheduler behavior and streaming sampling policy should be made explicit to improve run interpretability.
 - Fixed learning-rate training is now represented as explicit `scheduler_policy=constant` rather than an accidental scheduler caveat.
 - Streaming train data now supports seed-controlled `shuffle_buffer` sampling; future 2GB/5GB runs should use shuffled streaming rather than prefix-only sampling.
+- 5GB Modal preflight has passed; `train_5gb_1000` should only run after explicit cost approval and should download only the small result package.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -325,3 +326,4 @@ Current implementation note:
 - MVP-23.P scheduler and sampling cleanup plan
 - MVP-23.I scheduler metadata cleanup
 - MVP-23.J streaming shuffle buffer
+- MVP-24.P Modal 5GB 1000-step training mode prepared

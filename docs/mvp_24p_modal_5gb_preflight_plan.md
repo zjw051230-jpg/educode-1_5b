@@ -84,6 +84,25 @@ Expected files:
 - `execution_readiness_summary.json`
 - `modal_preflight_receipt.json`
 
+## Preflight Result
+
+`preflight_5gb_1000` has passed on Modal with `repo_commit=16f4cd6`.
+
+The completed preflight used:
+
+- config: `configs/a100/fineweb_edu_5gb_300m_1000step_public16k_execute.json`
+- prepared package: `/vol/prepared/fineweb_edu_5gb_prepared_splits.tar.gz`
+- data loading mode: `streaming`
+- batch size: `8`
+- gradient accumulation steps: `4`
+- max steps: `1000`
+- tokenizer vocab size: `16384`
+- parameter count: `336106496`
+
+The Modal preflight reported memory plan, dry-run, and readiness success with no blockers. It did not run training and did not produce a checkpoint.
+
+The next executable mode is `train_5gb_1000`, but only after explicit cost approval.
+
 ## No Training By Default
 
 `preflight_5gb_1000` must not run training and must not produce checkpoints. It is a readiness gate only.

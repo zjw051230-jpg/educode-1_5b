@@ -17,9 +17,17 @@ VOLUME_MOUNT_PATH = Path("/vol")
 WORKSPACE_ROOT = Path("/workspace")
 REPO_DIR = WORKSPACE_ROOT / "educode-1_5b"
 REPO_URL = "https://github.com/zjw051230-jpg/educode-1_5b.git"
-REQUIRED_COMMIT = "66b00b9"
+REQUIRED_COMMIT = "16f4cd6"
 DEFAULT_GPU = "A100-40GB"
 TIMEOUT_SECONDS = 2 * 60 * 60
+FIVE_GB_REQUIRED_PACKAGE_FILES = (
+    "data/public_corpus/fineweb_edu_sample10bt_5gb/manifest.json",
+    "data/public_corpus/fineweb_edu_sample10bt_5gb/validation_summary.json",
+    "data/public_corpus/fineweb_edu_sample10bt_5gb/intake_summary.json",
+    "data/public_corpus/fineweb_edu_sample10bt_5gb/intake_validation_summary.json",
+    "data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.train.jsonl",
+    "data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.val.jsonl",
+)
 
 app = modal.App(APP_NAME)
 DATA_VOLUME = modal.Volume.from_name(VOLUME_NAME, create_if_missing=False)
@@ -47,6 +55,7 @@ class ModeSpec:
     result_dir: str
     train: bool
     result_package: str | None = None
+    required_package_files: tuple[str, ...] = ()
 
 
 MODE_SPECS = {
@@ -87,6 +96,18 @@ MODE_SPECS = {
         val_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.val.jsonl",
         result_dir="/vol/results/modal_preflight_5gb_1000",
         train=False,
+        required_package_files=FIVE_GB_REQUIRED_PACKAGE_FILES,
+    ),
+    "train_5gb_1000": ModeSpec(
+        config_path="configs/a100/fineweb_edu_5gb_300m_1000step_public16k_execute.json",
+        package_path="/vol/prepared/fineweb_edu_5gb_prepared_splits.tar.gz",
+        extract_dir="data/public_corpus/fineweb_edu_sample10bt_5gb",
+        train_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.train.jsonl",
+        val_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.val.jsonl",
+        result_dir="/vol/results/modal_train_5gb_1000",
+        train=True,
+        result_package="/vol/results/mvp24_a100_5gb_1000step_public16k_streaming_results.tar.gz",
+        required_package_files=FIVE_GB_REQUIRED_PACKAGE_FILES,
     ),
 }
 
@@ -158,6 +179,16 @@ def repo_absolute_path(path_text: str) -> Path:
     if path.is_absolute():
         return path
     return REPO_DIR / path
+
+
+def verify_required_package_files(spec: ModeSpec) -> list[str]:
+    verified_files: list[str] = []
+    for file_path in spec.required_package_files:
+        path = REPO_DIR / file_path
+        if not path.exists():
+            raise FileNotFoundError(f"missing required prepared package file after extraction: {file_path}")
+        verified_files.append(file_path)
+    return verified_files
 
 
 def run_preflight(spec: ModeSpec, result_dir: Path) -> dict[str, Any]:
@@ -249,6 +280,7 @@ def run_modal_job(mode: str = "preflight_2gb_1000", repo_url: str = REPO_URL, re
         raise FileNotFoundError(f"missing train split after extraction: {train_path}")
     if not val_path.exists():
         raise FileNotFoundError(f"missing val split after extraction: {val_path}")
+    verified_package_files = verify_required_package_files(spec)
 
     if spec.train:
         result = run_training(spec, result_dir)
@@ -267,6 +299,7 @@ def run_modal_job(mode: str = "preflight_2gb_1000", repo_url: str = REPO_URL, re
         "config_path": spec.config_path,
         "prepared_package": spec.package_path,
         "extracted_members": extracted_members,
+        "verified_package_files": verified_package_files,
         "train_path_exists": train_path.exists(),
         "val_path_exists": val_path.exists(),
         "result_dir": spec.result_dir,
