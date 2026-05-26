@@ -100,7 +100,8 @@
   "scheduler": {
     "enabled": false,
     "name": null,
-    "reason": "MVP-10 found scheduler_config_present_but_not_applied=true; do not claim a scheduler until the execution script applies one or the report explicitly marks it disabled."
+    "policy": "constant",
+    "reason": "Fixed LR baseline for comparability with MVP-21/MVP-22 Modal 2GB runs."
   },
   "checkpoint": {
     "save_dir": "experiments/a100/fineweb_edu_2gb_300m_5000step_public16k_execute/checkpoints",

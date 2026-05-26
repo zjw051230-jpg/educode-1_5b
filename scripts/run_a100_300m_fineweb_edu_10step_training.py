@@ -59,6 +59,48 @@ def get_eos_token_id(config: dict[str, Any]) -> int | None:
     return eos_token_id if isinstance(eos_token_id, int) else None
 
 
+def get_scheduler_policy(config: dict[str, Any]) -> str:
+    scheduler_config = config.get("scheduler")
+    if not isinstance(scheduler_config, dict):
+        return "constant"
+
+    policy_value = scheduler_config.get("policy")
+    if policy_value is None:
+        return "constant"
+
+    policy = str(policy_value).strip().lower()
+    if policy in {"constant", "not_applied"}:
+        return policy
+    raise NotImplementedError(f"unsupported scheduler policy: {policy}")
+
+
+def build_scheduler_metadata(
+    config: dict[str, Any],
+    base_learning_rate: float | None = None,
+    final_learning_rate: float | None = None,
+) -> dict[str, Any]:
+    optimizer_config = config.get("optimizer", {}) if isinstance(config.get("optimizer"), dict) else {}
+    base_lr = float(optimizer_config.get("learning_rate", 3e-4)) if base_learning_rate is None else base_learning_rate
+    final_lr = base_lr if final_learning_rate is None else final_learning_rate
+    scheduler_config = config.get("scheduler")
+    scheduler_config_present = isinstance(scheduler_config, dict)
+    scheduler_enabled = bool(scheduler_config.get("enabled", False)) if scheduler_config_present else False
+    scheduler_policy = get_scheduler_policy(config)
+    scheduler_applied = False
+    learning_rate_mode = "constant" if scheduler_policy == "constant" else "not_applied"
+
+    return {
+        "scheduler_config_present": scheduler_config_present,
+        "scheduler_enabled": scheduler_enabled,
+        "scheduler_policy": scheduler_policy,
+        "scheduler_applied": scheduler_applied,
+        "scheduler_config_present_but_not_applied": scheduler_policy != "constant" and not scheduler_applied,
+        "learning_rate_mode": learning_rate_mode,
+        "base_learning_rate": base_lr,
+        "final_learning_rate": final_lr,
+    }
+
+
 def repo_relative_path(path: Path) -> str:
     resolved = path if path.is_absolute() else PROJECT_ROOT / path
     return resolved.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
@@ -461,6 +503,7 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
     batch_size = int(config["training"]["batch_size"])
     data_loading_mode = get_data_loading_mode(config)
     eos_token_id = get_eos_token_id(config)
+    scheduler_metadata = build_scheduler_metadata(config)
 
     tokenizer = Tokenizer.from_file(str(tokenizer_path))
     loaded_vocab_size = tokenizer.get_vocab_size()
@@ -565,6 +608,7 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
         "current_core_model_features": build_current_core_model_features(),
         "declared_vs_core_feature_mismatches": feature_mismatches,
         "core_model_feature_parity": len(feature_mismatches) == 0,
+        **scheduler_metadata,
         "no_forward": True,
         "no_backward": True,
         "no_optimizer_step": True,
@@ -584,6 +628,9 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
     print(f"model_materialized_locally={summary['model_materialized_locally']}")
     print(f"memory_limited_local_dry_run={summary['memory_limited_local_dry_run']}")
     print(f"core_model_feature_parity={summary['core_model_feature_parity']}")
+    print(f"scheduler_policy={summary['scheduler_policy']}")
+    print(f"scheduler_applied={summary['scheduler_applied']}")
+    print(f"learning_rate_mode={summary['learning_rate_mode']}")
     print(f"dry_run_summary_path={repo_relative_path(output_dir / 'dry_run_summary.json')}")
     return 0
 
@@ -699,6 +746,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
 
     optimizer_config = config.get("optimizer") if isinstance(config.get("optimizer"), dict) else {}
     learning_rate = float(optimizer_config.get("learning_rate", 3e-4))
+    scheduler_metadata = build_scheduler_metadata(config, base_learning_rate=learning_rate, final_learning_rate=learning_rate)
     weight_decay = float(optimizer_config.get("weight_decay", 0.0))
     betas = optimizer_config.get("betas", [0.9, 0.95])
     eps = float(optimizer_config.get("eps", 1e-8))
@@ -900,7 +948,6 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
     expected_validation_row_count = calculate_expected_validation_rows(max_steps, eval_interval)
     approximate_tokens_per_sec = total_tokens_seen / total_elapsed_seconds if total_elapsed_seconds > 0 else None
     feature_mismatches = collect_feature_mismatches(config)
-    scheduler_config_present = isinstance(config.get("scheduler"), dict)
     if data_loading_mode == "streaming":
         train_stats = train_stats_tracker.to_dict()
         val_stats = val_stats_tracker.to_dict()
@@ -998,10 +1045,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "declared_model_features": build_declared_model_features(config),
         "current_core_model_features": build_current_core_model_features(),
         "declared_vs_core_feature_mismatches": feature_mismatches,
-        "scheduler_config_present": scheduler_config_present,
-        "scheduler_applied": False,
-        "scheduler_policy": "not_applied",
-        "scheduler_config_present_but_not_applied": scheduler_config_present,
+        **scheduler_metadata,
         "bounded_prefix_batches_only": True,
         "success": bool(success),
     }

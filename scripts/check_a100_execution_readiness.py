@@ -119,6 +119,43 @@ def has_stale_run_token(value: str) -> bool:
     return any(token in lowered for token in DISALLOWED_STALE_RUN_TOKENS)
 
 
+def get_scheduler_policy(config: dict[str, Any]) -> str:
+    scheduler_config = config.get("scheduler")
+    if not isinstance(scheduler_config, dict):
+        return "constant"
+
+    policy_value = scheduler_config.get("policy")
+    if policy_value is None:
+        return "constant"
+
+    policy = str(policy_value).strip().lower()
+    if policy in {"constant", "not_applied"}:
+        return policy
+    raise NotImplementedError(f"unsupported scheduler policy: {policy}")
+
+
+def build_scheduler_metadata(config: dict[str, Any]) -> dict[str, Any]:
+    optimizer_config = config.get("optimizer", {}) if isinstance(config.get("optimizer"), dict) else {}
+    learning_rate = float(optimizer_config.get("learning_rate", 3e-4))
+    scheduler_config = config.get("scheduler")
+    scheduler_config_present = isinstance(scheduler_config, dict)
+    scheduler_enabled = bool(scheduler_config.get("enabled", False)) if scheduler_config_present else False
+    scheduler_policy = get_scheduler_policy(config)
+    scheduler_applied = False
+    learning_rate_mode = "constant" if scheduler_policy == "constant" else "not_applied"
+
+    return {
+        "scheduler_config_present": scheduler_config_present,
+        "scheduler_enabled": scheduler_enabled,
+        "scheduler_policy": scheduler_policy,
+        "scheduler_applied": scheduler_applied,
+        "scheduler_config_present_but_not_applied": scheduler_policy != "constant" and not scheduler_applied,
+        "learning_rate_mode": learning_rate_mode,
+        "base_learning_rate": learning_rate,
+        "final_learning_rate": learning_rate,
+    }
+
+
 def main() -> int:
     args = parse_args()
     config_path = Path(args.config)
@@ -146,6 +183,25 @@ def main() -> int:
     training_no_training = config["training"].get("no_training")
     data_loading_mode = str(config.get("data", {}).get("data_loading_mode", config.get("data_loading_mode", ""))).strip().lower()
     no_commit_checkpoints = config.get("checkpoint", {}).get("no_commit_checkpoints")
+    try:
+        scheduler_metadata = build_scheduler_metadata(config)
+    except NotImplementedError as exc:
+        scheduler_config = config.get("scheduler", {}) if isinstance(config.get("scheduler"), dict) else {}
+        scheduler_policy = str(scheduler_config.get("policy", "unsupported")).strip().lower()
+        blockers.append(f"unsupported scheduler policy: {scheduler_policy}")
+        scheduler_metadata = {
+            "scheduler_config_present": isinstance(config.get("scheduler"), dict),
+            "scheduler_enabled": bool(scheduler_config.get("enabled", False)),
+            "scheduler_policy": scheduler_policy,
+            "scheduler_applied": False,
+            "scheduler_config_present_but_not_applied": True,
+            "learning_rate_mode": "unsupported",
+            "base_learning_rate": float(config.get("optimizer", {}).get("learning_rate", 3e-4))
+            if isinstance(config.get("optimizer"), dict)
+            else 3e-4,
+            "final_learning_rate": None,
+            "scheduler_error": str(exc),
+        }
     expected_eval_interval = EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
     supported_max_steps_text = ", ".join(str(step) for step in sorted(EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS))
     output_dir_text = repo_relative_path(output_dir)
@@ -202,6 +258,18 @@ def main() -> int:
             blockers,
         )
         require(dry_run_summary.get("no_training") is True, "dry-run no_training must be true", blockers)
+        if "scheduler_policy" in dry_run_summary:
+            require(
+                dry_run_summary.get("scheduler_policy") == scheduler_metadata["scheduler_policy"],
+                "dry-run scheduler_policy mismatch",
+                blockers,
+            )
+        if "learning_rate_mode" in dry_run_summary:
+            require(
+                dry_run_summary.get("learning_rate_mode") == scheduler_metadata["learning_rate_mode"],
+                "dry-run learning_rate_mode mismatch",
+                blockers,
+            )
         if dry_run_summary.get("core_model_feature_parity") is False:
             caveats.append("core_model_feature_parity=false in dry-run summary; treat execution as systems validation only.")
     else:
@@ -238,6 +306,7 @@ def main() -> int:
         "dry_run_exact_parameter_count": dry_run_summary.get("exact_parameter_count") if dry_run_summary else None,
         "dry_run_output_dir": dry_run_summary.get("output_dir") if dry_run_summary else None,
         "dry_run_no_training": dry_run_summary.get("no_training") if dry_run_summary else None,
+        **scheduler_metadata,
         "blockers": blockers,
         "blocker_count": len(blockers),
         "caveats": caveats,
@@ -260,6 +329,8 @@ def main() -> int:
     print(f"max_steps={summary['max_steps']}")
     print(f"eval_interval={summary['eval_interval']}")
     print(f"checkpoint_interval={summary['checkpoint_interval']}")
+    print(f"scheduler_policy={summary['scheduler_policy']}")
+    print(f"learning_rate_mode={summary['learning_rate_mode']}")
     print(f"ready_for_a100_execution={summary['ready_for_a100_execution']}")
     print(f"ready_for_a800_execution={summary['ready_for_a800_execution']}")
     print(f"caveats={len(caveats)}")
