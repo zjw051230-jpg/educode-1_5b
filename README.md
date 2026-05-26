@@ -141,6 +141,7 @@ Current implementation note:
 - FineWeb-Edu 5GB prepared splits are now available locally for future 300M public16k streaming experiments without Hugging Face fetch on the GPU host.
 - 5GB public16k 1000/3000-step configs passed local memory inspection, dry-run, and readiness, but should run only after the 2GB queue supports moving up in data scale.
 - Modal can be used as an alternate A100/A100-40GB execution backend; prepared data packages should be uploaded to Modal Volume and GPU functions should not fetch Hugging Face data.
+- Modal A100 can be used as an alternate execution backend for prepared-data streaming runs; future Modal jobs should keep using Volume prepared packages and avoid Hugging Face fetch on GPU workers.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -313,3 +314,4 @@ Current implementation note:
 - MVP-22.P FineWeb-Edu 5GB prepared corpus and readiness
 - MVP-23 A800 5GB streaming training plan
 - MVP-26.P Modal backend adapter planned
+- MVP-21 Modal A100 2GB 1000-step streaming run completed
