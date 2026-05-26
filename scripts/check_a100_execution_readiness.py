@@ -22,6 +22,7 @@ EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS = {
 SUPPORTED_CORPUS_SIZE_LABELS_BY_PATH_MARKER = {
     "fineweb_edu_sample10bt_500mb": "500mb",
     "fineweb_edu_sample10bt_2gb": "2gb",
+    "fineweb_edu_sample10bt_5gb": "5gb",
 }
 DISALLOWED_STALE_RUN_TOKENS = ["10step", "100step"]
 
@@ -154,8 +155,8 @@ def main() -> int:
     expected_run_name_text = expected_run_name(corpus_size_label, max_steps) if corpus_size_label else None
 
     require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
-    require(train_corpus_size_label is not None, "train_path must be from supported FineWeb-Edu 500MB or 2GB corpus", blockers)
-    require(val_corpus_size_label is not None, "val_path must be from supported FineWeb-Edu 500MB or 2GB corpus", blockers)
+    require(train_corpus_size_label is not None, "train_path must be from supported FineWeb-Edu 500MB, 2GB, or 5GB corpus", blockers)
+    require(val_corpus_size_label is not None, "val_path must be from supported FineWeb-Edu 500MB, 2GB, or 5GB corpus", blockers)
     require(corpus_size_label is not None, "train_path and val_path must use the same supported corpus size", blockers)
     require(train_path.exists(), f"missing train_path: {train_path}", blockers)
     require(val_path.exists(), f"missing val_path: {val_path}", blockers)

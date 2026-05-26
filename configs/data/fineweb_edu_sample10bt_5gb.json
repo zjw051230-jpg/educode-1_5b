@@ -1,0 +1,14 @@
+{
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "split": "train",
+  "streaming": true,
+  "target_size_mb": 5120,
+  "text_field": "text",
+  "output_dir": "data/public_corpus/fineweb_edu_sample10bt_5gb",
+  "output_jsonl": "data/public_corpus/fineweb_edu_sample10bt_5gb/raw.jsonl",
+  "manifest_path": "data/public_corpus/fineweb_edu_sample10bt_5gb/manifest.json",
+  "license": "odc-by",
+  "allowed_for_training": true,
+  "notes": "bounded public corpus 5GB slice for multi-scale A800/A100 streaming preparation after 2GB readiness"
+}

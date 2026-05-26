@@ -10,6 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "experiments" / "a100" / "fineweb_edu_500mb_300m_1000step_public16k_execute"
 EXPECTED_TOKENIZER_VOCAB_SIZE = 16384
 MIN_VALIDATION_ROWS = 10
+SUPPORTED_MAX_STEPS = {1000, 3000, 5000}
 
 
 def resolve_repo_path(path_text: str) -> Path:
@@ -97,7 +98,7 @@ def main() -> int:
 
     if summary:
         require(summary.get("success") is True, "summary success must be true", blockers)
-        require(isinstance(max_steps, int) and max_steps > 0, "summary max_steps must be a positive integer", blockers)
+        require(isinstance(max_steps, int) and max_steps in SUPPORTED_MAX_STEPS, "summary max_steps must be one of: 1000, 3000, 5000", blockers)
         if data_loading_mode is not None:
             require(data_loading_mode == "streaming", "summary data_loading_mode must be streaming when present", blockers)
         if isinstance(max_steps, int):

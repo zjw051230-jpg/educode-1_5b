@@ -1,0 +1,17 @@
+{
+  "dataset_id": "HuggingFaceFW/fineweb-edu",
+  "dataset_config": "sample-10BT",
+  "license": "odc-by",
+  "allowed_for_training": true,
+  "record_count": 1127093,
+  "total_text_bytes": 5368710356,
+  "total_file_bytes": 5410614440,
+  "min_text_chars": 174,
+  "max_text_chars": 640136,
+  "mean_text_chars": 4738.822347,
+  "empty_text_count": 0,
+  "duplicate_text_hash_count": 4431,
+  "target_size_mb": 5120,
+  "summary_path": "data/public_corpus/fineweb_edu_sample10bt_5gb/validation_summary.json",
+  "validated_at": "2026-05-26T12:16:20.884808+00:00"
+}

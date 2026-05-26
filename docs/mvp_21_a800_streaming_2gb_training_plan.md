@@ -42,7 +42,7 @@ Recommended fields:
 | eval_interval | `300` |
 | checkpoint_interval | `3000` |
 
-If the 3000-step run succeeds with finite losses, checkpoint reload match, and artifact validation, a separate 5000-step 2GB follow-up can be prepared later.
+If the 3000-step run succeeds with finite losses, checkpoint reload match, and artifact validation, the prepared 5000-step 2GB follow-up config can be used only if enough rental time remains.
 
 ## Remote Execution Order
 

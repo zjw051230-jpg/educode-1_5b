@@ -39,6 +39,8 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - MVP-3.R hardened the FineWeb-Edu dry-run path and confirmed a tiny preview-only dry-run could succeed without generating `raw.jsonl`.
 - MVP-17 added a host-RAM-efficient streaming batch iterator for public16k A800/A100 configs and validated it locally with unit tests, memory inspection, streaming data/model/loss smoke, and dry-runs.
 - MVP-20 prepared a bounded FineWeb-Edu `sample-10BT` 2GB public corpus slice locally/CPU-side, with raw validation, intake validation, and a local prepared split package for future GPU transfer.
+- MVP-21.Q prepared a 2GB public16k 5000-step follow-up config and readiness evidence, completing a 2GB 1000/3000/5000-step local queue for future GPU execution.
+- MVP-22.P prepared a bounded FineWeb-Edu `sample-10BT` 5GB public corpus slice locally/CPU-side, with raw validation, intake validation, local prepared split package, and 5GB 1000/3000-step readiness evidence.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -134,6 +136,9 @@ Current implementation note:
 - Next GPU session can run streaming 3000-step first, then streaming 5000-step only if 3000-step succeeds and time remains.
 - FineWeb-Edu 2GB prepared splits are now available locally for future 300M public16k streaming experiments without Hugging Face fetch on the GPU host.
 - 2GB prepared corpus is ready for A800/A100 streaming runs; future GPU hosts should receive prepared data packages and start with 2GB 1000-step before longer runs.
+- The 2GB public16k queue now includes 1000/3000/5000-step configs; the next GPU session should still execute them in order and stop on any failed validation.
+- FineWeb-Edu 5GB prepared splits are now available locally for future 300M public16k streaming experiments without Hugging Face fetch on the GPU host.
+- 5GB public16k 1000/3000-step configs passed local memory inspection, dry-run, and readiness, but should run only after the 2GB queue supports moving up in data scale.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -302,3 +307,6 @@ Current implementation note:
 - MVP-19.Q A800 one-hour streaming queue prepared
 - MVP-20 FineWeb-Edu 2GB prepared corpus
 - MVP-21.P A800 2GB streaming preflight gate
+- MVP-21.Q A800 2GB streaming one-hour queue
+- MVP-22.P FineWeb-Edu 5GB prepared corpus and readiness
+- MVP-23 A800 5GB streaming training plan

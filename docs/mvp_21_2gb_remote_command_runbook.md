@@ -150,3 +150,22 @@ python scripts/check_a100_execution_readiness.py \
 python scripts/run_a100_300m_fineweb_edu_10step_training.py \
   --config configs/a100/fineweb_edu_2gb_300m_3000step_public16k_execute.json
 ```
+
+## Optional 5000-step Follow-up
+
+Run the 5000-step config only after the 3000-step run succeeds with finite losses, checkpoint reload match, post-run artifact validation, and enough rental time remaining.
+
+```bash
+python scripts/inspect_training_batch_memory_plan.py \
+  --config configs/a100/fineweb_edu_2gb_300m_5000step_public16k_execute.json
+
+python scripts/run_a100_300m_fineweb_edu_10step_training.py \
+  --config configs/a100/fineweb_edu_2gb_300m_5000step_public16k_execute.json \
+  --dry-run
+
+python scripts/check_a100_execution_readiness.py \
+  --config configs/a100/fineweb_edu_2gb_300m_5000step_public16k_execute.json
+
+python scripts/run_a100_300m_fineweb_edu_10step_training.py \
+  --config configs/a100/fineweb_edu_2gb_300m_5000step_public16k_execute.json
+```

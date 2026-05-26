@@ -34,6 +34,22 @@ Import directory:
 experiments/a100/fineweb_edu_2gb_300m_3000step_public16k_execute/results_imported_streaming/
 ```
 
+## 5000-step Optional Result Package
+
+Only import this package if the 5000-step follow-up was explicitly approved and completed after 3000-step success.
+
+Expected local package name:
+
+```text
+mvp23_a800_2gb_5000step_public16k_streaming_results.tar.gz
+```
+
+Import directory:
+
+```text
+experiments/a100/fineweb_edu_2gb_300m_5000step_public16k_execute/results_imported_streaming/
+```
+
 ## Expected Files
 
 Each result package should contain only:
@@ -74,6 +90,14 @@ For the optional 3000-step import, require the same checks except:
 |---|---:|
 | `max_steps` | `3000` |
 | `metrics_rows` | `3000` |
+| `validation_rows` | `10` |
+
+For the optional 5000-step import, require the same checks except:
+
+| field | expected value |
+|---|---:|
+| `max_steps` | `5000` |
+| `metrics_rows` | `5000` |
 | `validation_rows` | `10` |
 
 Recommended additional checks:
