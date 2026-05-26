@@ -19,6 +19,10 @@ EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS = {
     3000: 300,
     5000: 500,
 }
+SUPPORTED_CORPUS_SIZE_LABELS_BY_PATH_MARKER = {
+    "fineweb_edu_sample10bt_500mb": "500mb",
+    "fineweb_edu_sample10bt_2gb": "2gb",
+}
 DISALLOWED_STALE_RUN_TOKENS = ["10step", "100step"]
 
 if str(SRC_PATH) not in sys.path:
@@ -97,8 +101,16 @@ def warn_unless(condition: bool, message: str, caveats: list[str]) -> None:
         caveats.append(message)
 
 
-def expected_run_name(max_steps: int) -> str:
-    return f"fineweb_edu_500mb_300m_{max_steps}step_public16k_execute"
+def infer_corpus_size_label_from_path(path: Path) -> str | None:
+    path_parts = {part.lower() for part in path.parts}
+    for marker, label in SUPPORTED_CORPUS_SIZE_LABELS_BY_PATH_MARKER.items():
+        if marker in path_parts:
+            return label
+    return None
+
+
+def expected_run_name(corpus_size_label: str, max_steps: int) -> str:
+    return f"fineweb_edu_{corpus_size_label}_300m_{max_steps}step_public16k_execute"
 
 
 def has_stale_run_token(value: str) -> bool:
@@ -136,8 +148,15 @@ def main() -> int:
     expected_eval_interval = EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
     supported_max_steps_text = ", ".join(str(step) for step in sorted(EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS))
     output_dir_text = repo_relative_path(output_dir)
+    train_corpus_size_label = infer_corpus_size_label_from_path(train_path)
+    val_corpus_size_label = infer_corpus_size_label_from_path(val_path)
+    corpus_size_label = train_corpus_size_label if train_corpus_size_label == val_corpus_size_label else None
+    expected_run_name_text = expected_run_name(corpus_size_label, max_steps) if corpus_size_label else None
 
     require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
+    require(train_corpus_size_label is not None, "train_path must be from supported FineWeb-Edu 500MB or 2GB corpus", blockers)
+    require(val_corpus_size_label is not None, "val_path must be from supported FineWeb-Edu 500MB or 2GB corpus", blockers)
+    require(corpus_size_label is not None, "train_path and val_path must use the same supported corpus size", blockers)
     require(train_path.exists(), f"missing train_path: {train_path}", blockers)
     require(val_path.exists(), f"missing val_path: {val_path}", blockers)
     require(tokenizer_path.exists(), f"missing tokenizer_path: {tokenizer_path}", blockers)
@@ -153,7 +172,7 @@ def main() -> int:
     require(eval_interval == expected_eval_interval, f"eval_interval must be {expected_eval_interval} for {max_steps}-step public16k run", blockers)
     require(checkpoint_interval == max_steps, "checkpoint_interval must equal max_steps", blockers)
     require(str(config["training"].get("save_interval")) == str(max_steps), "training.save_interval must equal max_steps", blockers)
-    require(run_name == expected_run_name(max_steps), f"run_name must be {expected_run_name(max_steps)}", blockers)
+    require(expected_run_name_text is not None and run_name == expected_run_name_text, f"run_name must be {expected_run_name_text}", blockers)
     require(output_dir.name == run_name, "output_dir basename must match run_name", blockers)
     require(not has_stale_run_token(run_name), "run_name must not contain stale 10step/100step tokens", blockers)
     require(not has_stale_run_token(output_dir_text), "output_dir must not contain stale 10step/100step tokens", blockers)
@@ -196,6 +215,8 @@ def main() -> int:
         "output_dir": output_dir_text,
         "train_path": repo_relative_path(train_path),
         "val_path": repo_relative_path(val_path),
+        "corpus_size_label": corpus_size_label,
+        "expected_run_name": expected_run_name_text,
         "tokenizer_path": repo_relative_path(tokenizer_path),
         "tokenizer_vocab_size": tokenizer_vocab_size,
         "loaded_tokenizer_vocab_size": loaded_tokenizer_vocab_size,

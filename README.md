@@ -133,6 +133,7 @@ Current implementation note:
 - Next GPU run should use prepared local/CPU-side data package and run streaming 3000-step without Hugging Face fetch on the GPU host.
 - Next GPU session can run streaming 3000-step first, then streaming 5000-step only if 3000-step succeeds and time remains.
 - FineWeb-Edu 2GB prepared splits are now available locally for future 300M public16k streaming experiments without Hugging Face fetch on the GPU host.
+- 2GB prepared corpus is ready for A800/A100 streaming runs; future GPU hosts should receive prepared data packages and start with 2GB 1000-step before longer runs.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -300,3 +301,4 @@ Current implementation note:
 - MVP-19.P A800 streaming 3000-step execution plan
 - MVP-19.Q A800 one-hour streaming queue prepared
 - MVP-20 FineWeb-Edu 2GB prepared corpus
+- MVP-21.P A800 2GB streaming preflight gate
