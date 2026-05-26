@@ -25,6 +25,9 @@ SUPPORTED_CORPUS_SIZE_LABELS_BY_PATH_MARKER = {
     "fineweb_edu_sample10bt_5gb": "5gb",
 }
 DISALLOWED_STALE_RUN_TOKENS = ["10step", "100step"]
+SEQUENTIAL_PREFIX = "sequential_prefix"
+SHUFFLE_BUFFER = "shuffle_buffer"
+SUPPORTED_SAMPLING_POLICIES = {SEQUENTIAL_PREFIX, SHUFFLE_BUFFER}
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -156,6 +159,49 @@ def build_scheduler_metadata(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_sampling_metadata(config: dict[str, Any]) -> dict[str, Any]:
+    sampling_config = config.get("sampling")
+    sampling_config_present = isinstance(sampling_config, dict)
+    if not sampling_config_present:
+        return {
+            "sampling_config_present": False,
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": None,
+            "shuffle_buffer_size": 1,
+            "bounded_prefix_batches_only": True,
+        }
+
+    policy = str(sampling_config.get("policy", SEQUENTIAL_PREFIX)).strip().lower()
+    if policy not in SUPPORTED_SAMPLING_POLICIES:
+        raise ValueError(f"unsupported sampling policy: {policy}")
+
+    shuffle_buffer_size = int(sampling_config.get("shuffle_buffer_size", 1))
+    if policy == SEQUENTIAL_PREFIX:
+        shuffle_seed = sampling_config.get("shuffle_seed")
+        return {
+            "sampling_config_present": True,
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": int(shuffle_seed) if shuffle_seed is not None else None,
+            "shuffle_buffer_size": shuffle_buffer_size,
+            "bounded_prefix_batches_only": True,
+        }
+
+    if shuffle_buffer_size <= 1:
+        raise ValueError("shuffle_buffer_size must be greater than 1 for shuffle_buffer sampling")
+
+    seed_value = sampling_config.get("shuffle_seed", config.get("run", {}).get("seed"))
+    if seed_value is None:
+        raise ValueError("shuffle_buffer sampling requires shuffle_seed or run.seed")
+
+    return {
+        "sampling_config_present": True,
+        "sampling_policy": SHUFFLE_BUFFER,
+        "shuffle_seed": int(seed_value),
+        "shuffle_buffer_size": shuffle_buffer_size,
+        "bounded_prefix_batches_only": False,
+    }
+
+
 def main() -> int:
     args = parse_args()
     config_path = Path(args.config)
@@ -202,6 +248,19 @@ def main() -> int:
             "final_learning_rate": None,
             "scheduler_error": str(exc),
         }
+    try:
+        sampling_metadata = build_sampling_metadata(config)
+    except (TypeError, ValueError) as exc:
+        sampling_config = config.get("sampling", {}) if isinstance(config.get("sampling"), dict) else {}
+        blockers.append(str(exc))
+        sampling_metadata = {
+            "sampling_config_present": isinstance(config.get("sampling"), dict),
+            "sampling_policy": str(sampling_config.get("policy", "unsupported")).strip().lower(),
+            "shuffle_seed": sampling_config.get("shuffle_seed"),
+            "shuffle_buffer_size": sampling_config.get("shuffle_buffer_size"),
+            "bounded_prefix_batches_only": True,
+            "sampling_error": str(exc),
+        }
     expected_eval_interval = EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
     supported_max_steps_text = ", ".join(str(step) for step in sorted(EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS))
     output_dir_text = repo_relative_path(output_dir)
@@ -222,6 +281,24 @@ def main() -> int:
     require(no_commit_checkpoints is True, "checkpoint.no_commit_checkpoints must be true", blockers)
     require(training_no_training is False, "training.no_training must be false for execution config", blockers)
     require(data_loading_mode == "streaming", "data_loading_mode must be streaming", blockers)
+    if corpus_size_label in {"2gb", "5gb"}:
+        require(sampling_metadata["sampling_config_present"] is True, "2GB/5GB execution config must declare sampling", blockers)
+        require(
+            sampling_metadata["sampling_policy"] == SHUFFLE_BUFFER,
+            "2GB/5GB execution config must use shuffle_buffer sampling",
+            blockers,
+        )
+        require(isinstance(sampling_metadata["shuffle_seed"], int), "shuffle_buffer sampling must declare shuffle_seed", blockers)
+        require(
+            isinstance(sampling_metadata["shuffle_buffer_size"], int) and sampling_metadata["shuffle_buffer_size"] > 1,
+            "shuffle_buffer_size must be greater than 1",
+            blockers,
+        )
+        require(
+            sampling_metadata["bounded_prefix_batches_only"] is False,
+            "shuffle_buffer config must not be marked as bounded prefix only",
+            blockers,
+        )
     require(tokenizer_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k tokenizer vocab_size must be 16384", blockers)
     require(model_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k model vocab_size must be 16384", blockers)
     require(tokenizer_vocab_size == model_vocab_size, "tokenizer.vocab_size must match model.vocab_size", blockers)
@@ -270,6 +347,24 @@ def main() -> int:
                 "dry-run learning_rate_mode mismatch",
                 blockers,
             )
+        if "sampling_policy" in dry_run_summary:
+            require(
+                dry_run_summary.get("sampling_policy") == sampling_metadata["sampling_policy"],
+                "dry-run sampling_policy mismatch",
+                blockers,
+            )
+        if "shuffle_seed" in dry_run_summary:
+            require(
+                dry_run_summary.get("shuffle_seed") == sampling_metadata["shuffle_seed"],
+                "dry-run shuffle_seed mismatch",
+                blockers,
+            )
+        if "shuffle_buffer_size" in dry_run_summary:
+            require(
+                dry_run_summary.get("shuffle_buffer_size") == sampling_metadata["shuffle_buffer_size"],
+                "dry-run shuffle_buffer_size mismatch",
+                blockers,
+            )
         if dry_run_summary.get("core_model_feature_parity") is False:
             caveats.append("core_model_feature_parity=false in dry-run summary; treat execution as systems validation only.")
     else:
@@ -307,6 +402,7 @@ def main() -> int:
         "dry_run_output_dir": dry_run_summary.get("output_dir") if dry_run_summary else None,
         "dry_run_no_training": dry_run_summary.get("no_training") if dry_run_summary else None,
         **scheduler_metadata,
+        **sampling_metadata,
         "blockers": blockers,
         "blocker_count": len(blockers),
         "caveats": caveats,
@@ -331,6 +427,10 @@ def main() -> int:
     print(f"checkpoint_interval={summary['checkpoint_interval']}")
     print(f"scheduler_policy={summary['scheduler_policy']}")
     print(f"learning_rate_mode={summary['learning_rate_mode']}")
+    print(f"sampling_policy={summary['sampling_policy']}")
+    print(f"shuffle_seed={summary['shuffle_seed']}")
+    print(f"shuffle_buffer_size={summary['shuffle_buffer_size']}")
+    print(f"bounded_prefix_batches_only={summary['bounded_prefix_batches_only']}")
     print(f"ready_for_a100_execution={summary['ready_for_a100_execution']}")
     print(f"ready_for_a800_execution={summary['ready_for_a800_execution']}")
     print(f"caveats={len(caveats)}")

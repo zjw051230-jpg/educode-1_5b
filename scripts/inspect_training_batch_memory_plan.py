@@ -16,6 +16,9 @@ CPYTHON_INT_APPROX_BYTES = 28
 LIST_POINTER_BYTES = 8
 LIST_HEADER_APPROX_BYTES = 56
 TUPLE_HEADER_APPROX_BYTES = 56
+SEQUENTIAL_PREFIX = "sequential_prefix"
+SHUFFLE_BUFFER = "shuffle_buffer"
+SUPPORTED_SAMPLING_POLICIES = {SEQUENTIAL_PREFIX, SHUFFLE_BUFFER}
 
 
 def parse_args() -> argparse.Namespace:
@@ -62,6 +65,49 @@ def bytes_to_gib(byte_count: int | float) -> float:
 def get_data_loading_mode(config: dict[str, Any]) -> str:
     data_config = config.get("data", {}) if isinstance(config.get("data"), dict) else {}
     return str(data_config.get("data_loading_mode", config.get("data_loading_mode", "precomputed"))).strip().lower()
+
+
+def build_sampling_metadata(config: dict[str, Any]) -> dict[str, Any]:
+    sampling_config = config.get("sampling")
+    sampling_config_present = isinstance(sampling_config, dict)
+    if not sampling_config_present:
+        return {
+            "sampling_config_present": False,
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": None,
+            "shuffle_buffer_size": 1,
+            "bounded_prefix_batches_only": True,
+        }
+
+    policy = str(sampling_config.get("policy", SEQUENTIAL_PREFIX)).strip().lower()
+    if policy not in SUPPORTED_SAMPLING_POLICIES:
+        raise ValueError(f"unsupported sampling policy: {policy}")
+
+    shuffle_buffer_size = int(sampling_config.get("shuffle_buffer_size", 1))
+    if policy == SEQUENTIAL_PREFIX:
+        shuffle_seed = sampling_config.get("shuffle_seed")
+        return {
+            "sampling_config_present": True,
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": int(shuffle_seed) if shuffle_seed is not None else None,
+            "shuffle_buffer_size": shuffle_buffer_size,
+            "bounded_prefix_batches_only": True,
+        }
+
+    if shuffle_buffer_size <= 1:
+        raise ValueError("shuffle_buffer_size must be greater than 1 for shuffle_buffer sampling")
+
+    seed_value = sampling_config.get("shuffle_seed", config.get("run", {}).get("seed"))
+    if seed_value is None:
+        raise ValueError("shuffle_buffer sampling requires shuffle_seed or run.seed")
+
+    return {
+        "sampling_config_present": True,
+        "sampling_policy": SHUFFLE_BUFFER,
+        "shuffle_seed": int(seed_value),
+        "shuffle_buffer_size": shuffle_buffer_size,
+        "bounded_prefix_batches_only": False,
+    }
 
 
 def sample_split(path: Path, tokenizer: Tokenizer, max_records: int) -> dict[str, Any]:
@@ -204,6 +250,25 @@ def estimate_streaming_batch_memory(
     }
 
 
+def estimate_shuffle_buffer_memory(sample: dict[str, Any], shuffle_buffer_size: int) -> dict[str, Any]:
+    avg_chars_per_text = sample.get("avg_chars_per_text")
+    if not isinstance(avg_chars_per_text, (int, float)) or shuffle_buffer_size <= 1:
+        estimated_text_payload_bytes = 0
+    else:
+        estimated_text_payload_bytes = int(float(avg_chars_per_text) * shuffle_buffer_size * 4)
+    buffer_pointer_bytes = max(shuffle_buffer_size, 0) * LIST_POINTER_BYTES
+    estimated_total_bytes = estimated_text_payload_bytes + buffer_pointer_bytes + LIST_HEADER_APPROX_BYTES
+
+    return {
+        "shuffle_buffer_size": shuffle_buffer_size,
+        "estimated_text_payload_memory_mib": bytes_to_mib(estimated_text_payload_bytes),
+        "estimated_buffer_pointer_memory_mib": bytes_to_mib(buffer_pointer_bytes),
+        "estimated_total_shuffle_buffer_memory_mib": bytes_to_mib(estimated_total_bytes),
+        "estimate_uses_sample_avg_chars_per_text": avg_chars_per_text,
+        "does_not_read_entire_corpus": True,
+    }
+
+
 def main() -> int:
     args = parse_args()
     config_path = Path(args.config)
@@ -212,6 +277,7 @@ def main() -> int:
 
     config = load_json(config_path)
     data_loading_mode = get_data_loading_mode(config)
+    sampling_metadata = build_sampling_metadata(config)
     train_path = resolve_repo_path(str(config["data"]["train_path"]))
     val_path = resolve_repo_path(str(config["data"]["val_path"]))
     tokenizer_path = resolve_repo_path(str(config["tokenizer"]["path"]))
@@ -252,6 +318,10 @@ def main() -> int:
         batch_size=batch_size,
         sequence_length=sequence_length,
     )
+    train_shuffle_buffer_memory = estimate_shuffle_buffer_memory(
+        train_sample,
+        int(sampling_metadata["shuffle_buffer_size"]),
+    )
 
     summary = {
         "config_path": repo_relative_path(config_path),
@@ -271,6 +341,7 @@ def main() -> int:
         "sequence_length": sequence_length,
         "eval_interval": eval_interval,
         "data_loading_mode": data_loading_mode,
+        **sampling_metadata,
         "host_ram_efficient_batching": data_loading_mode == "streaming",
         "batch_precompute_disabled": data_loading_mode == "streaming",
         "required_train_batches": required_train_batches,
@@ -280,6 +351,8 @@ def main() -> int:
         "val_memory_plan": val_memory,
         "train_streaming_memory_plan": train_streaming_memory,
         "val_streaming_memory_plan": val_streaming_memory,
+        "train_shuffle_buffer_memory_plan": train_shuffle_buffer_memory,
+        "estimated_shuffle_buffer_memory_note": "Estimated from at most MAX_SAMPLE_RECORDS local records; no full corpus scan is performed.",
         "current_precomputed_estimated_python_memory_gib": train_memory["estimated_current_python_precompute_memory_gib"],
         "streaming_estimated_batch_tensor_memory_mib": train_streaming_memory[
             "streaming_estimated_batch_tensor_memory_mib"
@@ -315,6 +388,9 @@ def main() -> int:
     print(f"batch_size={batch_size}")
     print(f"gradient_accumulation_steps={gradient_accumulation_steps}")
     print(f"data_loading_mode={data_loading_mode}")
+    print(f"sampling_policy={summary['sampling_policy']}")
+    print(f"shuffle_seed={summary['shuffle_seed']}")
+    print(f"shuffle_buffer_size={summary['shuffle_buffer_size']}")
     print(f"required_train_batches={required_train_batches}")
     print(f"required_val_batches={required_val_batches}")
     print(

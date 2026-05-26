@@ -42,6 +42,7 @@ A CS336-inspired modular LLM training system, built from scratch and staged from
 - MVP-21.Q prepared a 2GB public16k 5000-step follow-up config and readiness evidence, completing a 2GB 1000/3000/5000-step local queue for future GPU execution.
 - MVP-22.P prepared a bounded FineWeb-Edu `sample-10BT` 5GB public corpus slice locally/CPU-side, with raw validation, intake validation, local prepared split package, and 5GB 1000/3000-step readiness evidence.
 - MVP-26.P prepared a Modal backend adapter plan, Modal Volume data policy, runner skeleton, remote runbook, and preflight receipt template for future A100/A100-40GB execution.
+- MVP-23.J added seed-controlled `shuffle_buffer` sampling for future prepared-data streaming runs, replacing the prior train-prefix-only sampling caveat for 2GB/5GB execution configs.
 - Current result is engineering/scaling validation, not full pretraining.
 - After A100 scaling validation, the next bottleneck is permitted corpus scale and tokenizer quality.
 - Since no existing local notes are available, the main project backbone remains project-authored synthetic educational data rather than a general external-language backbone.
@@ -144,7 +145,8 @@ Current implementation note:
 - Modal A100 can be used as an alternate execution backend for prepared-data streaming runs; future Modal jobs should keep using Volume prepared packages and avoid Hugging Face fetch on GPU workers.
 - Modal A100 backend is validated for 2GB prepared-data streaming runs; next recommended path is scheduler/sampling cleanup or 5GB 1000-step preflight rather than blindly extending 2GB step count.
 - Before further longer or larger-corpus training, scheduler behavior and streaming sampling policy should be made explicit to improve run interpretability.
-- Fixed learning-rate training is now represented as explicit `scheduler_policy=constant` rather than an accidental scheduler caveat; sampling cleanup remains next.
+- Fixed learning-rate training is now represented as explicit `scheduler_policy=constant` rather than an accidental scheduler caveat.
+- Streaming train data now supports seed-controlled `shuffle_buffer` sampling; future 2GB/5GB runs should use shuffled streaming rather than prefix-only sampling.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -322,3 +324,4 @@ Current implementation note:
 - MVP-22.S Modal 2GB streaming stage summary
 - MVP-23.P scheduler and sampling cleanup plan
 - MVP-23.I scheduler metadata cleanup
+- MVP-23.J streaming shuffle buffer

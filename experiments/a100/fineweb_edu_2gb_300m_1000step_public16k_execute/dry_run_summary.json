@@ -30,10 +30,12 @@
   ],
   "train_batches_validated": 1,
   "val_batches_validated": 1,
+  "train_sampling_policy": "shuffle_buffer",
+  "val_sampling_policy": "sequential_prefix",
   "train_data_probe": {
     "split_name": "train",
-    "records_seen": 1,
-    "docs_used": 1,
+    "records_seen": 1024,
+    "docs_used": 1024,
     "empty_text_count": 0,
     "token_ids_streamed": 520,
     "blocks_yielded": 8,
@@ -45,7 +47,15 @@
     "cycle_restarts": 0,
     "streaming_mode": true,
     "host_ram_efficient_batching": true,
-    "batch_precompute_disabled": true
+    "batch_precompute_disabled": true,
+    "sampling_policy": "shuffle_buffer",
+    "shuffle_seed": 1337,
+    "shuffle_buffer_size": 1024,
+    "documents_buffered_total": 1024,
+    "max_shuffle_buffer_occupancy": 1024,
+    "shuffle_buffer_underfilled": false,
+    "bounded_prefix_batches_only": false,
+    "last_shuffle_seed_used": 1337
   },
   "val_data_probe": {
     "split_name": "val",
@@ -62,7 +72,15 @@
     "cycle_restarts": 0,
     "streaming_mode": true,
     "host_ram_efficient_batching": true,
-    "batch_precompute_disabled": true
+    "batch_precompute_disabled": true,
+    "sampling_policy": "sequential_prefix",
+    "shuffle_seed": null,
+    "shuffle_buffer_size": 1,
+    "documents_buffered_total": 0,
+    "max_shuffle_buffer_occupancy": 0,
+    "shuffle_buffer_underfilled": false,
+    "bounded_prefix_batches_only": true,
+    "last_shuffle_seed_used": null
   },
   "model_size_label": "300m",
   "exact_parameter_count": 336106496,
@@ -96,10 +114,15 @@
   "learning_rate_mode": "constant",
   "base_learning_rate": 0.0003,
   "final_learning_rate": 0.0003,
+  "sampling_config_present": true,
+  "sampling_policy": "shuffle_buffer",
+  "shuffle_seed": 1337,
+  "shuffle_buffer_size": 1024,
+  "bounded_prefix_batches_only": false,
   "no_forward": true,
   "no_backward": true,
   "no_optimizer_step": true,
   "no_checkpoint": true,
   "no_training": true,
-  "checked_at": "2026-05-26T18:17:46.345822+00:00"
+  "checked_at": "2026-05-26T18:37:06.356912+00:00"
 }

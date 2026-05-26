@@ -54,7 +54,7 @@
     "streaming_train_probe_records": 64,
     "streaming_val_probe_records": 32,
     "max_tokens": 5368709120,
-    "bounded_prefix_batches_only": true
+    "bounded_prefix_batches_only": false
   },
   "model": {
     "architecture": "dense_decoder_only",
@@ -161,5 +161,10 @@
     "no_raw_or_processed_corpus_files_committed": true,
     "no_checkpoints_committed": true
   },
-  "purpose": "A800 300M 1000-step streaming run on 5GB FineWeb-Edu prepared corpus, not model quality claim"
+  "purpose": "A800 300M 1000-step streaming run on 5GB FineWeb-Edu prepared corpus, not model quality claim",
+  "sampling": {
+    "policy": "shuffle_buffer",
+    "shuffle_seed": 1337,
+    "shuffle_buffer_size": 1024
+  }
 }

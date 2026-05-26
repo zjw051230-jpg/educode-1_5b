@@ -35,7 +35,7 @@ from educode.run_logging import append_jsonl, build_summary_markdown, write_json
 from educode.run_setup import collect_basic_environment, get_git_branch, get_git_commit, make_run_id, snapshot_config, write_run_metadata
 from educode.sequence_dataset import batch_samples, make_next_token_samples
 from educode.tiny_model import TinyDecoderOnlyTransformer, TinyModelConfig, model_config_from_dict
-from streaming_lm_batch_iterator import create_streaming_batch_iterator
+from streaming_lm_batch_iterator import SEQUENTIAL_PREFIX, SHUFFLE_BUFFER, create_streaming_batch_iterator
 
 
 def resolve_repo_path(path_text: str | Path) -> Path:
@@ -98,6 +98,65 @@ def build_scheduler_metadata(
         "learning_rate_mode": learning_rate_mode,
         "base_learning_rate": base_lr,
         "final_learning_rate": final_lr,
+    }
+
+
+def build_sampling_metadata(config: dict[str, Any]) -> dict[str, Any]:
+    sampling_config = config.get("sampling")
+    sampling_config_present = isinstance(sampling_config, dict)
+    if not sampling_config_present:
+        return {
+            "sampling_config_present": False,
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": None,
+            "shuffle_buffer_size": 1,
+            "bounded_prefix_batches_only": True,
+        }
+
+    policy = str(sampling_config.get("policy", SEQUENTIAL_PREFIX)).strip().lower()
+    if policy not in {SEQUENTIAL_PREFIX, SHUFFLE_BUFFER}:
+        raise ValueError(f"unsupported sampling policy: {policy}")
+
+    shuffle_buffer_size = int(sampling_config.get("shuffle_buffer_size", 1))
+    if policy == SEQUENTIAL_PREFIX:
+        shuffle_seed = sampling_config.get("shuffle_seed")
+        return {
+            "sampling_config_present": True,
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": int(shuffle_seed) if shuffle_seed is not None else None,
+            "shuffle_buffer_size": shuffle_buffer_size,
+            "bounded_prefix_batches_only": True,
+        }
+
+    if shuffle_buffer_size <= 1:
+        raise ValueError("shuffle_buffer_size must be greater than 1 for shuffle_buffer sampling")
+
+    seed_value = sampling_config.get("shuffle_seed", config.get("run", {}).get("seed"))
+    if seed_value is None:
+        raise ValueError("shuffle_buffer sampling requires shuffle_seed or run.seed")
+
+    return {
+        "sampling_config_present": True,
+        "sampling_policy": SHUFFLE_BUFFER,
+        "shuffle_seed": int(seed_value),
+        "shuffle_buffer_size": shuffle_buffer_size,
+        "bounded_prefix_batches_only": False,
+    }
+
+
+def build_split_sampling_settings(config: dict[str, Any], *, split_name: str) -> dict[str, Any]:
+    if split_name == "train":
+        metadata = build_sampling_metadata(config)
+        return {
+            "sampling_policy": metadata["sampling_policy"],
+            "shuffle_seed": metadata["shuffle_seed"],
+            "shuffle_buffer_size": metadata["shuffle_buffer_size"],
+        }
+
+    return {
+        "sampling_policy": SEQUENTIAL_PREFIX,
+        "shuffle_seed": None,
+        "shuffle_buffer_size": 1,
     }
 
 
@@ -504,6 +563,9 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
     data_loading_mode = get_data_loading_mode(config)
     eos_token_id = get_eos_token_id(config)
     scheduler_metadata = build_scheduler_metadata(config)
+    sampling_metadata = build_sampling_metadata(config)
+    train_sampling_settings = build_split_sampling_settings(config, split_name="train")
+    val_sampling_settings = build_split_sampling_settings(config, split_name="val")
 
     tokenizer = Tokenizer.from_file(str(tokenizer_path))
     loaded_vocab_size = tokenizer.get_vocab_size()
@@ -519,6 +581,7 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
             batch_size=batch_size,
             required_batches=1,
             eos_token_id=eos_token_id,
+            **train_sampling_settings,
         )
         val_batch_iter, val_stats_tracker = create_streaming_batch_iterator(
             split_name="val",
@@ -528,6 +591,7 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
             batch_size=batch_size,
             required_batches=1,
             eos_token_id=eos_token_id,
+            **val_sampling_settings,
         )
         train_batches = [next(train_batch_iter)]
         val_batches = [next(val_batch_iter)]
@@ -592,6 +656,8 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
         "val_batch_shape": [batch_size, sequence_length],
         "train_batches_validated": len(train_batches),
         "val_batches_validated": len(val_batches),
+        "train_sampling_policy": train_stats.get("sampling_policy"),
+        "val_sampling_policy": val_stats.get("sampling_policy"),
         "train_data_probe": train_stats,
         "val_data_probe": val_stats,
         "model_size_label": config["model"].get("model_size_label"),
@@ -609,6 +675,7 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
         "declared_vs_core_feature_mismatches": feature_mismatches,
         "core_model_feature_parity": len(feature_mismatches) == 0,
         **scheduler_metadata,
+        **sampling_metadata,
         "no_forward": True,
         "no_backward": True,
         "no_optimizer_step": True,
@@ -631,6 +698,10 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
     print(f"scheduler_policy={summary['scheduler_policy']}")
     print(f"scheduler_applied={summary['scheduler_applied']}")
     print(f"learning_rate_mode={summary['learning_rate_mode']}")
+    print(f"sampling_policy={summary['sampling_policy']}")
+    print(f"shuffle_seed={summary['shuffle_seed']}")
+    print(f"shuffle_buffer_size={summary['shuffle_buffer_size']}")
+    print(f"bounded_prefix_batches_only={summary['bounded_prefix_batches_only']}")
     print(f"dry_run_summary_path={repo_relative_path(output_dir / 'dry_run_summary.json')}")
     return 0
 
@@ -677,6 +748,9 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
     grad_clip = float(config["training"].get("grad_clip", 0.0))
     data_loading_mode = get_data_loading_mode(config)
     eos_token_id = get_eos_token_id(config)
+    sampling_metadata = build_sampling_metadata(config)
+    train_sampling_settings = build_split_sampling_settings(config, split_name="train")
+    val_sampling_settings = build_split_sampling_settings(config, split_name="val")
 
     train_batches_required = max_steps * gradient_accumulation_steps
     val_batches_required = max_steps // eval_interval if eval_interval > 0 else 0
@@ -689,6 +763,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
             batch_size=batch_size,
             required_batches=train_batches_required,
             eos_token_id=eos_token_id,
+            **train_sampling_settings,
         )
         val_batch_iter, val_stats_tracker = create_streaming_batch_iterator(
             split_name="val",
@@ -698,6 +773,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
             batch_size=batch_size,
             required_batches=max(val_batches_required, 1) if eval_interval > 0 else 0,
             eos_token_id=eos_token_id,
+            **val_sampling_settings,
         )
         train_stats = train_stats_tracker.to_dict()
         val_stats = val_stats_tracker.to_dict()
@@ -1012,6 +1088,8 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "batch_precompute_disabled": data_loading_mode == "streaming",
         "train_batches_used": train_batches_required,
         "val_batches_used": len(val_losses),
+        "train_sampling_policy": train_stats.get("sampling_policy"),
+        "val_sampling_policy": val_stats.get("sampling_policy"),
         "train_data_probe": train_stats,
         "val_data_probe": val_stats,
         "tokenizer_vocab_size": tokenizer.get_vocab_size(),
@@ -1046,7 +1124,7 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "current_core_model_features": build_current_core_model_features(),
         "declared_vs_core_feature_mismatches": feature_mismatches,
         **scheduler_metadata,
-        "bounded_prefix_batches_only": True,
+        **sampling_metadata,
         "success": bool(success),
     }
     write_json(summary_json_path, summary_data)

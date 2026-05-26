@@ -16,6 +16,11 @@
   "sequence_length": 512,
   "eval_interval": 100,
   "data_loading_mode": "streaming",
+  "sampling_config_present": true,
+  "sampling_policy": "shuffle_buffer",
+  "shuffle_seed": 1337,
+  "shuffle_buffer_size": 1024,
+  "bounded_prefix_batches_only": false,
   "host_ram_efficient_batching": true,
   "batch_precompute_disabled": true,
   "required_train_batches": 4000,
@@ -77,6 +82,15 @@
     "streaming_expected_host_ram_safe": true,
     "reduction_factor_estimate": 2269.293
   },
+  "train_shuffle_buffer_memory_plan": {
+    "shuffle_buffer_size": 1024,
+    "estimated_text_payload_memory_mib": 14.564,
+    "estimated_buffer_pointer_memory_mib": 0.008,
+    "estimated_total_shuffle_buffer_memory_mib": 14.572,
+    "estimate_uses_sample_avg_chars_per_text": 3728.45,
+    "does_not_read_entire_corpus": true
+  },
+  "estimated_shuffle_buffer_memory_note": "Estimated from at most MAX_SAMPLE_RECORDS local records; no full corpus scan is performed.",
   "current_precomputed_estimated_python_memory_gib": 129.024313,
   "streaming_estimated_batch_tensor_memory_mib": 0.062,
   "streaming_expected_host_ram_safe": true,
@@ -120,5 +134,5 @@
   "no_training": true,
   "no_model_materialization": true,
   "no_checkpoint": true,
-  "checked_at": "2026-05-26T11:48:32.895708+00:00"
+  "checked_at": "2026-05-26T18:37:29.294115+00:00"
 }

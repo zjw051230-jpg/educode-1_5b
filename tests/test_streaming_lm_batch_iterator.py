@@ -14,6 +14,8 @@ for path in (PROJECT_ROOT, SRC_PATH):
 
 from educode.sequence_dataset import batch_samples, make_next_token_samples
 from scripts.streaming_lm_batch_iterator import (
+    StreamingBatchStats,
+    create_streaming_batch_iterator,
     cycle_batches,
     iter_batches,
     iter_jsonl_texts,
@@ -105,6 +107,126 @@ class StreamingLmBatchIteratorTests(unittest.TestCase):
         )
 
         self.assertEqual([next(streaming), next(streaming)], expected)
+
+    def test_sequential_prefix_sampling_preserves_jsonl_order(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            jsonl_path = Path(temp_dir) / "sample.jsonl"
+            write_jsonl(jsonl_path, [approved_record(str(index)) for index in range(8)])
+            stats = StreamingBatchStats(split_name="train", required_batches=1, sequence_length=2, batch_size=1)
+
+            texts = list(
+                iter_jsonl_texts(
+                    jsonl_path,
+                    split_name="train",
+                    sampling_policy="sequential_prefix",
+                    shuffle_seed=1337,
+                    shuffle_buffer_size=4,
+                    stats=stats,
+                )
+            )
+
+        self.assertEqual(texts, [str(index) for index in range(8)])
+        probe = stats.to_dict()
+        self.assertEqual(probe["sampling_policy"], "sequential_prefix")
+        self.assertEqual(probe["shuffle_seed"], 1337)
+        self.assertEqual(probe["shuffle_buffer_size"], 4)
+        self.assertTrue(probe["bounded_prefix_batches_only"])
+
+    def test_shuffle_buffer_sampling_is_reproducible_for_same_seed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            jsonl_path = Path(temp_dir) / "sample.jsonl"
+            write_jsonl(jsonl_path, [approved_record(str(index)) for index in range(20)])
+
+            first = list(
+                iter_jsonl_texts(
+                    jsonl_path,
+                    sampling_policy="shuffle_buffer",
+                    shuffle_seed=1337,
+                    shuffle_buffer_size=5,
+                )
+            )
+            second = list(
+                iter_jsonl_texts(
+                    jsonl_path,
+                    sampling_policy="shuffle_buffer",
+                    shuffle_seed=1337,
+                    shuffle_buffer_size=5,
+                )
+            )
+
+        self.assertEqual(first, second)
+
+    def test_shuffle_buffer_sampling_differs_from_sequential_prefix_on_constructed_sample(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            jsonl_path = Path(temp_dir) / "sample.jsonl"
+            write_jsonl(jsonl_path, [approved_record(str(index)) for index in range(20)])
+
+            sequential = list(iter_jsonl_texts(jsonl_path, sampling_policy="sequential_prefix"))
+            shuffled = list(
+                iter_jsonl_texts(
+                    jsonl_path,
+                    sampling_policy="shuffle_buffer",
+                    shuffle_seed=1337,
+                    shuffle_buffer_size=5,
+                )
+            )
+
+        self.assertNotEqual(shuffled, sequential)
+        self.assertCountEqual(shuffled, sequential)
+
+    def test_shuffle_buffer_size_limits_buffer_occupancy_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            jsonl_path = Path(temp_dir) / "sample.jsonl"
+            write_jsonl(jsonl_path, [approved_record(str(index)) for index in range(20)])
+            stats = StreamingBatchStats(split_name="train", required_batches=1, sequence_length=2, batch_size=1)
+
+            list(
+                iter_jsonl_texts(
+                    jsonl_path,
+                    split_name="train",
+                    sampling_policy="shuffle_buffer",
+                    shuffle_seed=1337,
+                    shuffle_buffer_size=5,
+                    stats=stats,
+                )
+            )
+
+        probe = stats.to_dict()
+        self.assertEqual(probe["documents_buffered_total"], 20)
+        self.assertLessEqual(probe["max_shuffle_buffer_occupancy"], 5)
+        self.assertFalse(probe["shuffle_buffer_underfilled"])
+        self.assertFalse(probe["bounded_prefix_batches_only"])
+
+    def test_create_streaming_batch_iterator_records_shuffle_probe_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            jsonl_path = Path(temp_dir) / "sample.jsonl"
+            write_jsonl(jsonl_path, [approved_record(str(index)) for index in range(10)])
+
+            batch_iter, stats = create_streaming_batch_iterator(
+                split_name="train",
+                split_path=jsonl_path,
+                tokenizer=FakeTokenizer(),
+                sequence_length=2,
+                batch_size=2,
+                required_batches=1,
+                eos_token_id=None,
+                sampling_policy="shuffle_buffer",
+                shuffle_seed=1337,
+                shuffle_buffer_size=5,
+            )
+            try:
+                next(batch_iter)
+            finally:
+                close = getattr(batch_iter, "close", None)
+                if close is not None:
+                    close()
+
+        probe = stats.to_dict()
+        self.assertEqual(probe["sampling_policy"], "shuffle_buffer")
+        self.assertEqual(probe["shuffle_seed"], 1337)
+        self.assertEqual(probe["shuffle_buffer_size"], 5)
+        self.assertLessEqual(probe["max_shuffle_buffer_occupancy"], 5)
+        self.assertFalse(probe["bounded_prefix_batches_only"])
 
 
 if __name__ == "__main__":
