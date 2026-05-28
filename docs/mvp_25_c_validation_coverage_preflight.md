@@ -41,7 +41,7 @@ splits/fineweb_edu_5gb.val.jsonl
 
 The runner now discovers the actual tar members for the validation-only preflight instead of assuming one fixed root. It deterministically maps each expected repo path to the shortest matching tar member, extracts only the required files into the repo layout expected by the config, and records the actual member mapping in the Modal receipt as `package_member_discovery`.
 
-Status remains pending rerun. This fix does not claim that the real 5GB validation coverage preflight passed.
+The rerun after this fix passed; see the current result section below.
 
 ## Modal mode
 
@@ -113,6 +113,7 @@ Local copies are written to:
 ```text
 experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/results_imported_modal_validation_coverage_preflight/modal_preflight_receipt.json
 experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/results_imported_modal_validation_coverage_preflight/validation_coverage_preflight_summary.json
+experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/results_imported_modal_validation_coverage_preflight/validation_coverage_preflight_validation_summary.json
 ```
 
 ## Passing standard
@@ -141,12 +142,61 @@ Validator:
 
 ## Current result
 
-Status: pending Modal execution.
+Status: passed.
 
-This document intentionally does not claim a real 5GB validation coverage result yet. The Modal command and expected cost must be reported before execution. After the Modal run, update this section with the validator output and the next-training recommendation.
+The real Modal CPU-only preflight completed successfully. The Modal app reported completion, and the local validator passed against the imported receipt and summary artifacts.
+
+Result artifacts:
+
+- `experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/results_imported_modal_validation_coverage_preflight/modal_preflight_receipt.json`
+- `experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/results_imported_modal_validation_coverage_preflight/validation_coverage_preflight_summary.json`
+- `experiments/a100/fineweb_edu_5gb_300m_1000step_public16k_execute/results_imported_modal_validation_coverage_preflight/validation_coverage_preflight_validation_summary.json`
+
+Execution boundaries reported by the receipt and validator:
+
+- `cpu_only=true`
+- `gpu_requested=null`
+- `used_gpu=false`
+- `ran_training=false`
+- `ran_backward=false`
+- `ran_optimizer_step=false`
+- `saved_checkpoint=false`
+- `produced_checkpoint=false`
+
+Validation coverage result:
+
+| Field | Value |
+| --- | --- |
+| `preflight_status` | `passed` |
+| `val_sampling_policy` | `shuffle_buffer` |
+| `val_shuffle_seed` | `7331` |
+| `val_shuffle_buffer_size` | `64` |
+| `validation_max_blocks_per_document` | `8` |
+| `validation_unique_doc_count` | `15` |
+| `validation_batches_evaluated` | `10` |
+| `validation_tokens_evaluated` | `40960` |
+| `validation_prefix_only_risk` | `false` |
+| `blocker_count` | `0` |
+| `blockers` | `[]` |
+| local validator | `passed` |
+
+The preflight also confirmed the prepared package member discovery fix for the rootless tarball layout:
+
+```json
+{
+  "data/public_corpus/fineweb_edu_sample10bt_5gb/manifest.json": "manifest.json",
+  "data/public_corpus/fineweb_edu_sample10bt_5gb/validation_summary.json": "validation_summary.json",
+  "data/public_corpus/fineweb_edu_sample10bt_5gb/intake_validation_summary.json": "intake_validation_summary.json",
+  "data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.val.jsonl": "splits/fineweb_edu_5gb.val.jsonl"
+}
+```
+
+This closes the MVP-25.A training-decision blocker that validation coverage was too narrow for the next bounded 5GB run. It is measurement-path evidence only: it does not show model-quality improvement and must not be used as a quality claim.
 
 ## Decision rule for next training
 
-If MVP-25.C passes, the MVP-25.A validation-coverage blocker is removed for a bounded 5GB 3000-step training request. That still does not approve training by itself: the 5GB 3000-step run remains a separate cost-bearing Modal GPU action and requires explicit approval.
+MVP-25.C removes the MVP-25.A validation-coverage blocker for a bounded 5GB 3000-step training request. That still does not approve training by itself: the 5GB 3000-step run remains a separate cost-bearing Modal GPU action and requires explicit approval and a fresh training plan.
+
+Do not jump directly to 5GB 10000-step. The recommended next step is a 5GB 3000-step training plan with explicit cost approval and artifact-import gates.
 
 If MVP-25.C fails, do not run 5GB 3000-step or 10000-step training. Fix the validation coverage path or prepared artifact issue first.
