@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import random
 from collections.abc import Callable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -47,6 +47,8 @@ class StreamingBatchStats:
     shuffle_buffer_underfilled: bool = False
     bounded_prefix_batches_only: bool = True
     last_shuffle_seed_used: int | None = None
+    max_blocks_per_document: int | None = None
+    sampled_doc_ids: set[int] = field(default_factory=set, repr=False)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -73,6 +75,8 @@ class StreamingBatchStats:
             "shuffle_buffer_underfilled": self.shuffle_buffer_underfilled,
             "bounded_prefix_batches_only": self.bounded_prefix_batches_only,
             "last_shuffle_seed_used": self.last_shuffle_seed_used,
+            "max_blocks_per_document": self.max_blocks_per_document,
+            "unique_doc_count": len(self.sampled_doc_ids),
         }
 
 
@@ -89,6 +93,15 @@ def normalize_shuffle_buffer_size(shuffle_buffer_size: int | None) -> int:
     if shuffle_buffer_size is None:
         return 1
     return int(shuffle_buffer_size)
+
+
+def normalize_max_blocks_per_document(max_blocks_per_document: int | None) -> int | None:
+    if max_blocks_per_document is None:
+        return None
+    value = int(max_blocks_per_document)
+    if value <= 0:
+        raise ValueError("max_blocks_per_document must be positive")
+    return value
 
 
 def effective_sampling_policy(sampling_policy: str, shuffle_buffer_size: int) -> str:
@@ -126,15 +139,31 @@ def iter_shuffle_buffered_texts(
     shuffle_buffer_size: int,
     stats: StreamingBatchStats | None = None,
 ) -> Iterator[str]:
+    for _, text in iter_shuffle_buffered_text_records(
+        enumerate(text_iter, start=1),
+        shuffle_seed=shuffle_seed,
+        shuffle_buffer_size=shuffle_buffer_size,
+        stats=stats,
+    ):
+        yield text
+
+
+def iter_shuffle_buffered_text_records(
+    text_iter: Iterator[tuple[int, str]],
+    *,
+    shuffle_seed: int | None,
+    shuffle_buffer_size: int,
+    stats: StreamingBatchStats | None = None,
+) -> Iterator[tuple[int, str]]:
     if shuffle_buffer_size <= 1:
         yield from text_iter
         return
 
     rng = random.Random(0 if shuffle_seed is None else shuffle_seed)
-    buffer: list[str] = []
+    buffer: list[tuple[int, str]] = []
     documents_buffered_this_iter = 0
-    for text in text_iter:
-        buffer.append(text)
+    for record in text_iter:
+        buffer.append(record)
         documents_buffered_this_iter += 1
         if stats is not None:
             stats.documents_buffered_total += 1
@@ -168,7 +197,7 @@ def iter_jsonl_texts(
         shuffle_buffer_size=normalized_shuffle_buffer_size,
     )
 
-    def validated_texts() -> Iterator[str]:
+    def validated_text_records() -> Iterator[tuple[int, str]]:
         with path.open("r", encoding="utf-8") as handle:
             for line_number, line in enumerate(handle, start=1):
                 if not line.strip():
@@ -202,17 +231,22 @@ def iter_jsonl_texts(
 
                 if stats is not None:
                     stats.docs_used += 1
-                yield text
+                yield line_number, text
 
     if effective_sampling_policy(normalized_sampling_policy, normalized_shuffle_buffer_size) == SHUFFLE_BUFFER:
-        yield from iter_shuffle_buffered_texts(
-            validated_texts(),
+        sampled_records = iter_shuffle_buffered_text_records(
+            validated_text_records(),
             shuffle_seed=shuffle_seed,
             shuffle_buffer_size=normalized_shuffle_buffer_size,
             stats=stats,
         )
     else:
-        yield from validated_texts()
+        sampled_records = validated_text_records()
+
+    for line_number, text in sampled_records:
+        if stats is not None:
+            stats.sampled_doc_ids.add(line_number)
+        yield text
 
 
 def iter_token_blocks(
@@ -222,35 +256,74 @@ def iter_token_blocks(
     eos_token_id: int | None,
     *,
     stats: StreamingBatchStats | None = None,
+    max_blocks_per_document: int | None = None,
 ) -> Iterator[TokenBlock]:
     if sequence_length <= 0:
         raise ValueError("sequence_length must be positive")
 
-    buffer: list[int] = []
+    normalized_max_blocks = normalize_max_blocks_per_document(max_blocks_per_document)
+    if stats is not None:
+        stats.max_blocks_per_document = normalized_max_blocks
+
+    if normalized_max_blocks is None:
+        buffer: list[int] = []
+        for text in text_iter:
+            encoded_ids = tokenizer.encode(text).ids
+            for token_id in encoded_ids:
+                buffer.append(int(token_id))
+                if stats is not None:
+                    stats.token_ids_streamed += 1
+                while len(buffer) >= sequence_length + 1:
+                    x = buffer[:sequence_length]
+                    y = buffer[1 : sequence_length + 1]
+                    if stats is not None:
+                        stats.blocks_yielded += 1
+                    yield x, y
+                    del buffer[0]
+
+            if eos_token_id is not None:
+                buffer.append(eos_token_id)
+                if stats is not None:
+                    stats.token_ids_streamed += 1
+                while len(buffer) >= sequence_length + 1:
+                    x = buffer[:sequence_length]
+                    y = buffer[1 : sequence_length + 1]
+                    if stats is not None:
+                        stats.blocks_yielded += 1
+                    yield x, y
+                    del buffer[0]
+        return
+
     for text in text_iter:
+        buffer: list[int] = []
+        blocks_from_document = 0
         encoded_ids = tokenizer.encode(text).ids
         for token_id in encoded_ids:
             buffer.append(int(token_id))
             if stats is not None:
                 stats.token_ids_streamed += 1
-            while len(buffer) >= sequence_length + 1:
+            while len(buffer) >= sequence_length + 1 and blocks_from_document < normalized_max_blocks:
                 x = buffer[:sequence_length]
                 y = buffer[1 : sequence_length + 1]
                 if stats is not None:
                     stats.blocks_yielded += 1
                 yield x, y
+                blocks_from_document += 1
                 del buffer[0]
+            if blocks_from_document >= normalized_max_blocks:
+                break
 
-        if eos_token_id is not None:
+        if eos_token_id is not None and blocks_from_document < normalized_max_blocks:
             buffer.append(eos_token_id)
             if stats is not None:
                 stats.token_ids_streamed += 1
-            while len(buffer) >= sequence_length + 1:
+            while len(buffer) >= sequence_length + 1 and blocks_from_document < normalized_max_blocks:
                 x = buffer[:sequence_length]
                 y = buffer[1 : sequence_length + 1]
                 if stats is not None:
                     stats.blocks_yielded += 1
                 yield x, y
+                blocks_from_document += 1
                 del buffer[0]
 
 
@@ -312,9 +385,11 @@ def create_streaming_batch_iterator(
     sampling_policy: str | None = None,
     shuffle_seed: int | None = None,
     shuffle_buffer_size: int | None = None,
+    max_blocks_per_document: int | None = None,
 ) -> tuple[Iterator[Batch], StreamingBatchStats]:
     normalized_sampling_policy = normalize_sampling_policy(sampling_policy)
     normalized_shuffle_buffer_size = normalize_shuffle_buffer_size(shuffle_buffer_size)
+    normalized_max_blocks = normalize_max_blocks_per_document(max_blocks_per_document)
     effective_policy = effective_sampling_policy(normalized_sampling_policy, normalized_shuffle_buffer_size)
     stats = StreamingBatchStats(
         split_name=split_name,
@@ -325,6 +400,7 @@ def create_streaming_batch_iterator(
         shuffle_seed=shuffle_seed,
         shuffle_buffer_size=normalized_shuffle_buffer_size,
         bounded_prefix_batches_only=effective_policy == SEQUENTIAL_PREFIX,
+        max_blocks_per_document=normalized_max_blocks,
     )
     cycle_index = 0
 
@@ -348,6 +424,7 @@ def create_streaming_batch_iterator(
                 sequence_length,
                 eos_token_id,
                 stats=stats,
+                max_blocks_per_document=normalized_max_blocks,
             ),
             batch_size,
             stats=stats,

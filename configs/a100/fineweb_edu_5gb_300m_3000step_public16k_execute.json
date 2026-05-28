@@ -167,5 +167,11 @@
     "policy": "shuffle_buffer",
     "shuffle_seed": 1337,
     "shuffle_buffer_size": 1024
+  },
+  "validation_sampling": {
+    "policy": "shuffle_buffer",
+    "shuffle_seed": 7331,
+    "shuffle_buffer_size": 64,
+    "max_blocks_per_document": 8
   }
 }

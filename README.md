@@ -149,6 +149,7 @@ Current implementation note:
 - Streaming train data now supports seed-controlled `shuffle_buffer` sampling; future 2GB/5GB runs should use shuffled streaming rather than prefix-only sampling.
 - 5GB Modal preflight has passed; `train_5gb_1000` should only run after explicit cost approval and should download only the small result package.
 - 5GB prepared-data streaming run on Modal A100 is now validated with `shuffle_buffer` sampling and constant scheduler metadata; future longer 5GB runs require separate cost approval.
+- Validation streaming configs now support deterministic multi-document coverage through validation-side `shuffle_buffer` sampling plus a per-document block cap before any longer 5GB run.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -329,3 +330,4 @@ Current implementation note:
 - MVP-23.J streaming shuffle buffer
 - MVP-24.P Modal 5GB 1000-step training mode prepared
 - MVP-24 Modal A100 5GB 1000-step streaming run completed
+- MVP-25.B validation coverage fix prepared

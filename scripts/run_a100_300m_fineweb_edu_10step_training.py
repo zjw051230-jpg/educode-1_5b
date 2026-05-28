@@ -144,6 +144,50 @@ def build_sampling_metadata(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_validation_sampling_settings(config: dict[str, Any]) -> dict[str, Any]:
+    validation_sampling_config = config.get("validation_sampling")
+    if not isinstance(validation_sampling_config, dict):
+        return {
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": None,
+            "shuffle_buffer_size": 1,
+            "max_blocks_per_document": None,
+        }
+
+    policy = str(validation_sampling_config.get("policy", SEQUENTIAL_PREFIX)).strip().lower()
+    if policy not in {SEQUENTIAL_PREFIX, SHUFFLE_BUFFER}:
+        raise ValueError(f"unsupported validation sampling policy: {policy}")
+
+    shuffle_buffer_size = int(validation_sampling_config.get("shuffle_buffer_size", 1))
+    max_blocks_value = validation_sampling_config.get("max_blocks_per_document")
+    max_blocks_per_document = int(max_blocks_value) if max_blocks_value is not None else None
+    if max_blocks_per_document is not None and max_blocks_per_document <= 0:
+        raise ValueError("validation max_blocks_per_document must be positive")
+
+    if policy == SEQUENTIAL_PREFIX:
+        shuffle_seed = validation_sampling_config.get("shuffle_seed")
+        return {
+            "sampling_policy": SEQUENTIAL_PREFIX,
+            "shuffle_seed": int(shuffle_seed) if shuffle_seed is not None else None,
+            "shuffle_buffer_size": shuffle_buffer_size,
+            "max_blocks_per_document": max_blocks_per_document,
+        }
+
+    if shuffle_buffer_size <= 1:
+        raise ValueError("validation shuffle_buffer_size must be greater than 1 for shuffle_buffer sampling")
+
+    seed_value = validation_sampling_config.get("shuffle_seed", validation_sampling_config.get("sampling_seed", config.get("run", {}).get("seed")))
+    if seed_value is None:
+        raise ValueError("validation shuffle_buffer sampling requires shuffle_seed, sampling_seed, or run.seed")
+
+    return {
+        "sampling_policy": SHUFFLE_BUFFER,
+        "shuffle_seed": int(seed_value),
+        "shuffle_buffer_size": shuffle_buffer_size,
+        "max_blocks_per_document": max_blocks_per_document,
+    }
+
+
 def build_split_sampling_settings(config: dict[str, Any], *, split_name: str) -> dict[str, Any]:
     if split_name == "train":
         metadata = build_sampling_metadata(config)
@@ -151,12 +195,33 @@ def build_split_sampling_settings(config: dict[str, Any], *, split_name: str) ->
             "sampling_policy": metadata["sampling_policy"],
             "shuffle_seed": metadata["shuffle_seed"],
             "shuffle_buffer_size": metadata["shuffle_buffer_size"],
+            "max_blocks_per_document": None,
         }
 
+    return build_validation_sampling_settings(config)
+
+
+def build_validation_coverage_metadata(
+    val_stats: dict[str, Any],
+    *,
+    validation_batches_evaluated: int,
+    batch_size: int,
+    sequence_length: int,
+) -> dict[str, Any]:
+    unique_doc_count = val_stats.get("unique_doc_count")
+    validation_prefix_only_risk = bool(
+        val_stats.get("sampling_policy") == SEQUENTIAL_PREFIX
+        or not isinstance(unique_doc_count, int)
+        or unique_doc_count <= 1
+    )
     return {
-        "sampling_policy": SEQUENTIAL_PREFIX,
-        "shuffle_seed": None,
-        "shuffle_buffer_size": 1,
+        "val_shuffle_seed": val_stats.get("shuffle_seed"),
+        "val_shuffle_buffer_size": val_stats.get("shuffle_buffer_size"),
+        "validation_max_blocks_per_document": val_stats.get("max_blocks_per_document"),
+        "validation_unique_doc_count": unique_doc_count,
+        "validation_batches_evaluated": validation_batches_evaluated,
+        "validation_tokens_evaluated": validation_batches_evaluated * batch_size * sequence_length,
+        "validation_prefix_only_risk": validation_prefix_only_risk,
     }
 
 
@@ -658,6 +723,12 @@ def run_dry_run(config_path: Path, config: dict[str, Any]) -> int:
         "val_batches_validated": len(val_batches),
         "train_sampling_policy": train_stats.get("sampling_policy"),
         "val_sampling_policy": val_stats.get("sampling_policy"),
+        **build_validation_coverage_metadata(
+            val_stats,
+            validation_batches_evaluated=len(val_batches),
+            batch_size=batch_size,
+            sequence_length=sequence_length,
+        ),
         "train_data_probe": train_stats,
         "val_data_probe": val_stats,
         "model_size_label": config["model"].get("model_size_label"),
@@ -1090,6 +1161,12 @@ def run_training(config_path: Path, config: dict[str, Any]) -> int:
         "val_batches_used": len(val_losses),
         "train_sampling_policy": train_stats.get("sampling_policy"),
         "val_sampling_policy": val_stats.get("sampling_policy"),
+        **build_validation_coverage_metadata(
+            val_stats,
+            validation_batches_evaluated=len(val_losses),
+            batch_size=batch_size,
+            sequence_length=sequence_length,
+        ),
         "train_data_probe": train_stats,
         "val_data_probe": val_stats,
         "tokenizer_vocab_size": tokenizer.get_vocab_size(),
