@@ -120,6 +120,49 @@ Current status: pending rerun. The correct next run is still:
 modal run scripts/modal_a100_streaming_runner.py --mode profile_5gb_50step_sdpa
 ```
 
+## MVP-28.RUN-RERUN Second Attempt
+
+After MVP-28.FIX-001, the rerun passed readiness and entered the actual A100 50-step SDPA profiling loop. The training/profiling body completed:
+
+- `max_steps=50`
+- `final_train_loss=4.271052`
+- `final_validation_loss=8.776379`
+- training script reported `success=True`
+
+The Modal app still did not complete because the post-run artifact validator stopped the runner before result packaging. The validator still assumed long training artifacts and rejected the bounded profile artifact shape:
+
+- `metrics_rows_actual=50`
+- `validation_rows_actual=1`
+- post-run validator blockers: `2`
+
+No result package was produced. This is useful execution evidence, but the MVP-28 profiling artifact is still pending successful validation and packaging.
+
+## MVP-28.FIX-002 Artifact Validation Split
+
+The post-run artifact validator now separates:
+
+- `training_execution`: unchanged validation for real training artifacts such as 1000/3000/5000-step runs
+- `bounded_sdpa_profile`: explicit validation for the 50-step SDPA profiling artifact
+
+For bounded profiling artifacts, the validator permits:
+
+- `max_steps=50`
+- `metrics_rows=50`
+- `validation_rows=1`, derived from the config evaluation cadence
+
+It still requires:
+
+- summary success
+- finite train loss
+- finite validation loss when present
+- `attention_backend=sdpa`
+- profiling flags for tokens/sec, memory, and MFU enabled in `run_config.json`
+- no 10000-step profile
+
+Missing per-row profiling metrics are treated as caveats rather than immediate blockers, so long as the config flags are present and the run artifacts are otherwise consistent.
+
+Current status: pending rerun / pending successful packaging. Do not treat MVP-28 profiling as completed until Modal app completes and the result package is produced.
+
 ## Next Command, Not Run In This Step
 
 ```text
