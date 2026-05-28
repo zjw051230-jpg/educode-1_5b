@@ -156,6 +156,7 @@ Current implementation note:
 - Modal A100 5GB 3000-step streaming run completed with corrected validation coverage: `final_train_loss=3.029707`, `final_validation_loss=8.341638`, `validation_unique_doc_count=15`, and `validation_prefix_only_risk=false`.
 - MVP-27.A analysis finds the 5GB 3000-step run improved both final train loss and corrected validation loss versus 5GB 1000-step; next step is route selection, not a direct 10000-step jump.
 - MVP-27.B selects the next route: MVP-28 should prepare SDPA / FlashAttention profiling before longer training, followed by context-length preflight and then a 5000-step-vs-optimizer decision.
+- MVP-28.P audits the current attention path: runtime uses causal PyTorch SDPA; FlashAttention is not implemented yet, so the next step is a bounded profiling harness/config plan before any GPU run.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -343,3 +344,4 @@ Current implementation note:
 - MVP-26 Modal A100 5GB 3000-step streaming run completed
 - MVP-27.A 5GB 3000-step result analysis completed
 - MVP-27.B next-stage route selection completed
+- MVP-28.P attention backend profiling plan completed
