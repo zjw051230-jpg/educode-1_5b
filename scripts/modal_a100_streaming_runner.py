@@ -17,7 +17,7 @@ VOLUME_MOUNT_PATH = Path("/vol")
 WORKSPACE_ROOT = Path("/workspace")
 REPO_DIR = WORKSPACE_ROOT / "educode-1_5b"
 REPO_URL = "https://github.com/zjw051230-jpg/educode-1_5b.git"
-REQUIRED_COMMIT = "a8c2bb9"
+REQUIRED_COMMIT = "89ab3f6"
 DEFAULT_GPU = "A100-40GB"
 TIMEOUT_SECONDS = 2 * 60 * 60
 FIVE_GB_REQUIRED_PACKAGE_FILES = (
@@ -147,6 +147,17 @@ MODE_SPECS = {
         result_dir="/vol/results/modal_train_5gb_1000",
         train=True,
         result_package="/vol/results/mvp24_a100_5gb_1000step_public16k_streaming_results.tar.gz",
+        required_package_files=FIVE_GB_REQUIRED_PACKAGE_FILES,
+    ),
+    "train_5gb_3000": ModeSpec(
+        config_path="configs/a100/fineweb_edu_5gb_300m_3000step_public16k_execute.json",
+        package_path="/vol/prepared/fineweb_edu_5gb_prepared_splits.tar.gz",
+        extract_dir="data/public_corpus/fineweb_edu_sample10bt_5gb",
+        train_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.train.jsonl",
+        val_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.val.jsonl",
+        result_dir="/vol/results/modal_train_5gb_3000",
+        train=True,
+        result_package="/vol/results/mvp26_a100_5gb_3000step_public16k_streaming_results.tar.gz",
         required_package_files=FIVE_GB_REQUIRED_PACKAGE_FILES,
     ),
     "preflight_5gb_validation_coverage": ModeSpec(

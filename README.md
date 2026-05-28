@@ -152,6 +152,7 @@ Current implementation note:
 - Validation streaming configs now support deterministic multi-document coverage through validation-side `shuffle_buffer` sampling plus a per-document block cap before any longer 5GB run.
 - Real 5GB validation coverage preflight now passes without GPU or training, with `validation_unique_doc_count=15` and `validation_prefix_only_risk=false`; next 5GB work should be a 3000-step training plan with cost approval, not a direct 10000-step jump.
 - MVP-26.P prepares the 5GB 3000-step Modal A100 training plan and cost gate; `train_5gb_3000` still needs a runner mode before any approved training execution.
+- MVP-26.I adds and locally validates the `train_5gb_3000` Modal runner mode; actual Modal A100 training still requires a separate cost gate.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -335,3 +336,4 @@ Current implementation note:
 - MVP-25.B validation coverage fix prepared
 - MVP-25.C real 5GB validation coverage preflight passed
 - MVP-26.P 5GB 3000-step training plan and cost gate prepared
+- MVP-26.I 5GB 3000-step Modal runner mode prepared
