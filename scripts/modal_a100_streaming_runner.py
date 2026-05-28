@@ -198,23 +198,85 @@ def safe_extract(package_path: Path, destination: Path) -> list[str]:
     return extracted
 
 
-def safe_extract_required_files(package_path: Path, destination: Path, required_files: tuple[str, ...]) -> list[str]:
+def normalize_tar_member_name(path_text: str) -> str:
+    return str(path_text).replace("\\", "/").lstrip("./")
+
+
+def candidate_suffixes_for_required_file(required_file: str) -> list[str]:
+    normalized = normalize_tar_member_name(required_file)
+    basename = normalized.rsplit("/", 1)[-1]
+    suffixes = [normalized]
+    if "/splits/" in normalized:
+        suffixes.append(f"splits/{basename}")
+    suffixes.append(basename)
+    return list(dict.fromkeys(suffixes))
+
+
+def candidate_members_for_required_file(member_names: list[str], required_file: str) -> list[str]:
+    candidates: list[str] = []
+    for suffix in candidate_suffixes_for_required_file(required_file):
+        for member_name in member_names:
+            if member_name == suffix or member_name.endswith(f"/{suffix}"):
+                candidates.append(member_name)
+        if candidates:
+            break
+    return sorted(set(candidates), key=lambda item: (len(item), item))
+
+
+def discover_required_package_members(package_path: Path, required_files: tuple[str, ...]) -> dict[str, str]:
+    with tarfile.open(package_path, "r:gz") as archive:
+        member_names = sorted(
+            normalize_tar_member_name(member.name)
+            for member in archive.getmembers()
+            if member.isfile()
+        )
+
+    discovered: dict[str, str] = {}
+    missing: list[str] = []
+    available_candidates: dict[str, list[str]] = {}
+    for required_file in required_files:
+        candidates = candidate_members_for_required_file(member_names, required_file)
+        if candidates:
+            discovered[required_file] = candidates[0]
+            if len(candidates) > 1:
+                available_candidates[required_file] = candidates
+        else:
+            missing.append(required_file)
+            basename = normalize_tar_member_name(required_file).rsplit("/", 1)[-1]
+            available_candidates[required_file] = [
+                member_name for member_name in member_names if member_name.endswith(basename)
+            ]
+
+    if missing:
+        raise FileNotFoundError(
+            f"missing required package members: {missing}; available candidates: {available_candidates}"
+        )
+    return discovered
+
+
+def safe_extract_required_files(
+    package_path: Path,
+    destination: Path,
+    required_files: tuple[str, ...],
+) -> tuple[list[str], dict[str, str]]:
     destination.mkdir(parents=True, exist_ok=True)
-    required = set(required_files)
+    discovered_members = discover_required_package_members(package_path, required_files)
     extracted: list[str] = []
     with tarfile.open(package_path, "r:gz") as archive:
-        members_by_name = {member.name: member for member in archive.getmembers()}
-        missing = sorted(required - set(members_by_name))
-        if missing:
-            raise FileNotFoundError(f"missing required package members: {missing}")
-        for file_path in required_files:
-            member = members_by_name[file_path]
-            target = (destination / member.name).resolve()
+        members_by_name = {normalize_tar_member_name(member.name): member for member in archive.getmembers()}
+        for file_path, member_name in discovered_members.items():
+            member = members_by_name[member_name]
+            target = (destination / file_path).resolve()
             if not target.is_relative_to(destination.resolve()):
                 raise ValueError(f"unsafe tar member path: {member.name}")
-            archive.extract(member, destination)
-            extracted.append(member.name)
-    return extracted
+            target.parent.mkdir(parents=True, exist_ok=True)
+            source = archive.extractfile(member)
+            if source is None:
+                raise FileNotFoundError(f"required package member is not a file: {member.name}")
+            with source, target.open("wb") as output:
+                shutil.copyfileobj(source, output)
+            extracted.append(member_name)
+    return extracted, discovered_members
 
 
 def clone_repo(repo_url: str, ref: str) -> str:
@@ -479,8 +541,13 @@ def run_modal_job_impl(mode: str, repo_url: str, ref: str) -> dict[str, Any]:
         raise FileNotFoundError(f"missing prepared package in Modal Volume: {package_path}")
 
     repo_commit = clone_repo(repo_url, ref)
+    package_member_discovery: dict[str, str] = {}
     if spec.extract_required_files_only:
-        extracted_members = safe_extract_required_files(package_path, REPO_DIR, spec.required_package_files)
+        extracted_members, package_member_discovery = safe_extract_required_files(
+            package_path,
+            REPO_DIR,
+            spec.required_package_files,
+        )
     else:
         extracted_members = safe_extract(package_path, REPO_DIR / spec.extract_dir)
 
@@ -512,6 +579,7 @@ def run_modal_job_impl(mode: str, repo_url: str, ref: str) -> dict[str, Any]:
         "config_path": spec.config_path,
         "prepared_package": spec.package_path,
         "extracted_members": extracted_members,
+        "package_member_discovery": package_member_discovery,
         "verified_package_files": verified_package_files,
         "train_path_exists": train_path.exists(),
         "val_path_exists": val_path.exists(),

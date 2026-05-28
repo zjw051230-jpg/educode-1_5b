@@ -16,6 +16,33 @@ MVP-25.C closes that measurement-health gap by reading the real 5GB validation s
 
 The preflight uses only the validation split and required metadata files. The training split is not required for this mode.
 
+## First execution attempt and fix
+
+The first real Modal CPU preflight attempt reached the CPU-only function but failed before validation batches were read. The failure happened while extracting required members from the prepared tarball:
+
+```text
+FileNotFoundError: missing required package members
+```
+
+Root cause: the runner assumed every prepared package member was rooted under:
+
+```text
+data/public_corpus/fineweb_edu_sample10bt_5gb/
+```
+
+The local copy recorded by the data logistics policy uses rootless package members instead:
+
+```text
+manifest.json
+validation_summary.json
+intake_validation_summary.json
+splits/fineweb_edu_5gb.val.jsonl
+```
+
+The runner now discovers the actual tar members for the validation-only preflight instead of assuming one fixed root. It deterministically maps each expected repo path to the shortest matching tar member, extracts only the required files into the repo layout expected by the config, and records the actual member mapping in the Modal receipt as `package_member_discovery`.
+
+Status remains pending rerun. This fix does not claim that the real 5GB validation coverage preflight passed.
+
 ## Modal mode
 
 The new mode is:
