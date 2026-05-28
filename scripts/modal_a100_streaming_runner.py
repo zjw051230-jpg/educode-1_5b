@@ -160,6 +160,17 @@ MODE_SPECS = {
         result_package="/vol/results/mvp26_a100_5gb_3000step_public16k_streaming_results.tar.gz",
         required_package_files=FIVE_GB_REQUIRED_PACKAGE_FILES,
     ),
+    "profile_5gb_50step_sdpa": ModeSpec(
+        config_path="configs/a100/fineweb_edu_5gb_300m_50step_public16k_sdpa_profile.json",
+        package_path="/vol/prepared/fineweb_edu_5gb_prepared_splits.tar.gz",
+        extract_dir="data/public_corpus/fineweb_edu_sample10bt_5gb",
+        train_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.train.jsonl",
+        val_path="data/public_corpus/fineweb_edu_sample10bt_5gb/splits/fineweb_edu_5gb.val.jsonl",
+        result_dir="/vol/results/modal_profile_5gb_50step_sdpa",
+        train=True,
+        result_package="/vol/results/mvp28_a100_5gb_50step_sdpa_profile_results.tar.gz",
+        required_package_files=FIVE_GB_REQUIRED_PACKAGE_FILES,
+    ),
     "preflight_5gb_validation_coverage": ModeSpec(
         config_path="configs/a100/fineweb_edu_5gb_300m_1000step_public16k_execute.json",
         package_path="/vol/prepared/fineweb_edu_5gb_prepared_splits.tar.gz",
