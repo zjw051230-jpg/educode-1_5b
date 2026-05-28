@@ -158,6 +158,7 @@ Current implementation note:
 - MVP-27.B selects the next route: MVP-28 should prepare SDPA / FlashAttention profiling before longer training, followed by context-length preflight and then a 5000-step-vs-optimizer decision.
 - MVP-28.P audits the current attention path: runtime uses causal PyTorch SDPA; FlashAttention is not implemented yet, so the next step is a bounded profiling harness/config plan before any GPU run.
 - MVP-28.I prepares a bounded `profile_5gb_50step_sdpa` Modal runner mode and 50-step SDPA profiling config; actual A100 profiling still requires a separate cost gate.
+- MVP-28.FIX-001 splits A100 readiness checks into traditional training execution and explicit bounded SDPA profiling gates; the profile remains pending rerun.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -347,3 +348,4 @@ Current implementation note:
 - MVP-27.B next-stage route selection completed
 - MVP-28.P attention backend profiling plan completed
 - MVP-28.I SDPA attention profiling mode prepared
+- MVP-28.FIX-001 bounded SDPA profiling readiness gate fixed

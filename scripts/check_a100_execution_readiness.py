@@ -19,6 +19,10 @@ EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS = {
     3000: 300,
     5000: 500,
 }
+BOUNDED_PROFILE_MODE = "bounded_sdpa_profile"
+BOUNDED_PROFILE_MAX_STEPS = 50
+BOUNDED_PROFILE_EVAL_INTERVAL = 50
+EXPECTED_SDPA_PROFILE_RESULT_PACKAGE = "/vol/results/mvp28_a100_5gb_50step_sdpa_profile_results.tar.gz"
 SUPPORTED_CORPUS_SIZE_LABELS_BY_PATH_MARKER = {
     "fineweb_edu_sample10bt_500mb": "500mb",
     "fineweb_edu_sample10bt_2gb": "2gb",
@@ -117,9 +121,30 @@ def expected_run_name(corpus_size_label: str, max_steps: int) -> str:
     return f"fineweb_edu_{corpus_size_label}_300m_{max_steps}step_public16k_execute"
 
 
+def expected_profile_run_name(corpus_size_label: str) -> str:
+    return f"fineweb_edu_{corpus_size_label}_300m_50step_public16k_sdpa_profile"
+
+
 def has_stale_run_token(value: str) -> bool:
     lowered = value.lower()
     return any(token in lowered for token in DISALLOWED_STALE_RUN_TOKENS)
+
+
+def is_bounded_sdpa_profile_config(config: dict[str, Any], run_name: str) -> bool:
+    profiling_config = config.get("profiling")
+    if not isinstance(profiling_config, dict):
+        return False
+
+    profile_mode = str(profiling_config.get("profile_mode", "")).strip().lower()
+    attention_backend = str(profiling_config.get("attention_backend", "")).strip().lower()
+    status = str(config.get("status", "")).strip().lower()
+    return (
+        profile_mode == BOUNDED_PROFILE_MODE
+        and profiling_config.get("enabled") is True
+        and attention_backend == "sdpa"
+        and run_name.endswith("_sdpa_profile")
+        and "profiling" in status
+    )
 
 
 def get_scheduler_policy(config: dict[str, Any]) -> str:
@@ -202,6 +227,27 @@ def build_sampling_metadata(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_validation_sampling_metadata(config: dict[str, Any]) -> dict[str, Any]:
+    validation_sampling_config = config.get("validation_sampling")
+    validation_sampling_config_present = isinstance(validation_sampling_config, dict)
+    if not validation_sampling_config_present:
+        return {
+            "validation_sampling_config_present": False,
+            "validation_sampling_policy": None,
+            "validation_shuffle_seed": None,
+            "validation_shuffle_buffer_size": None,
+            "validation_max_blocks_per_document": None,
+        }
+
+    return {
+        "validation_sampling_config_present": True,
+        "validation_sampling_policy": str(validation_sampling_config.get("policy", "")).strip().lower(),
+        "validation_shuffle_seed": validation_sampling_config.get("shuffle_seed"),
+        "validation_shuffle_buffer_size": validation_sampling_config.get("shuffle_buffer_size"),
+        "validation_max_blocks_per_document": validation_sampling_config.get("max_blocks_per_document"),
+    }
+
+
 def main() -> int:
     args = parse_args()
     config_path = Path(args.config)
@@ -261,13 +307,26 @@ def main() -> int:
             "bounded_prefix_batches_only": True,
             "sampling_error": str(exc),
         }
-    expected_eval_interval = EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
+    validation_sampling_metadata = build_validation_sampling_metadata(config)
+    profiling_config = config.get("profiling", {}) if isinstance(config.get("profiling"), dict) else {}
+    is_bounded_profile = is_bounded_sdpa_profile_config(config, run_name)
+    expected_eval_interval = (
+        BOUNDED_PROFILE_EVAL_INTERVAL
+        if is_bounded_profile
+        else EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
+    )
     supported_max_steps_text = ", ".join(str(step) for step in sorted(EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS))
     output_dir_text = repo_relative_path(output_dir)
     train_corpus_size_label = infer_corpus_size_label_from_path(train_path)
     val_corpus_size_label = infer_corpus_size_label_from_path(val_path)
     corpus_size_label = train_corpus_size_label if train_corpus_size_label == val_corpus_size_label else None
-    expected_run_name_text = expected_run_name(corpus_size_label, max_steps) if corpus_size_label else None
+    expected_run_name_text = (
+        expected_profile_run_name(corpus_size_label)
+        if is_bounded_profile and corpus_size_label
+        else expected_run_name(corpus_size_label, max_steps)
+        if corpus_size_label
+        else None
+    )
 
     require(TRAINING_SCRIPT_PATH.exists(), f"missing training script: {TRAINING_SCRIPT_PATH}", blockers)
     require(train_corpus_size_label is not None, "train_path must be from supported FineWeb-Edu 500MB, 2GB, or 5GB corpus", blockers)
@@ -302,8 +361,43 @@ def main() -> int:
     require(tokenizer_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k tokenizer vocab_size must be 16384", blockers)
     require(model_vocab_size == EXPECTED_PUBLIC16K_VOCAB_SIZE, "public16k model vocab_size must be 16384", blockers)
     require(tokenizer_vocab_size == model_vocab_size, "tokenizer.vocab_size must match model.vocab_size", blockers)
-    require(max_steps in EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS, f"max_steps must be one of: {supported_max_steps_text}", blockers)
-    require(eval_interval == expected_eval_interval, f"eval_interval must be {expected_eval_interval} for {max_steps}-step public16k run", blockers)
+    if is_bounded_profile:
+        require(max_steps == BOUNDED_PROFILE_MAX_STEPS, "bounded SDPA profile max_steps must be 50", blockers)
+        require(eval_interval == BOUNDED_PROFILE_EVAL_INTERVAL, "bounded SDPA profile eval_interval must be 50", blockers)
+        require(max_steps < 1000, "bounded SDPA profile must stay below long-run training step counts", blockers)
+        require(profiling_config.get("attention_backend") == "sdpa", "bounded profile attention_backend must be sdpa", blockers)
+        require(profiling_config.get("record_tokens_per_sec") is True, "bounded profile must record tokens/sec", blockers)
+        require(profiling_config.get("record_memory") is True, "bounded profile must record memory", blockers)
+        require(profiling_config.get("record_mfu") is True, "bounded profile must record MFU", blockers)
+        require(
+            profiling_config.get("expected_result_package") == EXPECTED_SDPA_PROFILE_RESULT_PACKAGE,
+            f"bounded profile expected_result_package must be {EXPECTED_SDPA_PROFILE_RESULT_PACKAGE}",
+            blockers,
+        )
+        require(
+            validation_sampling_metadata["validation_sampling_config_present"] is True,
+            "bounded profile must declare validation_sampling",
+            blockers,
+        )
+        require(
+            validation_sampling_metadata["validation_sampling_policy"] == SHUFFLE_BUFFER,
+            "bounded profile validation_sampling must use shuffle_buffer",
+            blockers,
+        )
+        require(
+            isinstance(validation_sampling_metadata["validation_shuffle_seed"], int),
+            "bounded profile validation_sampling must declare integer shuffle_seed",
+            blockers,
+        )
+        require(
+            isinstance(validation_sampling_metadata["validation_shuffle_buffer_size"], int)
+            and validation_sampling_metadata["validation_shuffle_buffer_size"] > 1,
+            "bounded profile validation shuffle_buffer_size must be greater than 1",
+            blockers,
+        )
+    else:
+        require(max_steps in EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS, f"max_steps must be one of: {supported_max_steps_text}", blockers)
+        require(eval_interval == expected_eval_interval, f"eval_interval must be {expected_eval_interval} for {max_steps}-step public16k run", blockers)
     require(checkpoint_interval == max_steps, "checkpoint_interval must equal max_steps", blockers)
     require(str(config["training"].get("save_interval")) == str(max_steps), "training.save_interval must equal max_steps", blockers)
     require(expected_run_name_text is not None and run_name == expected_run_name_text, f"run_name must be {expected_run_name_text}", blockers)
@@ -396,6 +490,15 @@ def main() -> int:
         "checkpoint_path_expectation": repo_relative_path(expected_checkpoint_save_dir),
         "checkpoint_path_uses_output_dir": checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(),
         "no_commit_checkpoints": no_commit_checkpoints,
+        "readiness_gate_type": "bounded_sdpa_profile" if is_bounded_profile else "training_execution",
+        "is_bounded_profile": is_bounded_profile,
+        "profiling_enabled": profiling_config.get("enabled"),
+        "profiling_profile_mode": profiling_config.get("profile_mode"),
+        "profiling_attention_backend": profiling_config.get("attention_backend"),
+        "profiling_record_tokens_per_sec": profiling_config.get("record_tokens_per_sec"),
+        "profiling_record_memory": profiling_config.get("record_memory"),
+        "profiling_record_mfu": profiling_config.get("record_mfu"),
+        "profiling_expected_result_package": profiling_config.get("expected_result_package"),
         "dry_run_summary_path": repo_relative_path(dry_run_summary_path),
         "dry_run_summary_present": dry_run_summary is not None,
         "dry_run_exact_parameter_count": dry_run_summary.get("exact_parameter_count") if dry_run_summary else None,
@@ -403,6 +506,7 @@ def main() -> int:
         "dry_run_no_training": dry_run_summary.get("no_training") if dry_run_summary else None,
         **scheduler_metadata,
         **sampling_metadata,
+        **validation_sampling_metadata,
         "blockers": blockers,
         "blocker_count": len(blockers),
         "caveats": caveats,
@@ -423,8 +527,10 @@ def main() -> int:
     print(f"data_loading_mode={summary['data_loading_mode']}")
     print(f"exact_parameter_count={summary['exact_parameter_count']}")
     print(f"max_steps={summary['max_steps']}")
+    print(f"readiness_gate_type={summary['readiness_gate_type']}")
     print(f"eval_interval={summary['eval_interval']}")
     print(f"checkpoint_interval={summary['checkpoint_interval']}")
+    print(f"attention_backend={summary['profiling_attention_backend']}")
     print(f"scheduler_policy={summary['scheduler_policy']}")
     print(f"learning_rate_mode={summary['learning_rate_mode']}")
     print(f"sampling_policy={summary['sampling_policy']}")

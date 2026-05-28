@@ -134,6 +134,7 @@
   },
   "profiling": {
     "enabled": true,
+    "profile_mode": "bounded_sdpa_profile",
     "profile_steps": [
       1,
       10,
@@ -144,6 +145,7 @@
     "record_tokens_per_sec": true,
     "record_mfu": true,
     "attention_backend": "sdpa",
+    "expected_result_package": "/vol/results/mvp28_a100_5gb_50step_sdpa_profile_results.tar.gz",
     "attention_backend_note": "MVP-28.I profiles the current SDPA baseline only. FlashAttention is not installed or implemented in this step."
   },
   "logging": {

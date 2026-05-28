@@ -81,6 +81,45 @@ This implementation step costs `0`: no Modal, no GPU, no training.
 
 The next A100 50-step profiling run should be much cheaper than the 5GB 3000-step training run, but it still requires a separate approval/cost gate before execution.
 
+## MVP-28.RUN First Attempt
+
+The first `profile_5gb_50step_sdpa` Modal attempt did not complete. The app stopped during `scripts/check_a100_execution_readiness.py` before entering the 50-step training/profiling loop.
+
+Failure cause:
+
+- the readiness checker still treated every config as a traditional training execution config
+- it only accepted `max_steps` values `1000`, `3000`, and `5000`
+- it expected the traditional `*_execute` run name
+- it did not recognize `*_sdpa_profile` as a bounded profiling config
+
+No profiling result package was generated, and this document must not be read as evidence that profiling passed.
+
+## MVP-28.FIX-001 Readiness Split
+
+The readiness checker now separates two gate types:
+
+- `training_execution`: unchanged gate for real training configs such as 5GB 3000-step
+- `bounded_sdpa_profile`: explicit 50-step profiling gate for `profile_5gb_50step_sdpa`
+
+The profiling gate is only enabled when the config is explicitly marked with `profiling.profile_mode=bounded_sdpa_profile`, `profiling.enabled=true`, `profiling.attention_backend=sdpa`, a `*_sdpa_profile` run name, and profiling status metadata. It does not relax the training execution gate.
+
+The bounded profiling gate still requires:
+
+- `max_steps=50`
+- `data_loading_mode=streaming`
+- train `sampling.policy=shuffle_buffer`
+- `validation_sampling.policy=shuffle_buffer`
+- `profiling.record_tokens_per_sec=true`
+- `profiling.record_memory=true`
+- `profiling.record_mfu=true`
+- `profiling.expected_result_package=/vol/results/mvp28_a100_5gb_50step_sdpa_profile_results.tar.gz`
+
+Current status: pending rerun. The correct next run is still:
+
+```text
+modal run scripts/modal_a100_streaming_runner.py --mode profile_5gb_50step_sdpa
+```
+
 ## Next Command, Not Run In This Step
 
 ```text
