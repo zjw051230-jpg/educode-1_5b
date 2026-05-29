@@ -162,6 +162,7 @@ Current implementation note:
 - MVP-28.FIX-002 splits post-run artifact validation for bounded SDPA profile artifacts; the profile remains pending successful Modal packaging.
 - MVP-28.R completed and imported a Modal A100 50-step SDPA profiling run with `44100.712407` summary tokens/sec, `8.416016 GiB` peak reserved memory, and artifact validation blockers `0`.
 - MVP-28.A analyzes the imported A100 SDPA profiling artifact as systems evidence: `46732.188322` mean per-step tokens/sec, `0.371513s` average step time, `2.645120 GiB` peak allocated memory, and MFU unavailable/null.
+- MVP-29.P plans a context length `512 -> 1024` memory preflight; the recommendation is a 10-step SDPA A100 preflight with `batch_size=4`, `grad_accum=4`, and no direct seq1024 3000-step run.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -355,3 +356,4 @@ Current implementation note:
 - MVP-28.FIX-002 bounded SDPA profile artifact validation fixed
 - MVP-28.R Modal A100 50-step SDPA profiling run imported
 - MVP-28.A A100 SDPA profiling result analysis completed
+- MVP-29.P context length 1024 memory preflight planned
