@@ -1,0 +1,32 @@
+{
+  "validation_status": "passed",
+  "blocker_count": 0,
+  "blockers": [],
+  "caveat_count": 1,
+  "caveats": [
+    "mfu values are absent or null in metrics.jsonl"
+  ],
+  "mode": "preflight_5gb_10step_seq1024_sdpa_memory",
+  "training_status": "success",
+  "context_length": 1024,
+  "batch_size": 4,
+  "grad_accum": 4,
+  "attention_backend": "sdpa",
+  "max_steps": 10,
+  "metrics_rows": 10,
+  "validation_metrics_rows": 1,
+  "final_train_loss": 2.392136,
+  "final_validation_loss": 9.044042,
+  "post_run_blocker_count": 0,
+  "oom_detected": false,
+  "checkpoint_imported": false,
+  "summary_tokens_per_sec": 27151.11506,
+  "mean_step_tokens_per_sec": 40433.276612,
+  "average_step_time_seconds": 0.603437,
+  "peak_gpu_memory_allocated_gib": 2.649026,
+  "peak_gpu_memory_reserved_gib": 8.412109,
+  "mfu_available": false,
+  "mfu_value": null,
+  "run_metadata_gpu_name": "NVIDIA A100-SXM4-40GB",
+  "run_metadata_git_commit": "838b2953a41aa9a899438a65e7c4a3c87f5a6e6e"
+}
