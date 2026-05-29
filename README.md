@@ -169,6 +169,7 @@ Current implementation note:
 - MVP-30.P plans a seq1024 50-step SDPA profiling run at `batch_size=4`, `grad_accum=4`, and recommends implementing a dedicated config/mode before any new A100 execution.
 - MVP-30.I adds the seq1024 50-step SDPA profiling config/mode and local validator; the real A100 run still requires a separate cost gate.
 - MVP-30.R imports the Modal A100 seq1024 50-step SDPA profiling run: no OOM, `final_train_loss=1.450320`, `final_val_loss=9.930368`, summary throughput `41430.475003` tokens/sec, peak reserved memory `8.412109 GiB`, and artifact blockers `0`.
+- MVP-30.A analyzes the seq1024 50-step SDPA profiling result: throughput is lower than seq512 but memory stays essentially flat, and the result is systems evidence only.
 - MVP-18 completed the A800 1000-step public16k streaming run with finite losses, standalone validation metrics, checkpoint reload match, and post-run artifact validation.
 - Imported A800 bounded-run results remain training-systems evidence only, with architecture-parity caveats explicit and no model-quality claims.
 
@@ -369,3 +370,4 @@ Current implementation note:
 - MVP-30.P seq1024 50-step SDPA profiling plan completed
 - MVP-30.I seq1024 SDPA profiling mode prepared
 - MVP-30.R seq1024 SDPA profiling run imported
+- MVP-30.A seq1024 SDPA profiling analysis completed
