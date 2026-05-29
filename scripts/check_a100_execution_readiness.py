@@ -23,6 +23,15 @@ BOUNDED_PROFILE_MODE = "bounded_sdpa_profile"
 BOUNDED_PROFILE_MAX_STEPS = 50
 BOUNDED_PROFILE_EVAL_INTERVAL = 50
 EXPECTED_SDPA_PROFILE_RESULT_PACKAGE = "/vol/results/mvp28_a100_5gb_50step_sdpa_profile_results.tar.gz"
+BOUNDED_MEMORY_PREFLIGHT_MODE = "bounded_seq1024_sdpa_memory_preflight"
+BOUNDED_MEMORY_PREFLIGHT_MAX_STEPS = 10
+BOUNDED_MEMORY_PREFLIGHT_EVAL_INTERVAL = 10
+BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH = 1024
+BOUNDED_MEMORY_PREFLIGHT_BATCH_SIZE = 4
+BOUNDED_MEMORY_PREFLIGHT_GRAD_ACCUM = 4
+EXPECTED_SEQ1024_MEMORY_PREFLIGHT_RESULT_PACKAGE = (
+    "/vol/results/mvp29_a100_5gb_10step_seq1024_sdpa_memory_preflight_results.tar.gz"
+)
 SUPPORTED_CORPUS_SIZE_LABELS_BY_PATH_MARKER = {
     "fineweb_edu_sample10bt_500mb": "500mb",
     "fineweb_edu_sample10bt_2gb": "2gb",
@@ -125,6 +134,10 @@ def expected_profile_run_name(corpus_size_label: str) -> str:
     return f"fineweb_edu_{corpus_size_label}_300m_50step_public16k_sdpa_profile"
 
 
+def expected_memory_preflight_run_name(corpus_size_label: str) -> str:
+    return f"fineweb_edu_{corpus_size_label}_300m_10step_public16k_seq1024_sdpa_memory_preflight"
+
+
 def has_stale_run_token(value: str) -> bool:
     lowered = value.lower()
     return any(token in lowered for token in DISALLOWED_STALE_RUN_TOKENS)
@@ -144,6 +157,23 @@ def is_bounded_sdpa_profile_config(config: dict[str, Any], run_name: str) -> boo
         and attention_backend == "sdpa"
         and run_name.endswith("_sdpa_profile")
         and "profiling" in status
+    )
+
+
+def is_bounded_seq1024_memory_preflight_config(config: dict[str, Any], run_name: str) -> bool:
+    profiling_config = config.get("profiling")
+    if not isinstance(profiling_config, dict):
+        return False
+
+    profile_mode = str(profiling_config.get("profile_mode", "")).strip().lower()
+    attention_backend = str(profiling_config.get("attention_backend", "")).strip().lower()
+    status = str(config.get("status", "")).strip().lower()
+    return (
+        profile_mode == BOUNDED_MEMORY_PREFLIGHT_MODE
+        and profiling_config.get("enabled") is True
+        and attention_backend == "sdpa"
+        and run_name.endswith("_seq1024_sdpa_memory_preflight")
+        and "preflight" in status
     )
 
 
@@ -310,9 +340,12 @@ def main() -> int:
     validation_sampling_metadata = build_validation_sampling_metadata(config)
     profiling_config = config.get("profiling", {}) if isinstance(config.get("profiling"), dict) else {}
     is_bounded_profile = is_bounded_sdpa_profile_config(config, run_name)
+    is_bounded_memory_preflight = is_bounded_seq1024_memory_preflight_config(config, run_name)
     expected_eval_interval = (
         BOUNDED_PROFILE_EVAL_INTERVAL
         if is_bounded_profile
+        else BOUNDED_MEMORY_PREFLIGHT_EVAL_INTERVAL
+        if is_bounded_memory_preflight
         else EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS.get(max_steps)
     )
     supported_max_steps_text = ", ".join(str(step) for step in sorted(EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS))
@@ -323,6 +356,8 @@ def main() -> int:
     expected_run_name_text = (
         expected_profile_run_name(corpus_size_label)
         if is_bounded_profile and corpus_size_label
+        else expected_memory_preflight_run_name(corpus_size_label)
+        if is_bounded_memory_preflight and corpus_size_label
         else expected_run_name(corpus_size_label, max_steps)
         if corpus_size_label
         else None
@@ -395,6 +430,48 @@ def main() -> int:
             "bounded profile validation shuffle_buffer_size must be greater than 1",
             blockers,
         )
+    elif is_bounded_memory_preflight:
+        sequence_length = int(config["training"].get("sequence_length", config["model"]["context_length"]))
+        batch_size = int(config["training"]["batch_size"])
+        grad_accum = int(config["training"].get("gradient_accumulation_steps", 1))
+        require(max_steps == BOUNDED_MEMORY_PREFLIGHT_MAX_STEPS, "bounded seq1024 memory preflight max_steps must be 10", blockers)
+        require(eval_interval == BOUNDED_MEMORY_PREFLIGHT_EVAL_INTERVAL, "bounded seq1024 memory preflight eval_interval must be 10", blockers)
+        require(max_steps < 1000, "bounded seq1024 memory preflight must stay below long-run training step counts", blockers)
+        require(config["model"]["context_length"] == BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH, "bounded seq1024 memory preflight model.context_length must be 1024", blockers)
+        require(config["data"]["sequence_length"] == BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH, "bounded seq1024 memory preflight data.sequence_length must be 1024", blockers)
+        require(sequence_length == BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH, "bounded seq1024 memory preflight training.sequence_length must be 1024", blockers)
+        require(batch_size == BOUNDED_MEMORY_PREFLIGHT_BATCH_SIZE, "bounded seq1024 memory preflight batch_size must be 4", blockers)
+        require(grad_accum == BOUNDED_MEMORY_PREFLIGHT_GRAD_ACCUM, "bounded seq1024 memory preflight grad_accum must be 4", blockers)
+        require(profiling_config.get("attention_backend") == "sdpa", "bounded seq1024 memory preflight attention_backend must be sdpa", blockers)
+        require(profiling_config.get("record_tokens_per_sec") is True, "bounded seq1024 memory preflight must record tokens/sec", blockers)
+        require(profiling_config.get("record_memory") is True, "bounded seq1024 memory preflight must record memory", blockers)
+        require(profiling_config.get("record_mfu") is True, "bounded seq1024 memory preflight must record MFU", blockers)
+        require(
+            profiling_config.get("expected_result_package") == EXPECTED_SEQ1024_MEMORY_PREFLIGHT_RESULT_PACKAGE,
+            f"bounded seq1024 memory preflight expected_result_package must be {EXPECTED_SEQ1024_MEMORY_PREFLIGHT_RESULT_PACKAGE}",
+            blockers,
+        )
+        require(
+            validation_sampling_metadata["validation_sampling_config_present"] is True,
+            "bounded seq1024 memory preflight must declare validation_sampling",
+            blockers,
+        )
+        require(
+            validation_sampling_metadata["validation_sampling_policy"] == SHUFFLE_BUFFER,
+            "bounded seq1024 memory preflight validation_sampling must use shuffle_buffer",
+            blockers,
+        )
+        require(
+            isinstance(validation_sampling_metadata["validation_shuffle_seed"], int),
+            "bounded seq1024 memory preflight validation_sampling must declare integer shuffle_seed",
+            blockers,
+        )
+        require(
+            isinstance(validation_sampling_metadata["validation_shuffle_buffer_size"], int)
+            and validation_sampling_metadata["validation_shuffle_buffer_size"] > 1,
+            "bounded seq1024 memory preflight validation shuffle_buffer_size must be greater than 1",
+            blockers,
+        )
     else:
         require(max_steps in EXPECTED_EVAL_INTERVAL_BY_MAX_STEPS, f"max_steps must be one of: {supported_max_steps_text}", blockers)
         require(eval_interval == expected_eval_interval, f"eval_interval must be {expected_eval_interval} for {max_steps}-step public16k run", blockers)
@@ -402,8 +479,9 @@ def main() -> int:
     require(str(config["training"].get("save_interval")) == str(max_steps), "training.save_interval must equal max_steps", blockers)
     require(expected_run_name_text is not None and run_name == expected_run_name_text, f"run_name must be {expected_run_name_text}", blockers)
     require(output_dir.name == run_name, "output_dir basename must match run_name", blockers)
-    require(not has_stale_run_token(run_name), "run_name must not contain stale 10step/100step tokens", blockers)
-    require(not has_stale_run_token(output_dir_text), "output_dir must not contain stale 10step/100step tokens", blockers)
+    if not is_bounded_memory_preflight:
+        require(not has_stale_run_token(run_name), "run_name must not contain stale 10step/100step tokens", blockers)
+        require(not has_stale_run_token(output_dir_text), "output_dir must not contain stale 10step/100step tokens", blockers)
 
     loaded_tokenizer_vocab_size: int | None = None
     if tokenizer_path.exists():
@@ -490,8 +568,13 @@ def main() -> int:
         "checkpoint_path_expectation": repo_relative_path(expected_checkpoint_save_dir),
         "checkpoint_path_uses_output_dir": checkpoint_save_dir.resolve() == expected_checkpoint_save_dir.resolve(),
         "no_commit_checkpoints": no_commit_checkpoints,
-        "readiness_gate_type": "bounded_sdpa_profile" if is_bounded_profile else "training_execution",
+        "readiness_gate_type": "bounded_sdpa_profile"
+        if is_bounded_profile
+        else "bounded_seq1024_sdpa_memory_preflight"
+        if is_bounded_memory_preflight
+        else "training_execution",
         "is_bounded_profile": is_bounded_profile,
+        "is_bounded_memory_preflight": is_bounded_memory_preflight,
         "profiling_enabled": profiling_config.get("enabled"),
         "profiling_profile_mode": profiling_config.get("profile_mode"),
         "profiling_attention_backend": profiling_config.get("attention_backend"),

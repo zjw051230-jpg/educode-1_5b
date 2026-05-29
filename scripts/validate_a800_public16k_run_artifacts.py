@@ -15,6 +15,11 @@ SUPPORTED_MAX_STEPS = {1000, 3000, 5000}
 BOUNDED_PROFILE_MODE = "bounded_sdpa_profile"
 BOUNDED_PROFILE_MAX_STEPS = 50
 BOUNDED_PROFILE_ATTENTION_BACKEND = "sdpa"
+BOUNDED_MEMORY_PREFLIGHT_MODE = "bounded_seq1024_sdpa_memory_preflight"
+BOUNDED_MEMORY_PREFLIGHT_MAX_STEPS = 10
+BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH = 1024
+BOUNDED_MEMORY_PREFLIGHT_BATCH_SIZE = 4
+BOUNDED_MEMORY_PREFLIGHT_ATTENTION_BACKEND = "sdpa"
 
 
 def resolve_repo_path(path_text: str) -> Path:
@@ -107,6 +112,20 @@ def is_bounded_profile_config(run_config: dict[str, Any], summary: dict[str, Any
     )
 
 
+def is_bounded_memory_preflight_config(run_config: dict[str, Any], summary: dict[str, Any]) -> bool:
+    profiling_config = run_config.get("profiling")
+    if not isinstance(profiling_config, dict):
+        return False
+    run_name = str(summary.get("run_name") or run_config.get("run", {}).get("run_name", ""))
+    return (
+        str(profiling_config.get("profile_mode", "")).strip().lower() == BOUNDED_MEMORY_PREFLIGHT_MODE
+        and profiling_config.get("enabled") is True
+        and str(profiling_config.get("attention_backend", "")).strip().lower()
+        == BOUNDED_MEMORY_PREFLIGHT_ATTENTION_BACKEND
+        and run_name.endswith("_seq1024_sdpa_memory_preflight")
+    )
+
+
 def expected_validation_rows_for_config(run_config: dict[str, Any], max_steps: int) -> int | None:
     training_config = run_config.get("training", {}) if isinstance(run_config.get("training"), dict) else {}
     eval_interval = training_config.get("eval_interval")
@@ -189,6 +208,64 @@ def validate_bounded_profile_artifact(
     warn_unless(bool(validation_rows), "bounded profile validation metrics are empty", caveats)
 
 
+def validate_bounded_memory_preflight_artifact(
+    summary: dict[str, Any],
+    run_config: dict[str, Any],
+    metrics_rows: list[dict[str, Any]],
+    validation_rows: list[dict[str, Any]],
+    metrics_rows_actual: int,
+    validation_rows_actual: int,
+    validation_rows_summary: Any,
+    max_steps: Any,
+    blockers: list[str],
+    caveats: list[str],
+) -> None:
+    profiling_config = run_config.get("profiling", {}) if isinstance(run_config.get("profiling"), dict) else {}
+    training_config = run_config.get("training", {}) if isinstance(run_config.get("training"), dict) else {}
+    model_config = run_config.get("model", {}) if isinstance(run_config.get("model"), dict) else {}
+    data_config = run_config.get("data", {}) if isinstance(run_config.get("data"), dict) else {}
+    expected_validation_rows = expected_validation_rows_for_config(run_config, int(max_steps)) if isinstance(max_steps, int) else None
+
+    require(max_steps == BOUNDED_MEMORY_PREFLIGHT_MAX_STEPS, "bounded seq1024 memory preflight summary max_steps must be 10", blockers)
+    require(summary.get("metrics_rows") == BOUNDED_MEMORY_PREFLIGHT_MAX_STEPS, "bounded seq1024 memory preflight summary metrics_rows must equal 10", blockers)
+    require(metrics_rows_actual == BOUNDED_MEMORY_PREFLIGHT_MAX_STEPS, "bounded seq1024 memory preflight metrics.jsonl actual rows must equal 10", blockers)
+    require(isinstance(validation_rows_summary, int), "bounded seq1024 memory preflight summary validation_rows must be an integer", blockers)
+    if isinstance(validation_rows_summary, int):
+        require(validation_rows_summary >= 1, "bounded seq1024 memory preflight validation_rows must be at least 1", blockers)
+        require(validation_rows_actual == validation_rows_summary, "bounded seq1024 memory preflight validation rows actual must match summary", blockers)
+    if expected_validation_rows is not None:
+        require(
+            validation_rows_actual == expected_validation_rows,
+            f"bounded seq1024 memory preflight validation rows must equal config-derived expected rows {expected_validation_rows}",
+            blockers,
+        )
+
+    require(profiling_config.get("profile_mode") == BOUNDED_MEMORY_PREFLIGHT_MODE, "bounded seq1024 memory preflight run_config profiling.profile_mode mismatch", blockers)
+    require(profiling_config.get("attention_backend") == BOUNDED_MEMORY_PREFLIGHT_ATTENTION_BACKEND, "bounded seq1024 memory preflight attention_backend must be sdpa", blockers)
+    require(profiling_config.get("record_tokens_per_sec") is True, "bounded seq1024 memory preflight must enable record_tokens_per_sec", blockers)
+    require(profiling_config.get("record_memory") is True, "bounded seq1024 memory preflight must enable record_memory", blockers)
+    require(profiling_config.get("record_mfu") is True, "bounded seq1024 memory preflight must enable record_mfu", blockers)
+    require(model_config.get("context_length") == BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH, "bounded seq1024 memory preflight model.context_length must be 1024", blockers)
+    require(data_config.get("sequence_length") == BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH, "bounded seq1024 memory preflight data.sequence_length must be 1024", blockers)
+    require(training_config.get("sequence_length") == BOUNDED_MEMORY_PREFLIGHT_CONTEXT_LENGTH, "bounded seq1024 memory preflight training.sequence_length must be 1024", blockers)
+    require(training_config.get("batch_size") == BOUNDED_MEMORY_PREFLIGHT_BATCH_SIZE, "bounded seq1024 memory preflight batch_size must be 4", blockers)
+    require(max_steps != 10000, "bounded seq1024 memory preflight must not be a 10000-step run", blockers)
+
+    require(is_finite_number(summary.get("final_train_loss")), "bounded seq1024 memory preflight final_train_loss must be finite", blockers)
+    final_val_loss = summary.get("final_val_loss", summary.get("final_validation_loss"))
+    if final_val_loss is not None:
+        require(is_finite_number(final_val_loss), "bounded seq1024 memory preflight final validation loss must be finite when present", blockers)
+
+    warn_unless(any("tokens_per_sec" in row for row in metrics_rows), "bounded seq1024 memory preflight metrics do not include tokens_per_sec rows", caveats)
+    warn_unless(
+        any("gpu_memory_allocated_gib" in row or "gpu_memory_reserved_gib" in row for row in metrics_rows),
+        "bounded seq1024 memory preflight metrics do not include GPU memory rows",
+        caveats,
+    )
+    warn_unless(any("mfu" in row for row in metrics_rows), "bounded seq1024 memory preflight metrics do not include MFU rows", caveats)
+    warn_unless(bool(validation_rows), "bounded seq1024 memory preflight validation metrics are empty", caveats)
+
+
 def main() -> int:
     args = parse_args()
     output_dir = Path(args.output_dir)
@@ -224,9 +301,12 @@ def main() -> int:
     checkpoint_path_value = summary.get("checkpoint_path") if summary else None
     checkpoint_path = resolve_repo_path(checkpoint_path_value) if isinstance(checkpoint_path_value, str) else None
     checkpoint_path_starts_with_output_dir = bool(checkpoint_path and path_is_under(checkpoint_path, output_dir))
-    artifact_validation_gate_type = (
-        "bounded_sdpa_profile" if summary and run_config and is_bounded_profile_config(run_config, summary) else "training_execution"
-    )
+    if summary and run_config and is_bounded_profile_config(run_config, summary):
+        artifact_validation_gate_type = "bounded_sdpa_profile"
+    elif summary and run_config and is_bounded_memory_preflight_config(run_config, summary):
+        artifact_validation_gate_type = "bounded_seq1024_sdpa_memory_preflight"
+    else:
+        artifact_validation_gate_type = "training_execution"
 
     if summary:
         require(summary.get("success") is True, "summary success must be true", blockers)
@@ -239,6 +319,19 @@ def main() -> int:
         require(summary.get("exact_parameter_count") is not None, "exact_parameter_count must be present", blockers)
         if artifact_validation_gate_type == "bounded_sdpa_profile":
             validate_bounded_profile_artifact(
+                summary=summary,
+                run_config=run_config,
+                metrics_rows=metrics_rows,
+                validation_rows=validation_rows,
+                metrics_rows_actual=metrics_rows_actual,
+                validation_rows_actual=validation_rows_actual,
+                validation_rows_summary=validation_rows_summary,
+                max_steps=max_steps,
+                blockers=blockers,
+                caveats=caveats,
+            )
+        elif artifact_validation_gate_type == "bounded_seq1024_sdpa_memory_preflight":
+            validate_bounded_memory_preflight_artifact(
                 summary=summary,
                 run_config=run_config,
                 metrics_rows=metrics_rows,
