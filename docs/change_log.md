@@ -1,5 +1,30 @@
 # Change Log
 
+## 2026-06-06 - feature/distributed-launch-feasibility
+
+- Technical direction: FSDP / ZeRO / Megatron feasibility docs and protected launch command planner.
+- Modified files:
+  - `scripts/plan_distributed_launch.py`
+  - `scripts/check_fsdp_zero_feasibility.py`
+  - `tests/test_distributed_launch_planner.py`
+  - `docs/fsdp_zero_megatron_feasibility.md`
+  - `docs/distributed_launch_planner.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe tests\test_distributed_launch_planner.py` (red: missing launch planner before implementation)
+  - `.\.venv\Scripts\python.exe -m py_compile scripts\plan_distributed_launch.py scripts\check_fsdp_zero_feasibility.py tests\test_distributed_launch_planner.py`
+  - `.\.venv\Scripts\python.exe scripts\plan_distributed_launch.py`
+  - `.\.venv\Scripts\python.exe scripts\check_fsdp_zero_feasibility.py`
+  - `.\.venv\Scripts\python.exe tests\test_distributed_launch_planner.py`
+  - `git diff --check`
+- Validation result: passed; launch planner scripts completed and unit tests ran 4 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review command templates before any multi-GPU execution plan.
+- User cost confirmation needed: no for local planner; yes before future distributed launch.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
