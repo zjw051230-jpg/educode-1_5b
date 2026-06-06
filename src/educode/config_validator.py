@@ -37,6 +37,12 @@ ALLOWED_TOKENIZER_TYPES = {
     "bpe",
 }
 
+ALLOWED_POSITION_ENCODINGS = {
+    "learned",
+    "learned_position_embedding",
+    "rope",
+}
+
 
 def get_nested(config: dict[str, Any], path: str, default: Any = None) -> Any:
     current: Any = config
@@ -139,6 +145,13 @@ def validate_config(config: dict[str, Any], repo_root: str | Path | None = None)
     architecture = get_nested(config, "model.architecture")
     if architecture != "dense_decoder_only":
         errors.append("model.architecture must be dense_decoder_only")
+
+    position_encoding = str(get_nested(config, "model.position_encoding", "learned_position_embedding")).strip().lower()
+    if position_encoding not in ALLOWED_POSITION_ENCODINGS:
+        errors.append("model.position_encoding must be one of: learned, learned_position_embedding, rope")
+    rope_theta = get_nested(config, "model.rope_theta")
+    if rope_theta is not None and (not isinstance(rope_theta, (int, float)) or float(rope_theta) <= 0):
+        errors.append("model.rope_theta must be positive when provided")
 
     ffn_type = get_nested(config, "model.ffn_type")
     if ffn_type == "moe":
