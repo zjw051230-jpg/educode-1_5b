@@ -1,5 +1,31 @@
 # Change Log
 
+## 2026-06-06 - feature/sequence-packing-v2
+
+- Technical direction: sequence packing v2 and document boundary metadata.
+- Modified files:
+  - `src/educode/packing.py`
+  - `src/educode/document_boundaries.py`
+  - `scripts/build_packing_report.py`
+  - `scripts/analyze_token_utilization_v2.py`
+  - `tests/test_sequence_packing_v2.py`
+  - `docs/sequence_packing_v2.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe tests\test_sequence_packing_v2.py` (red: missing packing modules before implementation)
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\packing.py src\educode\document_boundaries.py scripts\build_packing_report.py scripts\analyze_token_utilization_v2.py tests\test_sequence_packing_v2.py`
+  - `.\.venv\Scripts\python.exe scripts\build_packing_report.py`
+  - `.\.venv\Scripts\python.exe scripts\analyze_token_utilization_v2.py`
+  - `.\.venv\Scripts\python.exe tests\test_sequence_packing_v2.py`
+  - `git diff --check`
+- Validation result: passed; report scripts completed and unit tests ran 3 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review mask semantics before using with real datasets.
+- User cost confirmation needed: no, local synthetic fixtures only.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
