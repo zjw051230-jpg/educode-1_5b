@@ -1,44 +1,31 @@
 # Reproducibility Checklist
 
-## 1. Config
-- config path: `configs/windows/smoke_cuda_10m.json`
-- config is JSON parseable
-- config is validated before runs
-- `run_config.json` snapshot is written per run
+Use this checklist before presenting a run or profiling result.
 
-## 2. Code Version
-- git commit hash should be recorded
-- git branch should be recorded
-- working tree should be clean before demo runs
+## Evidence Boundaries
 
-## 3. Environment
-Record and verify:
-- Python version
-- torch version
-- CUDA availability
-- GPU name
-- GPU memory
+- [ ] Identify whether the evidence is quality training, systems profiling, or memory preflight.
+- [ ] State that short profiling losses are sanity signals only.
+- [ ] Avoid unsupported claims about production model quality.
+- [ ] Avoid speedup claims unless a matching baseline exists.
 
-## 4. Run Artifacts
-Each run should generate:
-- `run_metadata.json`
-- `run_config.json`
-- `metrics.jsonl`
-- `generation_samples.jsonl`
-- `checkpoints_manifest.json`
-- `summary.md`
+## Artifact Hygiene
 
-## 5. What Is Not Tracked
-- checkpoints
-- generated run directories
-- logs
-- raw datasets
-- model weights
+- [ ] Raw datasets are not committed.
+- [ ] Prepared data is not committed.
+- [ ] Root-level result tarballs are not committed.
+- [ ] Checkpoints are not committed.
+- [ ] Imported result files are small files such as `summary.json`, `metrics.jsonl`, and `validation_metrics.jsonl`.
 
-## 6. Current Known Reproducible Demo
-- script: `scripts/run_resume_demo.py`
-- underlying script: `scripts/run_50_step_toy_training.py`
-- max_steps: `50`
-- hardware: `RTX 4060 Ti`
-- best documented result: `first_loss 9.188724 -> final_loss 4.837882`
-- checkpoint reload match: `True`
+## Environment
+
+- [ ] Capture repo commit and branch.
+- [ ] Capture config path.
+- [ ] Capture Python and package versions with `scripts/capture_environment_summary.py`.
+- [ ] Record whether Modal, GPU, or training was run.
+
+## Local Branch Guardrail
+
+- Modal/GPU/training run: no for this branch.
+- User cost confirmation needed: no for this branch.
+- Tarball/checkpoint/raw data commit: no for this branch.

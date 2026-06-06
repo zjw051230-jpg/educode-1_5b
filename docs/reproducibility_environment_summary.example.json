@@ -1,0 +1,7 @@
+{
+  "environment_summary_status": "example",
+  "modal_gpu_training_run": false,
+  "notes": [
+    "Run scripts/capture_environment_summary.py --output <path> to produce a local summary."
+  ]
+}
