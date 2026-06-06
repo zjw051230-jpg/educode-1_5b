@@ -23,6 +23,7 @@ This is not a finished foundation model. The repository is evidence for building
 ## Details
 
 - Experiment index: `docs/experiment_index.md`
+- Experimental branch inventory: `docs/branch_asset_inventory.md`
 - 5GB training analysis: `docs/mvp_27_a_5gb_3000step_result_analysis.md`
 - seq512 SDPA analysis: `docs/mvp_28_a_sdpa_profile_result_analysis.md`
 - seq1024 memory preflight analysis: `docs/mvp_29_a_seq1024_memory_preflight_result_analysis.md`
