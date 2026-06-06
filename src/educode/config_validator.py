@@ -144,6 +144,28 @@ def validate_config(config: dict[str, Any], repo_root: str | Path | None = None)
     if ffn_type == "moe":
         errors.append("model.ffn_type must not be moe")
 
+    moe_config = config.get("moe")
+    if moe_config is not None:
+        if not isinstance(moe_config, dict):
+            errors.append("moe must be an object when provided")
+        else:
+            enabled = moe_config.get("enabled", False)
+            if not isinstance(enabled, bool):
+                errors.append("moe.enabled must be a boolean")
+            if enabled:
+                errors.append("moe.enabled=true is prepared-only and must not be used in training configs")
+            num_experts = moe_config.get("num_experts")
+            top_k = moe_config.get("top_k")
+            capacity_factor = moe_config.get("capacity_factor", 1.25)
+            if num_experts is not None and (not isinstance(num_experts, int) or num_experts <= 0):
+                errors.append("moe.num_experts must be a positive integer")
+            if top_k is not None and (not isinstance(top_k, int) or top_k <= 0):
+                errors.append("moe.top_k must be a positive integer")
+            if isinstance(num_experts, int) and isinstance(top_k, int) and top_k > num_experts:
+                errors.append("moe.top_k must be <= moe.num_experts")
+            if not isinstance(capacity_factor, (int, float)) or float(capacity_factor) <= 0:
+                errors.append("moe.capacity_factor must be positive")
+
     d_model = get_nested(config, "model.d_model")
     num_heads = get_nested(config, "model.num_heads")
     head_dim = get_nested(config, "model.head_dim")
