@@ -7,6 +7,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+from educode.attention_backends import causal_attention, normalize_attention_backend
+
 
 @dataclass
 class TinyModelConfig:
@@ -36,8 +38,7 @@ class TinyModelConfig:
             raise ValueError("d_model must be divisible by num_heads")
         if not isinstance(self.dropout, (int, float)) or not 0.0 <= float(self.dropout) <= 1.0:
             raise ValueError("dropout must be between 0.0 and 1.0")
-        if self.attention_backend != "sdpa":
-            raise ValueError("attention_backend must be sdpa")
+        self.attention_backend = normalize_attention_backend(self.attention_backend)
 
         self.dropout = float(self.dropout)
 
@@ -61,9 +62,7 @@ class RMSNorm(nn.Module):
 class CausalSelfAttention(nn.Module):
     def __init__(self, config: TinyModelConfig) -> None:
         super().__init__()
-        if config.attention_backend != "sdpa":
-            raise ValueError("CausalSelfAttention only supports attention_backend='sdpa'")
-
+        self.attention_backend = normalize_attention_backend(config.attention_backend)
         self.num_heads = config.num_heads
         self.head_dim = config.head_dim
         self.dropout = config.dropout
@@ -79,12 +78,13 @@ class CausalSelfAttention(nn.Module):
         k = k.view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
         v = v.view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
 
-        attn_output = F.scaled_dot_product_attention(
+        attn_output = causal_attention(
             q,
             k,
             v,
+            backend=self.attention_backend,
             dropout_p=self.dropout if self.training else 0.0,
-            is_causal=True,
+            training=self.training,
         )
         attn_output = attn_output.transpose(1, 2).contiguous().view(batch_size, seq_len, d_model)
         return self.out_proj(attn_output)
