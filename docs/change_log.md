@@ -1,5 +1,27 @@
 # Change Log
 
+## 2026-06-07 - feature/instruction-tuning-data-skeleton
+
+- Technical direction: local instruction-tuning sample schema, JSONL validator, and prompt/completion converter.
+- Modified files:
+  - `src/educode/instruction_data.py`
+  - `scripts/validate_instruction_dataset.py`
+  - `tests/test_instruction_data.py`
+  - `docs/instruction_tuning_data_skeleton.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\instruction_data.py scripts\validate_instruction_dataset.py tests\test_instruction_data.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_instruction_dataset.py`
+  - `.\.venv\Scripts\python.exe tests\test_instruction_data.py`
+  - `git diff --check`
+- Validation result: passed; synthetic validator accepted 1 sample, rejected 0 samples, and unit tests ran 6 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review schema before any real SFT data ingestion or training branch.
+- User cost confirmation needed: no, local synthetic validation only.
+
 ## 2026-06-07 - branch asset inventory v2
 
 - Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.
