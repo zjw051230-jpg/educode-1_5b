@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import torch
-from torch.nn import functional as F
+
+from educode.sampling import greedy_token, sample_token, validate_sampling_args
 
 
 def safe_decode_token_ids(token_ids: list[int]) -> str:
@@ -9,25 +10,23 @@ def safe_decode_token_ids(token_ids: list[int]) -> str:
     return bytes(safe_token_ids).decode("utf-8", errors="replace")
 
 
-def sample_next_token(logits: torch.Tensor, temperature: float = 1.0, top_k: int | None = None) -> int:
+def sample_next_token(
+    logits: torch.Tensor,
+    temperature: float = 1.0,
+    top_k: int | None = None,
+    top_p: float | None = None,
+    *,
+    generator: torch.Generator | None = None,
+) -> int:
     if not isinstance(logits, torch.Tensor):
         raise TypeError("logits must be a torch.Tensor")
-    if logits.ndim != 1:
-        raise ValueError("logits must have shape [vocab_size]")
-    if temperature <= 0:
-        raise ValueError("temperature must be greater than 0")
+    return int(sample_token(logits, temperature=temperature, top_k=top_k, top_p=top_p, generator=generator).item())
 
-    scaled_logits = logits / temperature
-    if top_k is not None and top_k > 0:
-        k = min(top_k, scaled_logits.shape[0])
-        top_values, top_indices = torch.topk(scaled_logits, k=k)
-        probabilities = F.softmax(top_values, dim=-1)
-        sampled_index = torch.multinomial(probabilities, num_samples=1)
-        return int(top_indices[sampled_index].item())
 
-    probabilities = F.softmax(scaled_logits, dim=-1)
-    sampled_index = torch.multinomial(probabilities, num_samples=1)
-    return int(sampled_index.item())
+def greedy_next_token(logits: torch.Tensor) -> int:
+    if not isinstance(logits, torch.Tensor):
+        raise TypeError("logits must be a torch.Tensor")
+    return int(greedy_token(logits).item())
 
 
 def generate_token_ids(
@@ -38,13 +37,23 @@ def generate_token_ids(
     device,
     temperature: float = 1.0,
     top_k: int | None = None,
+    top_p: float | None = None,
+    eos_token_id: int | None = None,
+    strategy: str = "sample",
+    seed: int | None = None,
 ) -> list[int]:
     if not isinstance(prompt, str):
         raise TypeError("prompt must be a str")
     if not isinstance(max_new_tokens, int) or max_new_tokens <= 0:
         raise ValueError("max_new_tokens must be a positive integer")
+    if strategy not in {"greedy", "sample"}:
+        raise ValueError("strategy must be greedy or sample")
+    validate_sampling_args(temperature=temperature, top_k=top_k, top_p=top_p)
 
     token_ids = tokenizer.encode(prompt)
+    generator = torch.Generator(device="cpu")
+    if seed is not None:
+        generator.manual_seed(seed)
     model.eval()
 
     for _ in range(max_new_tokens):
@@ -54,8 +63,19 @@ def generate_token_ids(
         with torch.no_grad():
             logits = model(input_ids)
         next_token_logits = logits[0, -1, :]
-        next_token_id = sample_next_token(next_token_logits, temperature=temperature, top_k=top_k)
+        if strategy == "greedy":
+            next_token_id = greedy_next_token(next_token_logits)
+        else:
+            next_token_id = sample_next_token(
+                next_token_logits,
+                temperature=temperature,
+                top_k=top_k,
+                top_p=top_p,
+                generator=generator,
+            )
         token_ids.append(next_token_id)
+        if eos_token_id is not None and next_token_id == eos_token_id:
+            break
 
     return token_ids
 
@@ -68,6 +88,10 @@ def generate_text(
     device,
     temperature: float = 1.0,
     top_k: int | None = None,
+    top_p: float | None = None,
+    eos_token_id: int | None = None,
+    strategy: str = "sample",
+    seed: int | None = None,
 ) -> str:
     token_ids = generate_token_ids(
         model=model,
@@ -77,6 +101,10 @@ def generate_text(
         device=device,
         temperature=temperature,
         top_k=top_k,
+        top_p=top_p,
+        eos_token_id=eos_token_id,
+        strategy=strategy,
+        seed=seed,
     )
 
     try:
