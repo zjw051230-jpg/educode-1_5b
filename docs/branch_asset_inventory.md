@@ -1,22 +1,24 @@
 # Branch Asset Inventory
 
-This inventory records remote branch assets as of `main` commit `565fc42` (`docs: update branch asset inventory`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
+This inventory records remote branch assets as of `main` commit `d056373` (`docs: update branch asset inventory`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
 
 ## Overview
 
-- Current main commit at V2 refresh start: `565fc42`
-- Current remote non-main branches total: `44`
-- Detailed branch assets covered: `36`
-- Remote non-main branches not yet detailed: `8`
+- Current main commit at V3 refresh start: `d056373`
+- Current remote non-main branches total: `46`
+- Detailed branch assets covered: `46`
+- Remote non-main branches not yet detailed: `0`
 - Main status at inventory time: `main...origin/main`
 - Scope: branch-level assets, likely review order, risk notes, and GPU/Modal gates.
 - V2 update: second-batch data-driven branches are included in a dedicated section below.
+- V3 update: third-batch wide-net engineering branches are included in a dedicated section below.
 
 ## Remote Coverage Snapshot
 
-- Covered in detailed inventory: `36` branches.
+- Covered in detailed inventory: `46` branches.
 - Second-batch data-driven branches covered in this update: `9` branches.
-- Remote branches still listed for later inventory expansion: `feature/auto-report-packager`, `feature/cli-experiment-manager`, `feature/eval-benchmark-harness`, `feature/instruction-tuning-data-skeleton`, `feature/model-compression-distillation`, `feature/rag-retrieval-skeleton`, `feature/run-registry-database`, `feature/serving-api-skeleton`.
+- Third-batch wide-net branches covered in this update: `10` branches.
+- Remote branches still listed for later inventory expansion: none.
 
 ## Categories
 
@@ -32,23 +34,33 @@ This inventory records remote branch assets as of `main` commit `565fc42` (`docs
 - diagnostics/reporting
 - memory/training systems
 - preference/reward
+- SFT/instruction data
+- retrieval/RAG
+- compression/distillation
+- serving/API
+- safety/filtering
 
 ## Completed Technical Branch Classification
 
-| Category | Branches |
-| --- | --- |
-| docs/roadmap | `docs/notebooklm-tech-synthesis`, `docs/llm-systems-survey-roadmap`, `feature/experiment-planner` |
-| inference/eval | `feature/inference-kv-cache-harness-v2`, `feature/inference-eval-harness` |
-| attention/backend | `feature/attention-backend-abstraction-v2`, `feature/attention-backend-abstraction`, `feature/attention-backend-prep`, `feature/flashattention-feasibility` |
-| optimizer | `feature/muon-experimental-optimizer`, `feature/optimizer-registry-muon` |
-| MoE | `feature/moe-routing-skeleton-v2`, `feature/moe-routing-prep` |
-| RoPE/long context | `feature/rope-position-encoding-v2`, `feature/rope-position-prep` |
-| PEFT/LoRA | `feature/lora-peft-skeleton`, `feature/lora-peft-v2` |
-| quantization | `feature/quantization-qlora-feasibility`, `feature/qlora-quantization-v2` |
-| data/packing/quality | `feature/sequence-packing-data-utilization`, `feature/dataset-quality-dedup`, `feature/sequence-packing-v2`, `feature/dataset-quality-dedup-v2`, `feature/tokenizer-stats-analyzer` |
-| diagnostics/reporting | `feature/training-report-generator`, `feature/loss-metric-diagnostics`, `feature/profiling-matrix-planner` |
-| memory/training systems | `feature/checkpoint-artifact-hygiene`, `feature/config-schema-hardening`, `feature/memory-knobs-activation-checkpointing`, `feature/distributed-config-memory-estimator`, `feature/distributed-launch-feasibility`, `feature/activation-checkpointing-v2` |
-| preference/reward | `feature/preference-optimization-skeleton`, `feature/reward-model-skeleton` |
+| Category | Count | Branches |
+| --- | ---: | --- |
+| docs/roadmap | 3 | `docs/notebooklm-tech-synthesis`, `docs/llm-systems-survey-roadmap`, `feature/experiment-planner` |
+| inference/eval | 3 | `feature/inference-kv-cache-harness-v2`, `feature/inference-eval-harness`, `feature/eval-benchmark-harness` |
+| attention/backend | 4 | `feature/attention-backend-abstraction-v2`, `feature/attention-backend-abstraction`, `feature/attention-backend-prep`, `feature/flashattention-feasibility` |
+| optimizer | 2 | `feature/muon-experimental-optimizer`, `feature/optimizer-registry-muon` |
+| MoE | 2 | `feature/moe-routing-skeleton-v2`, `feature/moe-routing-prep` |
+| RoPE/long context | 2 | `feature/rope-position-encoding-v2`, `feature/rope-position-prep` |
+| PEFT/LoRA | 2 | `feature/lora-peft-skeleton`, `feature/lora-peft-v2` |
+| quantization | 2 | `feature/quantization-qlora-feasibility`, `feature/qlora-quantization-v2` |
+| data/packing/quality | 6 | `feature/sequence-packing-data-utilization`, `feature/dataset-quality-dedup`, `feature/sequence-packing-v2`, `feature/dataset-quality-dedup-v2`, `feature/tokenizer-stats-analyzer`, `feature/tokenizer-training-feasibility` |
+| diagnostics/reporting | 6 | `feature/training-report-generator`, `feature/loss-metric-diagnostics`, `feature/profiling-matrix-planner`, `feature/cli-experiment-manager`, `feature/run-registry-database`, `feature/auto-report-packager` |
+| memory/training systems | 6 | `feature/checkpoint-artifact-hygiene`, `feature/config-schema-hardening`, `feature/memory-knobs-activation-checkpointing`, `feature/distributed-config-memory-estimator`, `feature/distributed-launch-feasibility`, `feature/activation-checkpointing-v2` |
+| preference/reward | 2 | `feature/preference-optimization-skeleton`, `feature/reward-model-skeleton` |
+| SFT/instruction data | 1 | `feature/instruction-tuning-data-skeleton` |
+| retrieval/RAG | 1 | `feature/rag-retrieval-skeleton` |
+| compression/distillation | 1 | `feature/model-compression-distillation` |
+| serving/API | 1 | `feature/serving-api-skeleton` |
+| safety/filtering | 1 | `feature/safety-filter-skeleton` |
 
 ## Second-Batch Data-Driven Branches
 
@@ -63,6 +75,21 @@ This inventory records remote branch assets as of `main` commit `565fc42` (`docs
 | `feature/sequence-packing-v2` | `7ffbc0f` | data/packing/quality | Packing, document boundaries, loss mask skeleton, report scripts. | `src/educode/packing.py`, `src/educode/document_boundaries.py`, `scripts/build_packing_report.py`, `scripts/analyze_token_utilization_v2.py`, `tests/test_sequence_packing_v2.py`, `docs/sequence_packing_v2.md` | py_compile, 2 report scripts, 3 tests, diff check passed. | No for synthetic utility; yes before training integration. | Low | review soon |
 | `feature/dataset-quality-dedup-v2` | `81a641f` | data/packing/quality | Exact/near duplicate detection, quality stats, MinHash placeholder. | `src/educode/data_quality.py`, `src/educode/dedup.py`, `scripts/analyze_dataset_quality_v2.py`, `tests/test_data_quality_v2.py`, `tests/test_dedup_v2.py`, `docs/dataset_quality_dedup_v2.md` | py_compile, quality script, 4 tests, diff check passed. | No for tiny fixtures; yes before large corpus scan. | Low | review soon |
 | `feature/tokenizer-stats-analyzer` | `1a638a9` | data/packing/quality | Tokenizer stats, frequency, special/unknown token rate, bytes-per-token proxy. | `src/educode/tokenizer_stats.py`, `scripts/analyze_tokenizer_stats.py`, `tests/test_tokenizer_stats.py`, `docs/tokenizer_stats_analyzer.md` | py_compile, analyzer script, 2 tests, diff check passed. | No | Low | review soon |
+
+## Third-Batch Wide-Net Branches
+
+| Branch | Commit | Category | Main Content | Local Validation Result | GPU/Modal Gate | Risk | Suggested Action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `feature/eval-benchmark-harness` | `63bb5fd` | inference/eval | Synthetic evaluation benchmark tasks, exact-match / multiple-choice / perplexity skeleton metrics, and validator. | smoke script, validator, 4 tests, and diff check passed. | Yes for real checkpoint eval. | Low | review soon |
+| `feature/cli-experiment-manager` | `6d473d9` | diagnostics/reporting | Local CLI for listing runs and project utilities; no Modal or training execution command. | help, `list-runs`, 3 tests, and diff check passed. | No | Low | review soon |
+| `feature/run-registry-database` | `d700f97` | diagnostics/reporting | JSONL run registry schema, imported summary metadata reader, append/load/query helpers. | dry-run found 12 summary records, 3 tests, and diff check passed. | No | Low | review soon |
+| `feature/auto-report-packager` | `4b8c166` | diagnostics/reporting | Deterministic report packager for docs and small imported summaries; excludes tarballs/checkpoints/raw data. | dry-run found 400 safe sources, 4 tests, and diff check passed. | No | Low | review soon |
+| `feature/instruction-tuning-data-skeleton` | `846eff4` | SFT/instruction data | Chat/SFT sample schema, JSONL validator, token estimate, and prompt/completion converter. | synthetic validator, 6 tests, and diff check passed. | Yes for SFT training. | Medium | needs deeper review |
+| `feature/rag-retrieval-skeleton` | `f379099` | retrieval/RAG | Token-overlap retriever, retrieval evaluator, and RAG context builder with citations. | synthetic hit_rate 1.0, 5 tests, and diff check passed. | Yes for real retrieval-augmented inference. | Medium | needs deeper review |
+| `feature/model-compression-distillation` | `06e17c1` | compression/distillation | Pure-Python distillation KL loss, teacher logits interface placeholder, and compression metadata. | finite KL validator, 5 tests, and diff check passed. | Yes for teacher/student distillation run. | High | experimental only |
+| `feature/tokenizer-training-feasibility` | `5d89615` | data/packing/quality | Tokenizer training config, special-token policy, and toy byte tokenizer fixture. | toy round-trip OK, 5 tests, and diff check passed. | Yes for tokenizer training on a real corpus. | Medium | needs deeper review |
+| `feature/serving-api-skeleton` | `1176e5e` | serving/API | Generate schema, fake backend, health/metadata helpers, optional FastAPI app builder. | fake backend validator, 5 tests, and diff check passed. | Yes for real checkpoint serving / latency test. | Medium | needs deeper review |
+| `feature/safety-filter-skeleton` | `f91c47a` | safety/filtering | Rule-based safety/content filter and report skeleton. | 2 synthetic unsafe samples flagged, 5 tests, and diff check passed. | No | Low | review soon |
 
 ## Branch Table
 
@@ -103,27 +130,33 @@ Low-risk branches should be reviewed before branches that alter model internals,
 ### Low Risk First
 
 1. `docs/llm-systems-survey-roadmap`
-2. `feature/tokenizer-stats-analyzer`
-3. `feature/training-report-generator`
-4. `feature/loss-metric-diagnostics`
-5. `feature/model-card-reproducibility`
-6. `feature/sequence-packing-v2`
-7. `feature/dataset-quality-dedup-v2`
-8. `feature/sequence-packing-data-utilization`
-9. `feature/dataset-quality-dedup`
-10. `feature/inference-kv-cache-harness-v2`
+2. `feature/cli-experiment-manager`
+3. `feature/run-registry-database`
+4. `feature/auto-report-packager`
+5. `feature/safety-filter-skeleton`
+6. `feature/tokenizer-stats-analyzer`
+7. `feature/training-report-generator`
+8. `feature/loss-metric-diagnostics`
+9. `feature/model-card-reproducibility`
+10. `feature/eval-benchmark-harness`
+11. `feature/sequence-packing-v2`
+12. `feature/dataset-quality-dedup-v2`
 
 ### Medium Risk
 
+- `feature/instruction-tuning-data-skeleton`
+- `feature/rag-retrieval-skeleton`
+- `feature/tokenizer-training-feasibility`
+- `feature/serving-api-skeleton`
 - `feature/lora-peft-v2`
 - `feature/qlora-quantization-v2`
 - `feature/lora-peft-skeleton`
 - `feature/quantization-qlora-feasibility`
-- `feature/rope-position-encoding-v2`
-- `feature/attention-backend-abstraction-v2`
+- `feature/inference-kv-cache-harness-v2`
 
 ### High Risk / Experimental Only
 
+- `feature/model-compression-distillation`
 - `feature/distributed-config-memory-estimator`
 - `feature/distributed-launch-feasibility`
 - `feature/activation-checkpointing-v2`
@@ -169,6 +202,12 @@ The following follow-up work requires explicit paid GPU/Modal confirmation befor
 - MoE training/profiling.
 - RoPE long-context profiling.
 - Real checkpoint inference.
+- Real checkpoint eval.
+- SFT training.
+- Real retrieval-augmented inference.
+- Teacher/student distillation run.
+- Tokenizer training on a real corpus.
+- Real checkpoint serving / latency test.
 - Reward/preference tuning.
 
 ## Do Not Claim Yet
@@ -184,6 +223,12 @@ These claims require real review, gated execution, and measured evidence before 
 - Do not claim FlashAttention accelerates this project.
 - Do not claim tokenizer, packing, or dedup utilities improve loss.
 - Do not claim seq1024 long training is safe; current evidence supports only short profiling/preflight no-OOM for bounded runs.
+- Do not claim eval benchmark results represent real model ability unless a real checkpoint is evaluated.
+- Do not claim RAG improves answer quality.
+- Do not claim distillation is effective.
+- Do not claim the tokenizer toy implementation can replace real tokenizer training.
+- Do not claim the serving API is production-ready.
+- Do not claim the safety filter is sufficient for safety.
 
 ## Current Prohibitions
 

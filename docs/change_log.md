@@ -1,5 +1,22 @@
 # Change Log
 
+## 2026-06-07 - branch asset inventory v3
+
+- Technical direction: update branch inventory with third-batch wide-net branches, category counts, review order, GPU gates, and claims boundaries.
+- Modified files:
+  - `docs/branch_asset_inventory.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `git diff --check`
+  - `git diff --cached --check`
+- Validation result: passed; `git diff --check` reported no whitespace errors.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review low-risk local tooling branches before medium-risk SFT/RAG/serving or high-risk distillation/model-internal branches.
+- User cost confirmation needed: no, documentation-only inventory update.
+
 ## 2026-06-07 - branch asset inventory v2 refresh
 
 - Technical direction: refresh branch inventory V2 metadata with current remote branch totals, coverage snapshot, and GPU gate wording.
