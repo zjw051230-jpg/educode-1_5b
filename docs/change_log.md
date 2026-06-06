@@ -1,5 +1,28 @@
 # Change Log
 
+## 2026-06-07 - feature/serving-api-skeleton
+
+- Technical direction: local serving API schema and fake backend skeleton.
+- Modified files:
+  - `src/educode/serving_schema.py`
+  - `src/educode/serving.py`
+  - `scripts/validate_serving_api.py`
+  - `tests/test_serving_schema.py`
+  - `docs/serving_api_skeleton.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\serving_schema.py src\educode\serving.py scripts\validate_serving_api.py tests\test_serving_schema.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_serving_api.py`
+  - `.\.venv\Scripts\python.exe tests\test_serving_schema.py`
+  - `git diff --check`
+- Validation result: passed; local validator used fake backend without starting a server and unit tests ran 5 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review real checkpoint inference gates before any server or GPU-backed inference.
+- User cost confirmation needed: no, local fake backend only.
+
 ## 2026-06-07 - branch asset inventory v2 refresh
 
 - Technical direction: refresh branch inventory V2 metadata with current remote branch totals, coverage snapshot, and GPU gate wording.
