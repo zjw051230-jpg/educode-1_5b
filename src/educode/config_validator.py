@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from educode.position_encoding import validate_position_encoding_config
+
 REQUIRED_TOP_LEVEL_SECTIONS = [
     "run",
     "hardware",
@@ -139,6 +141,9 @@ def validate_config(config: dict[str, Any], repo_root: str | Path | None = None)
     architecture = get_nested(config, "model.architecture")
     if architecture != "dense_decoder_only":
         errors.append("model.architecture must be dense_decoder_only")
+
+    model_config = config.get("model", {}) if isinstance(config.get("model"), dict) else {}
+    errors.extend(validate_position_encoding_config(model_config))
 
     ffn_type = get_nested(config, "model.ffn_type")
     if ffn_type == "moe":
