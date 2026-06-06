@@ -1,5 +1,28 @@
 # Change Log
 
+## 2026-06-07 - feature/model-compression-distillation
+
+- Technical direction: local distillation loss and compression metadata skeleton.
+- Modified files:
+  - `src/educode/distillation.py`
+  - `src/educode/compression.py`
+  - `scripts/validate_distillation_config.py`
+  - `tests/test_distillation_loss.py`
+  - `docs/model_compression_distillation.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\distillation.py src\educode\compression.py scripts\validate_distillation_config.py tests\test_distillation_loss.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_distillation_config.py`
+  - `.\.venv\Scripts\python.exe tests\test_distillation_loss.py`
+  - `git diff --check`
+- Validation result: passed; synthetic KL loss was finite and unit tests ran 5 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review checkpoint policy before any real teacher-student experiment.
+- User cost confirmation needed: no, local synthetic logits only.
+
 ## 2026-06-07 - branch asset inventory v2
 
 - Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.
