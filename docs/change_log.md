@@ -1,5 +1,28 @@
 # Change Log
 
+## 2026-06-07 - feature/rag-retrieval-skeleton
+
+- Technical direction: local RAG/retrieval skeleton with token-overlap search, context citations, and synthetic evaluation.
+- Modified files:
+  - `src/educode/retrieval.py`
+  - `src/educode/rag.py`
+  - `scripts/validate_rag_retrieval.py`
+  - `tests/test_rag_retrieval.py`
+  - `docs/rag_retrieval_skeleton.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\retrieval.py src\educode\rag.py scripts\validate_rag_retrieval.py tests\test_rag_retrieval.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_rag_retrieval.py`
+  - `.\.venv\Scripts\python.exe tests\test_rag_retrieval.py`
+  - `git diff --check`
+- Validation result: passed; synthetic retrieval validator reached hit_rate 1.0 and unit tests ran 5 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review retrieval quality assumptions before connecting any real corpus or vector store.
+- User cost confirmation needed: no, local synthetic retrieval only.
+
 ## 2026-06-07 - branch asset inventory v2
 
 - Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.
