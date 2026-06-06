@@ -1,13 +1,14 @@
 # Branch Asset Inventory
 
-This inventory records remote branch assets as of `main` commit `5931aa4` (`merge: add artifact hygiene guardrail`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
+This inventory records remote branch assets as of `main` commit `d90f311` (`docs: add branch asset inventory`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
 
 ## Overview
 
-- Current main commit: `5931aa4`
-- Remote non-main branches covered: `27`
+- Current main commit: `d90f311`
+- Remote non-main branches covered: `36`
 - Main status at inventory time: `main...origin/main`
 - Scope: branch-level assets, likely review order, risk notes, and GPU/Modal gates.
+- V2 update: second-batch data-driven branches are included in a dedicated section below.
 
 ## Categories
 
@@ -23,6 +24,37 @@ This inventory records remote branch assets as of `main` commit `5931aa4` (`merg
 - diagnostics/reporting
 - memory/training systems
 - preference/reward
+
+## Completed Technical Branch Classification
+
+| Category | Branches |
+| --- | --- |
+| docs/roadmap | `docs/notebooklm-tech-synthesis`, `docs/llm-systems-survey-roadmap`, `feature/experiment-planner` |
+| inference/eval | `feature/inference-kv-cache-harness-v2`, `feature/inference-eval-harness` |
+| attention/backend | `feature/attention-backend-abstraction-v2`, `feature/attention-backend-abstraction`, `feature/attention-backend-prep`, `feature/flashattention-feasibility` |
+| optimizer | `feature/muon-experimental-optimizer`, `feature/optimizer-registry-muon` |
+| MoE | `feature/moe-routing-skeleton-v2`, `feature/moe-routing-prep` |
+| RoPE/long context | `feature/rope-position-encoding-v2`, `feature/rope-position-prep` |
+| PEFT/LoRA | `feature/lora-peft-skeleton`, `feature/lora-peft-v2` |
+| quantization | `feature/quantization-qlora-feasibility`, `feature/qlora-quantization-v2` |
+| data/packing/quality | `feature/sequence-packing-data-utilization`, `feature/dataset-quality-dedup`, `feature/sequence-packing-v2`, `feature/dataset-quality-dedup-v2`, `feature/tokenizer-stats-analyzer` |
+| diagnostics/reporting | `feature/training-report-generator`, `feature/loss-metric-diagnostics`, `feature/profiling-matrix-planner` |
+| memory/training systems | `feature/checkpoint-artifact-hygiene`, `feature/config-schema-hardening`, `feature/memory-knobs-activation-checkpointing`, `feature/distributed-config-memory-estimator`, `feature/distributed-launch-feasibility`, `feature/activation-checkpointing-v2` |
+| preference/reward | `feature/preference-optimization-skeleton`, `feature/reward-model-skeleton` |
+
+## Second-Batch Data-Driven Branches
+
+| Branch | Commit | Category | Main Content | Main Files | Local Validation Result | GPU/Modal Gate | Risk | Suggested Action |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `docs/llm-systems-survey-roadmap` | `ed45fde` | docs/roadmap | LLM systems roadmap, claims boundary, and resume narrative. | `docs/llm_systems_survey_roadmap.md`, `docs/technical_claims_boundary.md`, `docs/resume_project_narrative.md` | `git diff --check` passed. | No | Low | review soon |
+| `feature/distributed-config-memory-estimator` | `e3ad6cc` | memory/training systems | Distributed config, gradient accumulation accounting, and rough memory estimator. | `src/educode/distributed_config.py`, `src/educode/grad_accum.py`, `src/educode/memory_estimator.py`, `scripts/validate_distributed_config.py`, `scripts/estimate_training_memory.py`, `tests/test_distributed_config.py`, `tests/test_grad_accum_accounting.py`, `tests/test_memory_estimator.py` | py_compile, validator script, estimator script, 7 tests, diff check passed. | Yes for multi-GPU validation. | High | experimental only |
+| `feature/distributed-launch-feasibility` | `e2f0ebf` | memory/training systems | FSDP / ZeRO / Megatron launch planner; generates command strings only. | `scripts/plan_distributed_launch.py`, `scripts/check_fsdp_zero_feasibility.py`, `tests/test_distributed_launch_planner.py`, `docs/fsdp_zero_megatron_feasibility.md`, `docs/distributed_launch_planner.md` | py_compile, planner script, feasibility script, 4 tests, diff check passed. | Yes for any real launch. | High | experimental only |
+| `feature/activation-checkpointing-v2` | `f6808fc` | memory/training systems | Activation checkpointing config/wrapper with CPU synthetic backward. | `src/educode/activation_checkpointing.py`, `src/educode/memory_knobs.py`, `scripts/validate_activation_checkpointing.py`, `tests/test_activation_checkpointing.py`, `docs/activation_checkpointing_v2.md` | py_compile, validator, 4 tests, diff check passed. | Yes for profiling/training integration. | High | needs deeper review |
+| `feature/lora-peft-v2` | `377756a` | PEFT/LoRA | LoRA wrapper, adapter state dict, merge/unmerge guard, trainable parameter report. | `src/educode/lora.py`, `src/educode/peft.py`, `scripts/validate_lora_peft_v2.py`, `tests/test_lora_peft_v2.py`, `docs/lora_peft_v2.md` | py_compile, validator, 5 tests, diff check passed. | Yes for LoRA training. | Medium | needs deeper review |
+| `feature/qlora-quantization-v2` | `9b1ddfb` | quantization | QLoRA config, bitsandbytes/CUDA guard, fake quant/dequant helpers. | `src/educode/quantization.py`, `scripts/check_quantization_feasibility_v2.py`, `scripts/validate_qlora_config.py`, `tests/test_quantization_v2.py`, `docs/qlora_quantization_v2.md`, `docs/dora_loftq_feasibility.md` | py_compile, 2 scripts, 4 tests, diff check passed. | Yes for 4-bit load/training. | Medium | needs deeper review |
+| `feature/sequence-packing-v2` | `7ffbc0f` | data/packing/quality | Packing, document boundaries, loss mask skeleton, report scripts. | `src/educode/packing.py`, `src/educode/document_boundaries.py`, `scripts/build_packing_report.py`, `scripts/analyze_token_utilization_v2.py`, `tests/test_sequence_packing_v2.py`, `docs/sequence_packing_v2.md` | py_compile, 2 report scripts, 3 tests, diff check passed. | No for synthetic utility; yes before training integration. | Low | review soon |
+| `feature/dataset-quality-dedup-v2` | `81a641f` | data/packing/quality | Exact/near duplicate detection, quality stats, MinHash placeholder. | `src/educode/data_quality.py`, `src/educode/dedup.py`, `scripts/analyze_dataset_quality_v2.py`, `tests/test_data_quality_v2.py`, `tests/test_dedup_v2.py`, `docs/dataset_quality_dedup_v2.md` | py_compile, quality script, 4 tests, diff check passed. | No for tiny fixtures; yes before large corpus scan. | Low | review soon |
+| `feature/tokenizer-stats-analyzer` | `1a638a9` | data/packing/quality | Tokenizer stats, frequency, special/unknown token rate, bytes-per-token proxy. | `src/educode/tokenizer_stats.py`, `scripts/analyze_tokenizer_stats.py`, `tests/test_tokenizer_stats.py`, `docs/tokenizer_stats_analyzer.md` | py_compile, analyzer script, 2 tests, diff check passed. | No | Low | review soon |
 
 ## Branch Table
 
@@ -58,24 +90,39 @@ This inventory records remote branch assets as of `main` commit `5931aa4` (`merg
 
 ## Recommended Review / Merge Order
 
-Low-risk branches should be reviewed before branches that alter model internals, optimizer behavior, attention execution, or training memory semantics.
+Low-risk branches should be reviewed before branches that alter model internals, optimizer behavior, attention execution, distributed execution, or training memory semantics.
 
-1. `docs/notebooklm-tech-synthesis`
-2. `feature/training-report-generator`
-3. `feature/loss-metric-diagnostics`
-4. `feature/model-card-reproducibility`
-5. `feature/sequence-packing-data-utilization`
-6. `feature/dataset-quality-dedup`
-7. `feature/inference-kv-cache-harness-v2`
-8. `feature/quantization-qlora-feasibility`
-9. `feature/lora-peft-skeleton`
-10. `feature/flashattention-feasibility`
-11. `feature/attention-backend-abstraction-v2`
-12. `feature/rope-position-encoding-v2`
-13. `feature/muon-experimental-optimizer`
-14. `feature/optimizer-registry-muon`
-15. `feature/moe-routing-skeleton-v2`
-16. `feature/memory-knobs-activation-checkpointing`
+### Low Risk First
+
+1. `docs/llm-systems-survey-roadmap`
+2. `feature/tokenizer-stats-analyzer`
+3. `feature/training-report-generator`
+4. `feature/loss-metric-diagnostics`
+5. `feature/model-card-reproducibility`
+6. `feature/sequence-packing-v2`
+7. `feature/dataset-quality-dedup-v2`
+8. `feature/sequence-packing-data-utilization`
+9. `feature/dataset-quality-dedup`
+10. `feature/inference-kv-cache-harness-v2`
+
+### Medium Risk
+
+- `feature/lora-peft-v2`
+- `feature/qlora-quantization-v2`
+- `feature/lora-peft-skeleton`
+- `feature/quantization-qlora-feasibility`
+- `feature/rope-position-encoding-v2`
+- `feature/attention-backend-abstraction-v2`
+
+### High Risk / Experimental Only
+
+- `feature/distributed-config-memory-estimator`
+- `feature/distributed-launch-feasibility`
+- `feature/activation-checkpointing-v2`
+- `feature/memory-knobs-activation-checkpointing`
+- `feature/muon-experimental-optimizer`
+- `feature/moe-routing-skeleton-v2`
+- Attention backend branches that modify `src/educode/tiny_model.py`
 
 Older prep branches should generally stay experimental unless they contain a file or idea missing from the newer v2 branch.
 
@@ -103,14 +150,32 @@ These branches should not be batch-merged or merged without deeper review:
 
 The following follow-up work requires explicit paid GPU/Modal confirmation before execution:
 
-- Attention backend profiling.
+- Multi-GPU distributed run.
+- FSDP / ZeRO / tensor parallel / sequence parallel validation.
+- Activation checkpointing profiling.
+- LoRA training.
+- QLoRA 4-bit load/training.
+- Backend profiling.
 - FlashAttention install/profile.
 - Muon vs AdamW training.
-- MoE training.
+- MoE training/profiling.
 - RoPE long-context profiling.
 - Real checkpoint inference.
-- LoRA/QLoRA training.
 - Reward/preference tuning.
+
+## Do Not Claim Yet
+
+These claims require real review, gated execution, and measured evidence before they can be used:
+
+- Do not claim Muon is better than AdamW.
+- Do not claim MoE improves model quality.
+- Do not claim QLoRA saves memory.
+- Do not claim LoRA effectiveness.
+- Do not claim distributed scaling succeeded.
+- Do not claim activation checkpointing improves throughput.
+- Do not claim FlashAttention accelerates this project.
+- Do not claim tokenizer, packing, or dedup utilities improve loss.
+- Do not claim seq1024 long training is safe; current evidence supports only short profiling/preflight no-OOM for bounded runs.
 
 ## Current Prohibitions
 

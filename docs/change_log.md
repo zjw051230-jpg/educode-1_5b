@@ -1,5 +1,22 @@
 # Change Log
 
+## 2026-06-07 - branch asset inventory v2
+
+- Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.
+- Modified files:
+  - `docs/branch_asset_inventory.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `git diff --check`
+  - `git diff --cached --check`
+- Validation result: passed; `git diff --check` reported no whitespace errors.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review low-risk docs/reporting/data utility branches before model-internal or distributed branches.
+- User cost confirmation needed: no, documentation-only inventory update.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
