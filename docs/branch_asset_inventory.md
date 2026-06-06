@@ -1,10 +1,12 @@
 # Branch Asset Inventory
 
-This inventory records remote branch assets as of `main` commit `d056373` (`docs: update branch asset inventory`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
+This inventory records remote branch assets as of `main` commit `f2d0576` (`docs: revert branch asset inventory refresh`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
+
+For the higher-level project asset map and branch deduplication plan, see `docs/project_asset_summary.md`.
 
 ## Overview
 
-- Current main commit at V3 refresh start: `d056373`
+- Current main commit at asset-summary refresh start: `f2d0576`
 - Current remote non-main branches total: `46`
 - Detailed branch assets covered: `46`
 - Remote non-main branches not yet detailed: `0`
@@ -61,6 +63,53 @@ This inventory records remote branch assets as of `main` commit `d056373` (`docs
 | compression/distillation | 1 | `feature/model-compression-distillation` |
 | serving/API | 1 | `feature/serving-api-skeleton` |
 | safety/filtering | 1 | `feature/safety-filter-skeleton` |
+
+## Canonical Branch Recommendations
+
+These branches are the preferred review targets when multiple branches cover the same technical direction.
+
+| Direction | Canonical Branch | Notes |
+| --- | --- | --- |
+| LoRA / PEFT | `feature/lora-peft-v2` | Supersedes `feature/lora-peft-skeleton` after review. |
+| QLoRA / quantization | `feature/qlora-quantization-v2` | Supersedes `feature/quantization-qlora-feasibility` after review. |
+| Sequence packing | `feature/sequence-packing-v2` | Adds document boundaries, mask handling, and report scripts. |
+| Dataset quality / dedup | `feature/dataset-quality-dedup-v2` | Adds exact/near dedup split and quality stats. |
+| Activation checkpointing | `feature/activation-checkpointing-v2` | Prefer over older memory-knobs checkpointing branch. |
+| Muon optimizer | `feature/muon-experimental-optimizer` | Keep experimental; do not claim optimizer improvement. |
+| Attention backend | `feature/attention-backend-abstraction-v2` | Prefer over older attention prep branches; still high risk. |
+| Inference / KV cache | `feature/inference-kv-cache-harness-v2` | Prefer over earlier inference/eval harness. |
+| MoE | `feature/moe-routing-skeleton-v2` | Prefer over earlier MoE prep branch. |
+| RoPE / long context | `feature/rope-position-encoding-v2` | Prefer over earlier RoPE prep branch. |
+
+## Superseded / Overlapping Branches
+
+| Topic | Older / Overlapping Branches | Preferred Branch | Recommended Action |
+| --- | --- | --- | --- |
+| LoRA / PEFT | `feature/lora-peft-skeleton` | `feature/lora-peft-v2` | Keep as reference until v2 review completes; delete later only with approval. |
+| Quantization / QLoRA | `feature/quantization-qlora-feasibility` | `feature/qlora-quantization-v2` | Supersede after checking any missing feasibility notes. |
+| Sequence packing | `feature/sequence-packing-data-utilization` | `feature/sequence-packing-v2` | Review v2 first; keep v1 as fallback. |
+| Dataset quality | `feature/dataset-quality-dedup` | `feature/dataset-quality-dedup-v2` | Supersede after v2 review. |
+| Attention backend | `feature/attention-backend-prep`, `feature/attention-backend-abstraction` | `feature/attention-backend-abstraction-v2` | Do not merge older branches directly; they contain stale history noise. |
+| Inference / eval | `feature/inference-eval-harness` | `feature/inference-kv-cache-harness-v2`, `feature/eval-benchmark-harness` | Split inference runtime and benchmark review. |
+| Muon | `feature/optimizer-registry-muon` | `feature/muon-experimental-optimizer` | Keep experimental until optimizer tests and GPU comparison are planned. |
+| MoE | `feature/moe-routing-prep` | `feature/moe-routing-skeleton-v2` | Keep prep branch experimental. |
+| RoPE | `feature/rope-position-prep` | `feature/rope-position-encoding-v2` | Keep prep branch experimental. |
+
+## Do Not Merge Yet
+
+Do not merge these without deeper review, regression tests, and any required GPU/Modal gate:
+
+- `feature/attention-backend-abstraction-v2`
+- `feature/attention-backend-abstraction`
+- `feature/attention-backend-prep`
+- `feature/muon-experimental-optimizer`
+- `feature/moe-routing-skeleton-v2`
+- `feature/rope-position-encoding-v2`
+- `feature/activation-checkpointing-v2`
+- `feature/memory-knobs-activation-checkpointing`
+- `feature/distributed-config-memory-estimator`
+- `feature/distributed-launch-feasibility`
+- `feature/model-compression-distillation`
 
 ## Second-Batch Data-Driven Branches
 

@@ -1,5 +1,24 @@
 # Change Log
 
+## 2026-06-07 - project asset summary and branch rationalization
+
+- Technical direction: summarize current project assets, deduplicate overlapping branch families, and add canonical review guidance without merging feature branches.
+- Modified files:
+  - `docs/project_asset_summary.md`
+  - `docs/branch_asset_inventory.md`
+  - `docs/change_log.md`
+  - `README.md`
+- Local validation commands:
+  - `git diff --check`
+  - `git diff --cached --check`
+- Validation result: passed; `git diff --check` reported no whitespace errors.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review and polish low-risk tooling branches before medium/high-risk model-internal assets.
+- User cost confirmation needed: no, documentation-only asset rationalization.
+
 ## 2026-06-07 - branch asset inventory v3
 
 - Technical direction: update branch inventory with third-batch wide-net branches, category counts, review order, GPU gates, and claims boundaries.
