@@ -1,5 +1,27 @@
 # Change Log
 
+## 2026-06-07 - feature/safety-filter-skeleton
+
+- Technical direction: local rule-based safety/content filter skeleton.
+- Modified files:
+  - `src/educode/safety_filter.py`
+  - `scripts/validate_safety_filter.py`
+  - `tests/test_safety_filter.py`
+  - `docs/safety_filter_skeleton.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\safety_filter.py scripts\validate_safety_filter.py tests\test_safety_filter.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_safety_filter.py`
+  - `.\.venv\Scripts\python.exe tests\test_safety_filter.py`
+  - `git diff --check`
+- Validation result: passed; local validator flagged 2 synthetic unsafe samples and unit tests ran 5 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review real safety policy and evaluation requirements before production use.
+- User cost confirmation needed: no, local rule-based synthetic validation only.
+
 ## 2026-06-07 - branch asset inventory v2 refresh
 
 - Technical direction: refresh branch inventory V2 metadata with current remote branch totals, coverage snapshot, and GPU gate wording.
