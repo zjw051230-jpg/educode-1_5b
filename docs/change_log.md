@@ -1,5 +1,27 @@
 # Change Log
 
+## 2026-06-07 - feature/tokenizer-training-feasibility
+
+- Technical direction: tokenizer training config feasibility, special-token policy, and tiny byte tokenizer toy fixture.
+- Modified files:
+  - `src/educode/tokenizer_training.py`
+  - `scripts/validate_tokenizer_training_config.py`
+  - `tests/test_tokenizer_training_config.py`
+  - `docs/tokenizer_training_feasibility.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\tokenizer_training.py scripts\validate_tokenizer_training_config.py tests\test_tokenizer_training_config.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_tokenizer_training_config.py`
+  - `.\.venv\Scripts\python.exe tests\test_tokenizer_training_config.py`
+  - `git diff --check`
+- Validation result: passed; toy tokenizer round-trip succeeded and unit tests ran 5 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review corpus and artifact policy before any real tokenizer training.
+- User cost confirmation needed: no, local toy fixture only.
+
 ## 2026-06-07 - branch asset inventory v2
 
 - Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.
