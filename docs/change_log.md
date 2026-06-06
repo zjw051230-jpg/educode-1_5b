@@ -1,5 +1,22 @@
 # Change Log
 
+## 2026-06-07 - branch asset inventory v2 refresh
+
+- Technical direction: refresh branch inventory V2 metadata with current remote branch totals, coverage snapshot, and GPU gate wording.
+- Modified files:
+  - `docs/branch_asset_inventory.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `git diff --check`
+  - `git diff --cached --check`
+- Validation result: passed; `git diff --check` reported no whitespace errors.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review the low-risk second-batch branches before distributed, checkpointing, and model-internal branches.
+- User cost confirmation needed: no, documentation-only inventory refresh.
+
 ## 2026-06-07 - branch asset inventory v2
 
 - Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.

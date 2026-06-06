@@ -1,14 +1,22 @@
 # Branch Asset Inventory
 
-This inventory records remote branch assets as of `main` commit `d90f311` (`docs: add branch asset inventory`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
+This inventory records remote branch assets as of `main` commit `565fc42` (`docs: update branch asset inventory`). It is a planning document only: no feature branch is merged, reviewed in detail, or executed here.
 
 ## Overview
 
-- Current main commit: `d90f311`
-- Remote non-main branches covered: `36`
+- Current main commit at V2 refresh start: `565fc42`
+- Current remote non-main branches total: `43`
+- Detailed branch assets covered: `36`
+- Remote non-main branches not yet detailed: `7`
 - Main status at inventory time: `main...origin/main`
 - Scope: branch-level assets, likely review order, risk notes, and GPU/Modal gates.
 - V2 update: second-batch data-driven branches are included in a dedicated section below.
+
+## Remote Coverage Snapshot
+
+- Covered in detailed inventory: `36` branches.
+- Second-batch data-driven branches covered in this update: `9` branches.
+- Remote branches still listed for later inventory expansion: `feature/auto-report-packager`, `feature/cli-experiment-manager`, `feature/eval-benchmark-harness`, `feature/instruction-tuning-data-skeleton`, `feature/model-compression-distillation`, `feature/rag-retrieval-skeleton`, `feature/run-registry-database`.
 
 ## Categories
 
@@ -47,7 +55,7 @@ This inventory records remote branch assets as of `main` commit `d90f311` (`docs
 | Branch | Commit | Category | Main Content | Main Files | Local Validation Result | GPU/Modal Gate | Risk | Suggested Action |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `docs/llm-systems-survey-roadmap` | `ed45fde` | docs/roadmap | LLM systems roadmap, claims boundary, and resume narrative. | `docs/llm_systems_survey_roadmap.md`, `docs/technical_claims_boundary.md`, `docs/resume_project_narrative.md` | `git diff --check` passed. | No | Low | review soon |
-| `feature/distributed-config-memory-estimator` | `e3ad6cc` | memory/training systems | Distributed config, gradient accumulation accounting, and rough memory estimator. | `src/educode/distributed_config.py`, `src/educode/grad_accum.py`, `src/educode/memory_estimator.py`, `scripts/validate_distributed_config.py`, `scripts/estimate_training_memory.py`, `tests/test_distributed_config.py`, `tests/test_grad_accum_accounting.py`, `tests/test_memory_estimator.py` | py_compile, validator script, estimator script, 7 tests, diff check passed. | Yes for multi-GPU validation. | High | experimental only |
+| `feature/distributed-config-memory-estimator` | `e3ad6cc` | memory/training systems | Distributed config, gradient accumulation accounting, and rough memory estimator. | `docs/distributed_config_memory_estimator.md`, `src/educode/distributed_config.py`, `src/educode/grad_accum.py`, `src/educode/memory_estimator.py`, `scripts/validate_distributed_config.py`, `scripts/estimate_training_memory.py`, `tests/test_distributed_config.py`, `tests/test_grad_accum_accounting.py`, `tests/test_memory_estimator.py` | py_compile, validator script, estimator script, 7 tests, diff check passed. | Yes for multi-GPU validation. | High | experimental only |
 | `feature/distributed-launch-feasibility` | `e2f0ebf` | memory/training systems | FSDP / ZeRO / Megatron launch planner; generates command strings only. | `scripts/plan_distributed_launch.py`, `scripts/check_fsdp_zero_feasibility.py`, `tests/test_distributed_launch_planner.py`, `docs/fsdp_zero_megatron_feasibility.md`, `docs/distributed_launch_planner.md` | py_compile, planner script, feasibility script, 4 tests, diff check passed. | Yes for any real launch. | High | experimental only |
 | `feature/activation-checkpointing-v2` | `f6808fc` | memory/training systems | Activation checkpointing config/wrapper with CPU synthetic backward. | `src/educode/activation_checkpointing.py`, `src/educode/memory_knobs.py`, `scripts/validate_activation_checkpointing.py`, `tests/test_activation_checkpointing.py`, `docs/activation_checkpointing_v2.md` | py_compile, validator, 4 tests, diff check passed. | Yes for profiling/training integration. | High | needs deeper review |
 | `feature/lora-peft-v2` | `377756a` | PEFT/LoRA | LoRA wrapper, adapter state dict, merge/unmerge guard, trainable parameter report. | `src/educode/lora.py`, `src/educode/peft.py`, `scripts/validate_lora_peft_v2.py`, `tests/test_lora_peft_v2.py`, `docs/lora_peft_v2.md` | py_compile, validator, 5 tests, diff check passed. | Yes for LoRA training. | Medium | needs deeper review |
@@ -151,7 +159,7 @@ These branches should not be batch-merged or merged without deeper review:
 The following follow-up work requires explicit paid GPU/Modal confirmation before execution:
 
 - Multi-GPU distributed run.
-- FSDP / ZeRO / tensor parallel / sequence parallel validation.
+- FSDP / ZeRO / TP / SP validation.
 - Activation checkpointing profiling.
 - LoRA training.
 - QLoRA 4-bit load/training.
