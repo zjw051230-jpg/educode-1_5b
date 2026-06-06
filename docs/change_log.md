@@ -1,5 +1,29 @@
 # Change Log
 
+## 2026-06-06 - feature/lora-peft-v2
+
+- Technical direction: LoRA / PEFT v2 utilities.
+- Modified files:
+  - `src/educode/lora.py`
+  - `src/educode/peft.py`
+  - `scripts/validate_lora_peft_v2.py`
+  - `tests/test_lora_peft_v2.py`
+  - `docs/lora_peft_v2.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe tests\test_lora_peft_v2.py` (red: missing LoRA module before implementation)
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\lora.py src\educode\peft.py scripts\validate_lora_peft_v2.py tests\test_lora_peft_v2.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_lora_peft_v2.py`
+  - `.\.venv\Scripts\python.exe tests\test_lora_peft_v2.py`
+  - `git diff --check`
+- Validation result: passed; validator blocker count 0 and unit tests ran 5 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review adapter checkpoint policy before any training branch.
+- User cost confirmation needed: no for local branch; yes before LoRA training.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
