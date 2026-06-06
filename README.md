@@ -1,71 +1,39 @@
 # EduCode-1.5B
 
-A CS336-inspired LLM training systems project built from scratch in PyTorch, with a focus on reproducible training infrastructure, data/validation guardrails, and small-scale A100 systems profiling.
+EduCode-1.5B is a CS336-inspired LLM training systems project built from scratch in PyTorch. The focus is reproducible training infrastructure: tokenizer/data loading, model code, validation guardrails, Modal A100 execution gates, artifact validation, and small systems profiling.
 
-This repository is not a finished foundation model. It is an engineering project that demonstrates the pipeline needed to move from local smoke tests to bounded GPU experiments: config validation, tokenization, streaming data, model execution, training/eval loops, artifact validation, and Modal A100 run import.
+This is not a finished foundation model. The repository is evidence for building and validating the training pipeline, not a claim of production model quality.
 
-## Current Evidence
+## Key Evidence
 
-| Area | Key Result |
-| --- | --- |
-| Training trend | FineWeb-Edu 5GB 3000-step improved over the 1000-step run |
-| Validation credibility | `validation_unique_doc_count = 15`, `validation_prefix_only_risk = false` for the 5GB 3000-step run |
-| A100 SDPA baseline | seq512 50-step SDPA profile: `44100.712407` summary tokens/sec, `0.371513s` average step time |
-| Seq1024 memory preflight | seq1024 10-step SDPA preflight completed with no OOM at `batch_size=4` |
-| Seq1024 SDPA profile | seq1024 50-step SDPA profile completed with no OOM: `41430.475003` summary tokens/sec, `0.395458s` average step time |
-| GPU memory | seq1024 50-step profile peak allocated `2.649026 GiB`, peak reserved `8.412109 GiB` |
-| Current caveat | MFU is recorded as `null`; throughput, step time, and memory are the usable systems metrics |
+- **Training trend:** the FineWeb-Edu 5GB 3000-step run improved over the 1000-step run.
+- **Validation guardrail:** the 5GB 3000-step run used `validation_unique_doc_count = 15` with `validation_prefix_only_risk = false`.
+- **A100 SDPA systems baseline:**
+  - seq512, batch 8, 50-step profile: `44100.712407` summary tokens/sec, `0.371513s` average step time.
+  - seq1024, batch 4, 50-step profile: no OOM, `41430.475003` summary tokens/sec, `0.395458s` average step time.
+  - seq1024 peak memory: `2.649026 GiB` allocated, `8.412109 GiB` reserved.
 
-## What Is Implemented
+## What To Know
 
-- Decoder-only Transformer training path with RMSNorm, SwiGLU, learned position embeddings, and PyTorch SDPA.
-- Public 16k BPE tokenizer path for FineWeb-Edu public-corpus experiments.
-- Host-RAM-efficient streaming batch iterator with deterministic shuffle-buffer sampling.
-- Modal A100 runner modes for bounded prepared-data streaming runs.
-- Readiness gates that separate long training execution from bounded profiling/preflight runs.
-- Post-run artifact validation for training, SDPA profiling, and seq1024 memory/preflight artifacts.
-- Import scripts and analysis docs for small JSON/JSONL/Markdown result artifacts.
+- Short profiling runs are systems evidence, not model-quality evidence.
+- MFU is currently unavailable/null; throughput, step time, and memory are the useful profiling metrics.
+- Raw datasets, prepared data, result tarballs, and checkpoints are intentionally not committed.
+- GPU/Modal runs require explicit mode-specific approval and cost awareness.
 
-## Important Reports
+## Details
 
-| Topic | Report |
-| --- | --- |
-| 5GB 3000-step result analysis | `docs/mvp_27_a_5gb_3000step_result_analysis.md` |
-| Route selection after 3000-step | `docs/mvp_27_b_next_stage_route_selection.md` |
-| Seq512 SDPA profile analysis | `docs/mvp_28_a_sdpa_profile_result_analysis.md` |
-| Seq1024 memory preflight analysis | `docs/mvp_29_a_seq1024_memory_preflight_result_analysis.md` |
-| Seq1024 SDPA profile analysis | `docs/mvp_30_a_seq1024_sdpa_profile_result_analysis.md` |
-| Full experiment index | `docs/experiment_index.md` |
+- Experiment index: `docs/experiment_index.md`
+- 5GB training analysis: `docs/mvp_27_a_5gb_3000step_result_analysis.md`
+- seq512 SDPA analysis: `docs/mvp_28_a_sdpa_profile_result_analysis.md`
+- seq1024 memory preflight analysis: `docs/mvp_29_a_seq1024_memory_preflight_result_analysis.md`
+- seq1024 SDPA profiling analysis: `docs/mvp_30_a_seq1024_sdpa_profile_result_analysis.md`
 
-## Quick Local Checks
+## Current Next Step
 
-These commands do not run Modal, do not use GPU, and do not start training:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\analyze_mvp30_a_seq1024_sdpa_profile_results.py
-.\.venv\Scripts\python.exe scripts\validate_mvp30_modal_a100_seq1024_sdpa_profile_results.py
-```
-
-Toy/local demo commands are still available:
-
-```powershell
-python scripts/run_resume_demo.py
-python scripts/run_50_step_toy_training.py
-```
-
-## Guardrails
-
-- Raw datasets, prepared data packages, checkpoints, and result tarballs are not committed.
-- Long GPU runs require explicit mode-specific approval and cost awareness.
-- Bounded profiling results are systems evidence, not model-quality evidence.
-- Do not compare SDPA against naive attention or FlashAttention until those backends exist and are measured.
-
-## Current Recommendation
-
-Next planned step:
+Recommended next planning item:
 
 ```text
 MVP-31.P seq1024 batch_size=8 memory preflight plan
 ```
 
-Rationale: seq1024 at `batch_size=4` is now stable for a 50-step SDPA profile. The next unanswered systems question is whether seq1024 can safely use `batch_size=8` before considering longer training or backend comparisons.
+The goal is to decide whether seq1024 can safely use `batch_size=8` before attempting longer training or backend comparisons.
