@@ -1,5 +1,23 @@
 # Change Log
 
+## 2026-06-06 - docs/llm-systems-survey-roadmap
+
+- Technical direction: LLM training systems survey, project roadmap, claims boundary, and resume narrative.
+- Modified files:
+  - `docs/llm_systems_survey_roadmap.md`
+  - `docs/technical_claims_boundary.md`
+  - `docs/resume_project_narrative.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `git diff --check`
+- Validation result: passed; `git diff --check` reported no whitespace errors.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: use this roadmap to choose low-risk review branches before model-internal branches.
+- User cost confirmation needed: no, documentation-only branch.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
