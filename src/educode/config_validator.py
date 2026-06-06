@@ -37,6 +37,11 @@ ALLOWED_TOKENIZER_TYPES = {
     "bpe",
 }
 
+ALLOWED_OPTIMIZERS = {
+    "adamw",
+    "muon_experimental",
+}
+
 
 def get_nested(config: dict[str, Any], path: str, default: Any = None) -> Any:
     current: Any = config
@@ -167,6 +172,7 @@ def validate_config(config: dict[str, Any], repo_root: str | Path | None = None)
     max_steps = get_nested(config, "training.max_steps")
     batch_size = get_nested(config, "training.batch_size")
     grad_accum = get_nested(config, "training.gradient_accumulation_steps")
+    optimizer_name = str(get_nested(config, "optimizer.name", "adamw")).strip().lower()
 
     if not isinstance(max_steps, int) or max_steps <= 0:
         errors.append("training.max_steps must be greater than 0")
@@ -174,6 +180,10 @@ def validate_config(config: dict[str, Any], repo_root: str | Path | None = None)
         errors.append("training.batch_size must be greater than 0")
     if not isinstance(grad_accum, int) or grad_accum <= 0:
         errors.append("training.gradient_accumulation_steps must be greater than 0")
+    if optimizer_name not in ALLOWED_OPTIMIZERS:
+        errors.append("optimizer.name must be one of: adamw, muon_experimental")
+    if optimizer_name == "muon_experimental" and get_nested(config, "optimizer.experimental_ack_required") is not True:
+        errors.append("muon_experimental requires optimizer.experimental_ack_required=true")
 
     if hardware_target == "windows_cuda":
         context_length = get_nested(config, "model.context_length")
