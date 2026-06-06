@@ -1,5 +1,31 @@
 # Change Log
 
+## 2026-06-06 - feature/qlora-quantization-v2
+
+- Technical direction: QLoRA and quantization feasibility v2.
+- Modified files:
+  - `src/educode/quantization.py`
+  - `scripts/check_quantization_feasibility_v2.py`
+  - `scripts/validate_qlora_config.py`
+  - `tests/test_quantization_v2.py`
+  - `docs/qlora_quantization_v2.md`
+  - `docs/dora_loftq_feasibility.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe tests\test_quantization_v2.py` (red: missing quantization module before implementation)
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\quantization.py scripts\check_quantization_feasibility_v2.py scripts\validate_qlora_config.py tests\test_quantization_v2.py`
+  - `.\.venv\Scripts\python.exe scripts\check_quantization_feasibility_v2.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_qlora_config.py`
+  - `.\.venv\Scripts\python.exe tests\test_quantization_v2.py`
+  - `git diff --check`
+- Validation result: passed; feasibility scripts completed and unit tests ran 4 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review real 4-bit load risks before any GPU branch.
+- User cost confirmation needed: no for local branch; yes before QLoRA training.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
