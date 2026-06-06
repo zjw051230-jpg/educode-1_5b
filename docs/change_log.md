@@ -1,5 +1,29 @@
 # Change Log
 
+## 2026-06-06 - feature/activation-checkpointing-v2
+
+- Technical direction: activation checkpointing / recompute controls v2.
+- Modified files:
+  - `src/educode/activation_checkpointing.py`
+  - `src/educode/memory_knobs.py`
+  - `scripts/validate_activation_checkpointing.py`
+  - `tests/test_activation_checkpointing.py`
+  - `docs/activation_checkpointing_v2.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe tests\test_activation_checkpointing.py` (red: missing activation checkpointing module before implementation)
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\activation_checkpointing.py src\educode\memory_knobs.py scripts\validate_activation_checkpointing.py tests\test_activation_checkpointing.py`
+  - `.\.venv\Scripts\python.exe scripts\validate_activation_checkpointing.py`
+  - `.\.venv\Scripts\python.exe tests\test_activation_checkpointing.py`
+  - `git diff --check`
+- Validation result: passed; validator blocker count 0 and unit tests ran 4 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review block boundaries before any integration with training code.
+- User cost confirmation needed: no for local branch; yes before GPU profiling.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
