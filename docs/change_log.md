@@ -1,5 +1,27 @@
 # Change Log
 
+## 2026-06-07 - feature/run-registry-database
+
+- Technical direction: local run registry metadata store for imported experiment summaries.
+- Modified files:
+  - `src/educode/run_registry.py`
+  - `scripts/build_run_registry.py`
+  - `tests/test_run_registry.py`
+  - `docs/run_registry_database.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\run_registry.py scripts\build_run_registry.py tests\test_run_registry.py`
+  - `.\.venv\Scripts\python.exe scripts\build_run_registry.py`
+  - `.\.venv\Scripts\python.exe tests\test_run_registry.py`
+  - `git diff --check`
+- Validation result: passed; dry-run registry scan found 12 imported summary records, wrote no output file, and touched no tarballs.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review whether registry output should be generated as an explicit artifact in a later branch.
+- User cost confirmation needed: no, local metadata-only tool.
+
 ## 2026-06-07 - branch asset inventory v2
 
 - Technical direction: update branch inventory with second-batch data-driven branches, risk tiers, review order, GPU gates, and claims boundaries.
