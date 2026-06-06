@@ -1,5 +1,28 @@
 # Change Log
 
+## 2026-06-06 - feature/tokenizer-stats-analyzer
+
+- Technical direction: tokenizer statistics analyzer for small fixtures.
+- Modified files:
+  - `src/educode/tokenizer_stats.py`
+  - `scripts/analyze_tokenizer_stats.py`
+  - `tests/test_tokenizer_stats.py`
+  - `docs/tokenizer_stats_analyzer.md`
+  - `docs/change_log.md`
+- Local validation commands:
+  - `.\.venv\Scripts\python.exe tests\test_tokenizer_stats.py` (red: missing tokenizer stats module before implementation)
+  - `.\.venv\Scripts\python.exe -m py_compile src\educode\tokenizer_stats.py scripts\analyze_tokenizer_stats.py tests\test_tokenizer_stats.py`
+  - `.\.venv\Scripts\python.exe scripts\analyze_tokenizer_stats.py`
+  - `.\.venv\Scripts\python.exe tests\test_tokenizer_stats.py`
+  - `git diff --check`
+- Validation result: passed; analyzer script completed and unit tests ran 2 tests successfully.
+- Modal/GPU/training run: no.
+- Tarball/checkpoint/raw data committed: no.
+- Commit hash: pending.
+- Push status: pending.
+- Next step: review whether real tokenizer distribution sampling is needed.
+- User cost confirmation needed: no, local small fixture only.
+
 ## 2026-06-06 - branch asset inventory
 
 - Technical direction: branch inventory and review sequencing for experimental assets.
