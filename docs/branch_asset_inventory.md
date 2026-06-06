@@ -5,9 +5,9 @@ This inventory records remote branch assets as of `main` commit `565fc42` (`docs
 ## Overview
 
 - Current main commit at V2 refresh start: `565fc42`
-- Current remote non-main branches total: `43`
+- Current remote non-main branches total: `44`
 - Detailed branch assets covered: `36`
-- Remote non-main branches not yet detailed: `7`
+- Remote non-main branches not yet detailed: `8`
 - Main status at inventory time: `main...origin/main`
 - Scope: branch-level assets, likely review order, risk notes, and GPU/Modal gates.
 - V2 update: second-batch data-driven branches are included in a dedicated section below.
@@ -16,7 +16,7 @@ This inventory records remote branch assets as of `main` commit `565fc42` (`docs
 
 - Covered in detailed inventory: `36` branches.
 - Second-batch data-driven branches covered in this update: `9` branches.
-- Remote branches still listed for later inventory expansion: `feature/auto-report-packager`, `feature/cli-experiment-manager`, `feature/eval-benchmark-harness`, `feature/instruction-tuning-data-skeleton`, `feature/model-compression-distillation`, `feature/rag-retrieval-skeleton`, `feature/run-registry-database`.
+- Remote branches still listed for later inventory expansion: `feature/auto-report-packager`, `feature/cli-experiment-manager`, `feature/eval-benchmark-harness`, `feature/instruction-tuning-data-skeleton`, `feature/model-compression-distillation`, `feature/rag-retrieval-skeleton`, `feature/run-registry-database`, `feature/serving-api-skeleton`.
 
 ## Categories
 
