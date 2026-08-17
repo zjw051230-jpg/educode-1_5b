@@ -1,41 +1,31 @@
-# EduCode-1.5B
+# EduCode Training Lab
 
-EduCode-1.5B is a CS336-inspired LLM training systems project built from scratch in PyTorch. The focus is reproducible training infrastructure: tokenizer/data loading, model code, validation guardrails, Modal A100 execution gates, artifact validation, and small systems profiling.
+A small PyTorch language-model training project inspired by Stanford CS336. The emphasis is on reproducible systems work: tokenization, data loading, model code, validation checks, Modal/A100 runs, artifact validation, and lightweight profiling.
 
-This is not a finished foundation model. The repository is evidence for building and validating the training pipeline, not a claim of production model quality.
+## Current results
 
-## Key Evidence
+- A 5 GB FineWeb-Edu run continued to improve between 1,000 and 3,000 steps.
+- The 3,000-step run used 15 unique validation documents without prefix-only leakage risk.
+- SDPA profiling reached about 44.1k tokens/s at sequence length 512, batch size 8.
+- Sequence length 1024, batch size 4 reached about 41.4k tokens/s without OOM.
 
-- **Training trend:** the FineWeb-Edu 5GB 3000-step run improved over the 1000-step run.
-- **Validation guardrail:** the 5GB 3000-step run used `validation_unique_doc_count = 15` with `validation_prefix_only_risk = false`.
-- **A100 SDPA systems baseline:**
-  - seq512, batch 8, 50-step profile: `44100.712407` summary tokens/sec, `0.371513s` average step time.
-  - seq1024, batch 4, 50-step profile: no OOM, `41430.475003` summary tokens/sec, `0.395458s` average step time.
-  - seq1024 peak memory: `2.649026 GiB` allocated, `8.412109 GiB` reserved.
+These are training-system measurements rather than a model-quality benchmark. Raw datasets, checkpoints, and result archives are kept outside Git.
 
-## What To Know
+## Layout
 
-- Short profiling runs are systems evidence, not model-quality evidence.
-- MFU is currently unavailable/null; throughput, step time, and memory are the useful profiling metrics.
-- Raw datasets, prepared data, result tarballs, and checkpoints are intentionally not committed.
-- GPU/Modal runs require explicit mode-specific approval and cost awareness.
+- `src/`: tokenizer, data, model, and training code.
+- `configs/`: experiment configuration.
+- `scripts/`: data preparation, training, and profiling entry points.
+- `tests/`: unit and integration checks.
+- `docs/experiment_index.md`: index of completed runs and notes.
 
-## Details
+## Notes and reports
 
-- Experiment index: `docs/experiment_index.md`
-- Project asset summary: `docs/project_asset_summary.md`
-- Experimental branch inventory: `docs/branch_asset_inventory.md`
-- 5GB training analysis: `docs/mvp_27_a_5gb_3000step_result_analysis.md`
-- seq512 SDPA analysis: `docs/mvp_28_a_sdpa_profile_result_analysis.md`
-- seq1024 memory preflight analysis: `docs/mvp_29_a_seq1024_memory_preflight_result_analysis.md`
-- seq1024 SDPA profiling analysis: `docs/mvp_30_a_seq1024_sdpa_profile_result_analysis.md`
+- [Project asset summary](docs/project_asset_summary.md)
+- [Experiment index](docs/experiment_index.md)
+- [5 GB / 3,000-step analysis](docs/mvp_27_a_5gb_3000step_result_analysis.md)
+- [seq512 SDPA profile](docs/mvp_28_a_sdpa_profile_result_analysis.md)
+- [seq1024 memory preflight](docs/mvp_29_a_seq1024_memory_preflight_result_analysis.md)
+- [seq1024 SDPA profile](docs/mvp_30_a_seq1024_sdpa_profile_result_analysis.md)
 
-## Current Next Step
-
-Recommended next planning item:
-
-```text
-MVP-31.P seq1024 batch_size=8 memory preflight plan
-```
-
-The goal is to decide whether seq1024 can safely use `batch_size=8` before attempting longer training or backend comparisons.
+GPU runs can incur cost, so training and profiling commands should be reviewed before they are submitted.
